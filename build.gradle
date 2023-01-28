@@ -1,7 +1,6 @@
 plugins {
     id 'java-library'
-    id 'org.jetbrains.kotlin.jvm' version '1.7.21'
-    id 'application'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 java {
@@ -11,10 +10,6 @@ java {
 
 group = 'com.zhangke.activitypub'
 version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     testImplementation 'junit:junit:4.+'
@@ -40,8 +35,4 @@ compileKotlin {
 
 compileTestKotlin {
     kotlinOptions.jvmTarget = '1.8'
-}
-
-application {
-    mainClassName = 'MainKt'
 }

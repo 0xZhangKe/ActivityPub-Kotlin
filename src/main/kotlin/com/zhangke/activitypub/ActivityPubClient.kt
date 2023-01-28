@@ -36,6 +36,7 @@ class ActivityPubClient(
     val baseUrl: String = buildBaseUrl(application.host)
 
     internal fun buildOAuthUrl(): String {
+        ///oauth/authorize?response_type=code&client_id=&redirect_uri=&scope=read+write+follow+push
         val baseUrl = baseUrl.removeSuffix("/")
         return "${baseUrl}/oauth/authorize" +
                 "?response_type=code" +

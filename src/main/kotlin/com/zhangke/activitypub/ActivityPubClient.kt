@@ -36,7 +36,6 @@ class ActivityPubClient(
     val baseUrl: String = buildBaseUrl(application.host)
 
     internal fun buildOAuthUrl(): String {
-        //https://m.cmx.im/oauth/authorize?response_type=code&client_id=KHGSFM7oZY2_ZhaQRo25DfBRNwERZy7_iqZ_HjA5Sp8&redirect_uri=utopia://oauth.utopia&scope=read+write+follow+push
         val baseUrl = baseUrl.removeSuffix("/")
         return "${baseUrl}/oauth/authorize" +
                 "?response_type=code" +

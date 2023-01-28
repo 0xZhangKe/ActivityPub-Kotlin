@@ -9,8 +9,6 @@ import com.zhangke.activitypub.entry.ActivityPubToken
 import com.zhangke.activitypub.utils.ResultCallAdapterFactory
 import retrofit2.Retrofit
 
-private const val REDIRECT_URI = "utopia://oauth.utopia"
-
 /**
  * Created by ZhangKe on 2022/12/3.
  */

@@ -25,7 +25,9 @@ private interface AccountsApi {
     @GET("/api/v1/accounts/{id}/statuses")
     suspend fun getStatuses(
         @Path("id") id: String,
-        @Query("limit") limit: Int
+        @Query("limit") limit: Int,
+        @Query("pinned") pinned: Boolean,
+        @Query("exclude_replies") excludeReplies: Boolean,
     ): Result<List<ActivityPubStatus>>
 }
 
@@ -33,7 +35,7 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
 
     private val api = createApi(AccountsApi::class.java)
 
-    suspend fun verifyCredentials(accessToken: String): Result<ActivityPubAccount>{
+    suspend fun verifyCredentials(accessToken: String): Result<ActivityPubAccount> {
         return api.verifyCredentials(buildAuthorizationHeader(accessToken)).collectAuthorizeFailed()
     }
 
@@ -45,7 +47,33 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.getAccount(id).collectAuthorizeFailed()
     }
 
+    suspend fun getPinnedStatuses(id: String, limit: Int = 20): Result<List<ActivityPubStatus>> {
+        return api.getStatuses(
+            id = id,
+            limit = limit,
+            pinned = true,
+            excludeReplies = true
+        ).collectAuthorizeFailed()
+    }
+
     suspend fun getStatuses(id: String, limit: Int = 20): Result<List<ActivityPubStatus>> {
-        return api.getStatuses(id, limit).collectAuthorizeFailed()
+        return api.getStatuses(
+            id = id,
+            limit = limit,
+            pinned = false,
+            excludeReplies = true
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun getStatusesAndReplies(
+        id: String,
+        limit: Int = 20
+    ): Result<List<ActivityPubStatus>> {
+        return api.getStatuses(
+            id = id,
+            limit = limit,
+            pinned = false,
+            excludeReplies = false
+        ).collectAuthorizeFailed()
     }
 }

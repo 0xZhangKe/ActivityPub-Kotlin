@@ -64,7 +64,7 @@ class TimelinesRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         maxId: String,
         minId: String,
         sinceId: String,
-        limit: Int
+        limit: Int,
     ): Result<List<ActivityPubStatus>> {
         return api.homeTimeline(
             authorization = getAuthorizationHeader(),

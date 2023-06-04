@@ -12,7 +12,7 @@ abstract class ActivityPubBaseRepo(protected val client: ActivityPubClient) {
         return client.retrofit.create(clazz)
     }
 
-    protected fun <T> Result<T>.collectAuthorizeFailed(): Result<T> {
+    protected suspend fun <T> Result<T>.collectAuthorizeFailed(): Result<T> {
         return onFailure {
             if (it is ActivityPubHttpException.UnauthorizedException) {
                 client.onAuthorizeFailed(client.buildOAuthUrl(), client)
@@ -20,7 +20,7 @@ abstract class ActivityPubBaseRepo(protected val client: ActivityPubClient) {
         }
     }
 
-    protected fun getAuthorizationHeader(): String {
+    protected suspend fun getAuthorizationHeader(): String {
         val accessToken = client.tokenProvider()?.accessToken
         return if (accessToken.isNullOrEmpty()) "" else buildAuthorizationHeader(accessToken)
     }

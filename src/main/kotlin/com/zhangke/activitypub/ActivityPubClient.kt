@@ -17,8 +17,8 @@ class ActivityPubClient(
     retrofit: Retrofit,
     gson: Gson,
     private val redirectUrl: String,
-    val tokenProvider: () -> ActivityPubToken?,
-    val onAuthorizeFailed: (url: String, client: ActivityPubClient) -> Unit
+    val tokenProvider: suspend () -> ActivityPubToken?,
+    val onAuthorizeFailed: suspend (url: String, client: ActivityPubClient) -> Unit
 ) {
 
     internal val retrofit: Retrofit = retrofit.newBuilder()

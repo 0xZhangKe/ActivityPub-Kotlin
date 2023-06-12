@@ -15,7 +15,12 @@ class TimelinesRepoTest {
     @Test
     fun testLocalTimelines() {
         runBlocking {
-            activityPub.timelinesRepo.localTimelines()
+            activityPub.timelinesRepo.localTimelines(
+                minId = "",
+                maxId = "",
+                sinceId = "",
+                limit = 20,
+            )
                 .onFailure {
                     println(it.stackTraceToString())
                 }
@@ -28,7 +33,12 @@ class TimelinesRepoTest {
     @Test
     fun testPublicTimelines() {
         runBlocking {
-            activityPub.timelinesRepo.localTimelines()
+            activityPub.timelinesRepo.localTimelines(
+                minId = "",
+                maxId = "",
+                sinceId = "",
+                limit = 20,
+            )
                 .onFailure {
                     println(it.stackTraceToString())
                 }

@@ -25,9 +25,15 @@ private interface AccountsApi {
     @GET("/api/v1/accounts/{id}/statuses")
     suspend fun getStatuses(
         @Path("id") id: String,
-        @Query("limit") limit: Int,
-        @Query("pinned") pinned: Boolean,
-        @Query("exclude_replies") excludeReplies: Boolean,
+        @Query("min_id") minId: String?,
+        @Query("since_id") sinceId: String?,
+        @Query("max_id") maxId: String?,
+        @Query("limit") limit: Int?,
+        @Query("only_media") onlyMedia: Boolean?,
+        @Query("pinned") pinned: Boolean?,
+        @Query("exclude_replies") excludeReplies: Boolean?,
+        @Query("exclude_reblogs") excludeBlogs: Boolean?,
+        @Query("tagged") tagged: Boolean?,
     ): Result<List<ActivityPubStatus>>
 }
 
@@ -47,33 +53,29 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.getAccount(id).collectAuthorizeFailed()
     }
 
-    suspend fun getPinnedStatuses(id: String, limit: Int = 20): Result<List<ActivityPubStatus>> {
-        return api.getStatuses(
-            id = id,
-            limit = limit,
-            pinned = true,
-            excludeReplies = true
-        ).collectAuthorizeFailed()
-    }
-
-    suspend fun getStatuses(id: String, limit: Int = 20): Result<List<ActivityPubStatus>> {
-        return api.getStatuses(
-            id = id,
-            limit = limit,
-            pinned = false,
-            excludeReplies = true
-        ).collectAuthorizeFailed()
-    }
-
-    suspend fun getStatusesAndReplies(
+    suspend fun getStatuses(
         id: String,
-        limit: Int = 20
+        limit: Int? = 20,
+        minId: String? = null,
+        sinceId: String? = null,
+        maxId: String? = null,
+        onlyMedia: Boolean? = false,
+        pinned: Boolean? = false,
+        excludeReplies: Boolean? = false,
+        excludeBlogs: Boolean? = false,
+        tagged: Boolean? = false,
     ): Result<List<ActivityPubStatus>> {
         return api.getStatuses(
             id = id,
             limit = limit,
-            pinned = false,
-            excludeReplies = false
+            pinned = pinned,
+            maxId = maxId,
+            minId = minId,
+            sinceId = sinceId,
+            onlyMedia = onlyMedia,
+            tagged = tagged,
+            excludeReplies = excludeReplies,
+            excludeBlogs = excludeBlogs,
         ).collectAuthorizeFailed()
     }
 }

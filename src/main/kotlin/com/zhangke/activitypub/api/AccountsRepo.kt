@@ -33,7 +33,6 @@ private interface AccountsApi {
         @Query("pinned") pinned: Boolean?,
         @Query("exclude_replies") excludeReplies: Boolean?,
         @Query("exclude_reblogs") excludeBlogs: Boolean?,
-        @Query("tagged") tagged: Boolean?,
     ): Result<List<ActivityPubStatus>>
 }
 
@@ -63,7 +62,6 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         pinned: Boolean? = false,
         excludeReplies: Boolean? = false,
         excludeBlogs: Boolean? = false,
-        tagged: Boolean? = false,
     ): Result<List<ActivityPubStatus>> {
         return api.getStatuses(
             id = id,
@@ -73,7 +71,6 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             minId = minId,
             sinceId = sinceId,
             onlyMedia = onlyMedia,
-            tagged = tagged,
             excludeReplies = excludeReplies,
             excludeBlogs = excludeBlogs,
         ).collectAuthorizeFailed()

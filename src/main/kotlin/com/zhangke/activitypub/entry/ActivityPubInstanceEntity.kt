@@ -2,7 +2,7 @@ package com.zhangke.activitypub.entry
 
 import com.google.gson.annotations.SerializedName
 
-data class ActivityPubInstance(
+data class ActivityPubInstanceEntity(
     val domain: String,
     val title: String,
     val version: String,
@@ -12,6 +12,7 @@ data class ActivityPubInstance(
     val thumbnail: Thumbnail,
     val languages: List<String>,
     val rules: List<Rule>,
+    val contact: Contact,
 ) {
 
     data class Usage(val users: Users) {
@@ -26,5 +27,10 @@ data class ActivityPubInstance(
     data class Rule(
         val id: String,
         val text: String,
+    )
+
+    data class Contact(
+        val email: String,
+        val accountEntity: ActivityPubAccountEntity,
     )
 }

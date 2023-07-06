@@ -14,7 +14,7 @@ data class ActivityPubStatus(
     val inReplyToId: String,
     @SerializedName("in_reply_to_account_id")
     val inReplyToAccountId: String,
-    val account: ActivityPubAccount,
+    val account: ActivityPubAccountEntity,
     val sensitive: Boolean,
     @SerializedName("spoiler_text")
     val spoilerText: String,

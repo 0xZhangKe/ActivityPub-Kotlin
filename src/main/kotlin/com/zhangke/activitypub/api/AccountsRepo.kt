@@ -1,7 +1,7 @@
 package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
-import com.zhangke.activitypub.entry.ActivityPubAccount
+import com.zhangke.activitypub.entry.ActivityPubAccountEntity
 import com.zhangke.activitypub.entry.ActivityPubStatus
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -14,13 +14,13 @@ import retrofit2.http.Query
 private interface AccountsApi {
 
     @GET("/api/v1/accounts/verify_credentials")
-    suspend fun verifyCredentials(@Header("Authorization") authorization: String): Result<ActivityPubAccount>
+    suspend fun verifyCredentials(@Header("Authorization") authorization: String): Result<ActivityPubAccountEntity>
 
     @GET("/api/v1/accounts/lookup")
-    suspend fun lookup(@Query("acct") acct: String): Result<ActivityPubAccount>
+    suspend fun lookup(@Query("acct") acct: String): Result<ActivityPubAccountEntity>
 
     @GET("/api/v1/accounts/{id}")
-    suspend fun getAccount(@Path("id") id: String): Result<ActivityPubAccount>
+    suspend fun getAccount(@Path("id") id: String): Result<ActivityPubAccountEntity>
 
     @GET("/api/v1/accounts/{id}/statuses")
     suspend fun getStatuses(
@@ -40,15 +40,15 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
 
     private val api = createApi(AccountsApi::class.java)
 
-    suspend fun verifyCredentials(accessToken: String): Result<ActivityPubAccount> {
+    suspend fun verifyCredentials(accessToken: String): Result<ActivityPubAccountEntity> {
         return api.verifyCredentials(buildAuthorizationHeader(accessToken)).collectAuthorizeFailed()
     }
 
-    suspend fun lookup(acct: String): Result<ActivityPubAccount> {
+    suspend fun lookup(acct: String): Result<ActivityPubAccountEntity> {
         return api.lookup(acct).collectAuthorizeFailed()
     }
 
-    suspend fun getAccount(id: String): Result<ActivityPubAccount> {
+    suspend fun getAccount(id: String): Result<ActivityPubAccountEntity> {
         return api.getAccount(id).collectAuthorizeFailed()
     }
 

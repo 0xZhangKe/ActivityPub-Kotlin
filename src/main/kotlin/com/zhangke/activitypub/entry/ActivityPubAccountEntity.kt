@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by ZhangKe on 2022/12/13.
  */
-data class ActivityPubAccount(
+data class ActivityPubAccountEntity(
     val id: String,
     val username: String,
     val acct: String,
@@ -26,11 +26,11 @@ data class ActivityPubAccount(
     @SerializedName("header_static")
     val headerStatic: String,
     @SerializedName("followers_count")
-    val followersCount: String,
+    val followersCount: Int,
     @SerializedName("following_count")
-    val followingCount: String,
+    val followingCount: Int,
     @SerializedName("statuses_count")
-    val statusesCount: String,
+    val statusesCount: Int,
     @SerializedName("last_status_at")
     val lastStatusAt: String,
 )

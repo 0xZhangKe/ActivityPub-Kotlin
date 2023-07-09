@@ -1,7 +1,7 @@
 package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
-import com.zhangke.activitypub.entry.ActivityPubStatus
+import com.zhangke.activitypub.entry.ActivityPubStatusEntity
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
@@ -21,7 +21,7 @@ private interface TimelinesApi {
         @Query("since_id") sinceId: String?,
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int,
-    ): Result<List<ActivityPubStatus>>
+    ): Result<List<ActivityPubStatusEntity>>
 
     @GET("/api/v1/timelines/home")
     suspend fun homeTimeline(
@@ -30,7 +30,7 @@ private interface TimelinesApi {
         @Query("since_id") sinceId: String?,
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int,
-    ): Result<List<ActivityPubStatus>>
+    ): Result<List<ActivityPubStatusEntity>>
 }
 
 class TimelinesRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -45,7 +45,7 @@ class TimelinesRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         minId: String? = null,
         maxId: String? = null,
         sinceId: String? = null,
-    ): Result<List<ActivityPubStatus>> {
+    ): Result<List<ActivityPubStatusEntity>> {
         return api.timelines(
             authorization = getAuthorizationHeader(),
             local = true,
@@ -65,7 +65,7 @@ class TimelinesRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         minId: String? = null,
         maxId: String? = null,
         sinceId: String? = null,
-    ): Result<List<ActivityPubStatus>> {
+    ): Result<List<ActivityPubStatusEntity>> {
         return api.timelines(
             authorization = getAuthorizationHeader(),
             local = false,
@@ -82,7 +82,7 @@ class TimelinesRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         minId: String? = null,
         sinceId: String? = null,
         limit: Int,
-    ): Result<List<ActivityPubStatus>> {
+    ): Result<List<ActivityPubStatusEntity>> {
         return api.homeTimeline(
             authorization = getAuthorizationHeader(),
             maxId = maxId,

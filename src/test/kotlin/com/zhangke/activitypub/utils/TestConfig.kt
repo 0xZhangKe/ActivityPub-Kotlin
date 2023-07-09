@@ -2,17 +2,17 @@ package com.zhangke.activitypub.utils
 
 import com.google.gson.JsonObject
 import com.zhangke.activitypub.ActivityPubApplication
-import com.zhangke.activitypub.entry.ActivityPubToken
+import com.zhangke.activitypub.entry.ActivityPubTokenEntity
 import java.io.File
 
 object TestConfig {
 
     private val configFile = File("src/test/TestConfig.json")
 
-    fun readToken(): ActivityPubToken {
+    fun readToken(): ActivityPubTokenEntity {
         val json = testGlobalGson.fromJson<JsonObject>(configFile.readText(), JsonObject::class.java)
         val token = json.getAsJsonPrimitive("token").asString
-        return ActivityPubToken(
+        return ActivityPubTokenEntity(
             accessToken = token,
             tokenType = "",
             scope = "",

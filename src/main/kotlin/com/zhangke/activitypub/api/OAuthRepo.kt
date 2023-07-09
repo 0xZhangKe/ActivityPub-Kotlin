@@ -1,7 +1,7 @@
 package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
-import com.zhangke.activitypub.entry.ActivityPubToken
+import com.zhangke.activitypub.entry.ActivityPubTokenEntity
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -21,7 +21,7 @@ private interface OAuthApi {
         @Field("grant_type") grantType: String,
         @Field("code") code: String,
         @Field("scope") scope: String,
-    ): Result<ActivityPubToken>
+    ): Result<ActivityPubTokenEntity>
 
 }
 
@@ -29,7 +29,7 @@ class OAuthRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
 
     private val api = createApi(OAuthApi::class.java)
 
-    suspend fun getToken(code: String, scopeList: Array<ActivityPubScope>): Result<ActivityPubToken> {
+    suspend fun getToken(code: String, scopeList: Array<ActivityPubScope>): Result<ActivityPubTokenEntity> {
         return api.getToken(
             clientId = client.application.clientId,
             clientSecret = client.application.clientSecret,

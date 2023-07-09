@@ -5,7 +5,7 @@ import com.zhangke.activitypub.api.AccountsRepo
 import com.zhangke.activitypub.api.InstanceRepo
 import com.zhangke.activitypub.api.OAuthRepo
 import com.zhangke.activitypub.api.TimelinesRepo
-import com.zhangke.activitypub.entry.ActivityPubToken
+import com.zhangke.activitypub.entry.ActivityPubTokenEntity
 import com.zhangke.activitypub.utils.ResultCallAdapterFactory
 import retrofit2.Retrofit
 
@@ -17,7 +17,7 @@ class ActivityPubClient(
     retrofit: Retrofit,
     gson: Gson,
     private val redirectUrl: String,
-    val tokenProvider: suspend () -> ActivityPubToken?,
+    val tokenProvider: suspend () -> ActivityPubTokenEntity?,
     val onAuthorizeFailed: suspend (url: String, client: ActivityPubClient) -> Unit
 ) {
 

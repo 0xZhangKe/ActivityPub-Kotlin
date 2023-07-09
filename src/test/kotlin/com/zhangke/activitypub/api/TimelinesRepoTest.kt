@@ -1,9 +1,8 @@
 package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.utils.newCmxClient
-import com.zhangke.activitypub.utils.newMastodonClient
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Test
+import org.junit.Test
 
 /**
  * Created by ZhangKe on 2022/12/13.

@@ -2,7 +2,7 @@ package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entry.ActivityPubAccountEntity
-import com.zhangke.activitypub.entry.ActivityPubStatus
+import com.zhangke.activitypub.entry.ActivityPubStatusEntity
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
@@ -33,7 +33,7 @@ private interface AccountsApi {
         @Query("pinned") pinned: Boolean?,
         @Query("exclude_replies") excludeReplies: Boolean?,
         @Query("exclude_reblogs") excludeBlogs: Boolean?,
-    ): Result<List<ActivityPubStatus>>
+    ): Result<List<ActivityPubStatusEntity>>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -62,7 +62,7 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         pinned: Boolean? = false,
         excludeReplies: Boolean? = false,
         excludeBlogs: Boolean? = false,
-    ): Result<List<ActivityPubStatus>> {
+    ): Result<List<ActivityPubStatusEntity>> {
         return api.getStatuses(
             id = id,
             limit = limit,

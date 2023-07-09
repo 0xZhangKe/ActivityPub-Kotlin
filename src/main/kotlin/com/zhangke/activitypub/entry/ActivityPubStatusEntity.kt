@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
  * Created by ZhangKe on 2022/12/13.
  * https://docs.joinmastodon.org/entities/Status/
  */
-data class ActivityPubStatus(
+data class ActivityPubStatusEntity(
     val id: String,
     @SerializedName("created_at")
     val createdAt: String,
@@ -33,5 +33,6 @@ data class ActivityPubStatus(
     val muted: Boolean?,
     val bookmarked: Boolean?,
     val content: String,
-    val reblog: ActivityPubStatus?,
+    val reblog: ActivityPubStatusEntity?,
+    val tags: List<ActivityPubStatusTagEntity>,
 )

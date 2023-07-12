@@ -31,6 +31,6 @@ data class ActivityPubInstanceEntity(
 
     data class Contact(
         val email: String,
-        val accountEntity: ActivityPubAccountEntity,
+        val account: ActivityPubAccountEntity,
     )
 }

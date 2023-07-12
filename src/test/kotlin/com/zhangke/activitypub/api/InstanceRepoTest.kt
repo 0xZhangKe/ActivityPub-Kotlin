@@ -23,4 +23,12 @@ class InstanceRepoTest {
             println(announcement)
         }
     }
+
+    @Test
+    fun shouldResultTagsWhenAuth() {
+        runBlocking {
+            val tags = instanceRepo.getTrendsTags().getOrThrow()
+            println(tags)
+        }
+    }
 }

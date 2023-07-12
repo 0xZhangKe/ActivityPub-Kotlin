@@ -9,11 +9,14 @@ object TestConfig {
 
     private val configFile = File("src/test/TestConfig.json")
 
-    fun readToken(): ActivityPubTokenEntity {
-        val json = testGlobalGson.fromJson<JsonObject>(configFile.readText(), JsonObject::class.java)
-        val token = json.getAsJsonPrimitive("token").asString
+    fun readToken(): ActivityPubTokenEntity? {
+        val json = testGlobalGson.fromJson(configFile.readText(), JsonObject::class.java)
+        val tokenPrimitive = json.getAsJsonPrimitive("token")?.asString
+        if (tokenPrimitive.isNullOrEmpty()){
+            return null
+        }
         return ActivityPubTokenEntity(
-            accessToken = token,
+            accessToken = tokenPrimitive,
             tokenType = "",
             scope = "",
             createdAt = ""

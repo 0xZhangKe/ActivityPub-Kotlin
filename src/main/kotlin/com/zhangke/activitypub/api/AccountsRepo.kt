@@ -17,7 +17,7 @@ private interface AccountsApi {
     suspend fun verifyCredentials(@Header("Authorization") authorization: String): Result<ActivityPubAccountEntity>
 
     @GET("/api/v1/accounts/lookup")
-    suspend fun lookup(@Query("acct") acct: String): Result<ActivityPubAccountEntity>
+    suspend fun lookup(@Query("acct") acct: String): Result<ActivityPubAccountEntity?>
 
     @GET("/api/v1/accounts/{id}")
     suspend fun getAccount(@Path("id") id: String): Result<ActivityPubAccountEntity>
@@ -44,7 +44,7 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.verifyCredentials(buildAuthorizationHeader(accessToken)).collectAuthorizeFailed()
     }
 
-    suspend fun lookup(acct: String): Result<ActivityPubAccountEntity> {
+    suspend fun lookup(acct: String): Result<ActivityPubAccountEntity?> {
         return api.lookup(acct).collectAuthorizeFailed()
     }
 

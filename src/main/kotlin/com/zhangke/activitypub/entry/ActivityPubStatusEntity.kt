@@ -15,6 +15,7 @@ data class ActivityPubStatusEntity(
     @SerializedName("in_reply_to_account_id")
     val inReplyToAccountId: String,
     val account: ActivityPubAccountEntity,
+    val mediaAttachments: List<ActivityPubMediaAttachmentEntity>,
     val sensitive: Boolean,
     @SerializedName("spoiler_text")
     val spoilerText: String,

@@ -9,7 +9,7 @@ data class ActivityPubMediaMetaEntity(
     val size: String?,
     val width: Int?,
     val height: Int?,
-    val aspect: Double?,
+    val aspect: Float?,
     @SerializedName("audio_encode")
     val audioEncode: String?,
     @SerializedName("audio_bitrate")
@@ -25,7 +25,7 @@ data class ActivityPubMediaMetaEntity(
         val width: Int?,
         val height: Int?,
         val size: String?,
-        val aspect: Double?,
+        val aspect: Float?,
         @SerializedName("frame_rate")
         val frameRate: String?,
         val bitrate: Int?,

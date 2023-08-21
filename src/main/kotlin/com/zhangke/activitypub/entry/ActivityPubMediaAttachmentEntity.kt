@@ -19,8 +19,8 @@ data class ActivityPubMediaAttachmentEntity(
     val previewUrl: String,
     @SerializedName("remote_url")
     val remoteUrl: String? = null,
-    val description: String,
-    val blurhash: String,
+    val description: String? = null,
+    val blurhash: String? = null,
     val meta: ActivityPubMediaMetaEntity?,
 ) {
 

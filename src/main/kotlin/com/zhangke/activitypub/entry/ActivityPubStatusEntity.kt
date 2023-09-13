@@ -37,4 +37,5 @@ data class ActivityPubStatusEntity(
     val content: String,
     val reblog: ActivityPubStatusEntity?,
     val tags: List<ActivityPubStatusTagEntity>,
+    val poll: ActivityPubPollEntity?,
 )

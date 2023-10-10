@@ -28,7 +28,7 @@ data class ActivityPubPollEntity(
     val emojis: List<ActivityPubCustomEmojiEntity>,
     val voted: Boolean?,
     @SerializedName("own_votes")
-    val ownVotes: Boolean,
+    val ownVotes: List<Int>?,
 ) {
 
     data class Option(

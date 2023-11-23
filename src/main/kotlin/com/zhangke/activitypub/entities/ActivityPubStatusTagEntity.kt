@@ -1,4 +1,4 @@
-package com.zhangke.activitypub.entry
+package com.zhangke.activitypub.entities
 
 data class ActivityPubStatusTagEntity(
     val name: String,

@@ -2,7 +2,7 @@ package com.zhangke.activitypub.utils
 
 import com.google.gson.JsonObject
 import com.zhangke.activitypub.ActivityPubApplication
-import com.zhangke.activitypub.entry.ActivityPubTokenEntity
+import com.zhangke.activitypub.entities.ActivityPubTokenEntity
 import java.io.File
 
 object TestConfig {

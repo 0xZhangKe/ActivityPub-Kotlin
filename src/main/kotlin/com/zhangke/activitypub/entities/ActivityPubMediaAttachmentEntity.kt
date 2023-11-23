@@ -1,11 +1,11 @@
-package com.zhangke.activitypub.entry
+package com.zhangke.activitypub.entities
 
 import com.google.gson.annotations.SerializedName
-import com.zhangke.activitypub.entry.ActivityPubMediaAttachmentEntity.Companion.TYPE_AUDIO
-import com.zhangke.activitypub.entry.ActivityPubMediaAttachmentEntity.Companion.TYPE_GIFV
-import com.zhangke.activitypub.entry.ActivityPubMediaAttachmentEntity.Companion.TYPE_IMAGE
-import com.zhangke.activitypub.entry.ActivityPubMediaAttachmentEntity.Companion.TYPE_UNKNOWN
-import com.zhangke.activitypub.entry.ActivityPubMediaAttachmentEntity.Companion.TYPE_VIDEO
+import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity.Companion.TYPE_AUDIO
+import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity.Companion.TYPE_GIFV
+import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity.Companion.TYPE_IMAGE
+import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity.Companion.TYPE_UNKNOWN
+import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity.Companion.TYPE_VIDEO
 
 data class ActivityPubMediaAttachmentEntity(
     val id: String,

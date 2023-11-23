@@ -1,5 +1,6 @@
 package com.zhangke.activitypub.api
 
+import com.zhangke.activitypub.utils.newAndroidClient
 import com.zhangke.activitypub.utils.newMastodonClient
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -10,29 +11,26 @@ import org.junit.Test
 
 class RegisterApiTest {
 
-    private val activityPub = newMastodonClient()
-
     @Test
-    fun testRegister() {
-        runBlocking {
-//            try {
-//                activityPub.oauthRepo.registerApplication(
-//                    clientName = "utopia",
-//                    redirectUris = listOf("utopia://oauth.utopia"),
-//                    scopes = RegisterRepo.AppScopes.ALL,
-//                    website = "https://0xzhangke.github.io/"
-//                ).onFailure {
-//                    println("onError:$it")
-//                    assert(false)
-//                }.onSuccess {
-//                    println("onSuccess:$it")
-//                    assert(true)
-//                }
-//                assert(true)
-//            } catch (e: Throwable) {
-//                e.printStackTrace()
-//                assert(false)
-//            }
+    fun testRegister() = runBlocking {
+        val activityPubClient = newAndroidClient()
+        try {
+            RegisterRepo(activityPubClient.retrofit).registerApplication(
+                clientName = "utopia",
+                redirectUris = listOf("utopia://oauth.utopia"),
+                scopes = RegisterRepo.AppScopes.ALL,
+                website = "https://0xzhangke.github.io/"
+            ).onFailure {
+                println("onError:$it")
+                assert(false)
+            }.onSuccess {
+                println("onSuccess:$it")
+                assert(true)
+            }
+            assert(true)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            assert(false)
         }
     }
 

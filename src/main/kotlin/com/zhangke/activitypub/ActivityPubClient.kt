@@ -5,7 +5,7 @@ import com.zhangke.activitypub.api.AccountsRepo
 import com.zhangke.activitypub.api.InstanceRepo
 import com.zhangke.activitypub.api.OAuthRepo
 import com.zhangke.activitypub.api.TimelinesRepo
-import com.zhangke.activitypub.entry.ActivityPubTokenEntity
+import com.zhangke.activitypub.entities.ActivityPubTokenEntity
 import com.zhangke.activitypub.utils.ResultCallAdapterFactory
 import retrofit2.Retrofit
 

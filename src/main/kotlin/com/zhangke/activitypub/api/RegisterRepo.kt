@@ -1,6 +1,6 @@
 package com.zhangke.activitypub.api
 
-import com.zhangke.activitypub.entry.RegisterApplicationEntry
+import com.zhangke.activitypub.entities.RegisterApplicationEntry
 import retrofit2.Retrofit
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

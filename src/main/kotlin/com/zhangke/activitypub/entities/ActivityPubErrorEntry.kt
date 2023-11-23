@@ -1,4 +1,4 @@
-package com.zhangke.activitypub.entry
+package com.zhangke.activitypub.entities
 
 /**
  * Created by ZhangKe on 2022/12/3.

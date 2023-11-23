@@ -1,7 +1,7 @@
 package com.zhangke.activitypub.utils
 
 import com.google.gson.Gson
-import com.zhangke.activitypub.entry.ActivityPubErrorEntry
+import com.zhangke.activitypub.entities.ActivityPubErrorEntry
 import com.zhangke.activitypub.exception.ActivityPubHttpException
 import okhttp3.Request
 import okio.Timeout

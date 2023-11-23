@@ -1,6 +1,6 @@
 package com.zhangke.activitypub.exception
 
-import com.zhangke.activitypub.entry.ActivityPubErrorEntry
+import com.zhangke.activitypub.entities.ActivityPubErrorEntry
 
 /**
  * Created by ZhangKe on 2022/12/3.

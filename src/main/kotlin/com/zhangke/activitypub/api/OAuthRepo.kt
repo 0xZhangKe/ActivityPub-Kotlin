@@ -1,7 +1,7 @@
 package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
-import com.zhangke.activitypub.entry.ActivityPubTokenEntity
+import com.zhangke.activitypub.entities.ActivityPubTokenEntity
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST

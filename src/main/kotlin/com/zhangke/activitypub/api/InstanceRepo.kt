@@ -1,10 +1,10 @@
 package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
-import com.zhangke.activitypub.entry.ActivityPubAnnouncementEntity
-import com.zhangke.activitypub.entry.ActivityPubInstanceEntity
-import com.zhangke.activitypub.entry.ActivityPubStatusEntity
-import com.zhangke.activitypub.entry.ActivityPubTagEntity
+import com.zhangke.activitypub.entities.ActivityPubAnnouncementEntity
+import com.zhangke.activitypub.entities.ActivityPubInstanceEntity
+import com.zhangke.activitypub.entities.ActivityPubStatusEntity
+import com.zhangke.activitypub.entities.ActivityPubTagEntity
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query

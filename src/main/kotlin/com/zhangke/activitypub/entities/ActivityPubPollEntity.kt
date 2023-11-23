@@ -1,4 +1,4 @@
-package com.zhangke.activitypub.entry
+package com.zhangke.activitypub.entities
 
 import com.google.gson.annotations.SerializedName
 

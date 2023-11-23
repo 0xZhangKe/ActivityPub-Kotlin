@@ -8,6 +8,7 @@ import com.zhangke.activitypub.ActivityPubClient
 
 private const val MASTODON = "https://mastodon.social"
 private const val CMX = "https://m.cmx.im"
+private const val ANDROID = "https://androiddev.social"
 
 internal fun newMastodonClient(): ActivityPubClient {
     return newTestActivityPubClient(MASTODON)
@@ -15,4 +16,8 @@ internal fun newMastodonClient(): ActivityPubClient {
 
 internal fun newCmxClient(): ActivityPubClient {
     return newTestActivityPubClient(CMX)
+}
+
+internal fun newAndroidClient(): ActivityPubClient {
+    return newTestActivityPubClient(ANDROID)
 }

@@ -1,7 +1,7 @@
 package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
-import com.zhangke.activitypub.entry.ActivityPubStatusEntity
+import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query

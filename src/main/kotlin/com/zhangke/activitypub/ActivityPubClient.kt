@@ -3,7 +3,9 @@ package com.zhangke.activitypub
 import com.google.gson.Gson
 import com.zhangke.activitypub.api.AccountsRepo
 import com.zhangke.activitypub.api.InstanceRepo
+import com.zhangke.activitypub.api.MediaRepo
 import com.zhangke.activitypub.api.OAuthRepo
+import com.zhangke.activitypub.api.StatusRepo
 import com.zhangke.activitypub.api.TimelinesRepo
 import com.zhangke.activitypub.entities.ActivityPubTokenEntity
 import com.zhangke.activitypub.utils.ResultCallAdapterFactory
@@ -32,6 +34,10 @@ class ActivityPubClient(
     val accountRepo: AccountsRepo by lazy { AccountsRepo(this) }
 
     val timelinesRepo: TimelinesRepo by lazy { TimelinesRepo(this) }
+
+    val statusRepo: StatusRepo by lazy { StatusRepo(this) }
+
+    val mediaRepo: MediaRepo by lazy { MediaRepo(this) }
 
     val baseUrl: String = buildBaseUrl(application.host)
 

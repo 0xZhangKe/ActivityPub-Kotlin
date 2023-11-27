@@ -12,7 +12,7 @@ import retrofit2.http.POST
 private interface StatusService {
 
     @FormUrlEncoded
-    @POST("/api/v2/media")
+    @POST("/api/v2/statuses")
     suspend fun postStatus(
         @Field("status") status: String?,
         @Field("media_ids") mediaIds: List<String>?,
@@ -24,7 +24,7 @@ private interface StatusService {
     ): Result<ActivityPubStatusEntity>
 
     @FormUrlEncoded
-    @POST("/api/v2/media")
+    @POST("/api/v2/statuses")
     suspend fun postStatusWithPoll(
         @Field("status") status: String?,
         @Field("poll") poll: ActivityPubPollRequestEntity,
@@ -36,7 +36,7 @@ private interface StatusService {
     ): Result<ActivityPubStatusEntity>
 
     @FormUrlEncoded
-    @POST("/api/v2/media")
+    @POST("/api/v2/statuses")
     suspend fun postScheduledStatus(
         @Field("status") status: String?,
         @Field("media_ids") mediaIds: List<String>?,
@@ -49,7 +49,7 @@ private interface StatusService {
     ): Result<ActivityPubStatusScheduledEntity>
 
     @FormUrlEncoded
-    @POST("/api/v2/media")
+    @POST("/api/v2/statuses")
     suspend fun postScheduledStatusWithPoll(
         @Field("status") status: String?,
         @Field("poll") poll: ActivityPubPollRequestEntity,

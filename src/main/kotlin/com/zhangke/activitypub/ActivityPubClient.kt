@@ -2,6 +2,7 @@ package com.zhangke.activitypub
 
 import com.google.gson.Gson
 import com.zhangke.activitypub.api.AccountsRepo
+import com.zhangke.activitypub.api.CustomEmojiRepo
 import com.zhangke.activitypub.api.InstanceRepo
 import com.zhangke.activitypub.api.MediaRepo
 import com.zhangke.activitypub.api.OAuthRepo
@@ -38,6 +39,8 @@ class ActivityPubClient(
     val statusRepo: StatusRepo by lazy { StatusRepo(this) }
 
     val mediaRepo: MediaRepo by lazy { MediaRepo(this) }
+
+    val emojiRepo: CustomEmojiRepo by lazy { CustomEmojiRepo(this) }
 
     val baseUrl: String = buildBaseUrl(application.host)
 

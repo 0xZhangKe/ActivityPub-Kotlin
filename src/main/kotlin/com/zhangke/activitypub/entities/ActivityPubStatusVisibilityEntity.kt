@@ -1,6 +1,6 @@
 package com.zhangke.activitypub.entities
 
-enum class ActivityPubStatusVisibility(val code: String) {
+enum class ActivityPubStatusVisibilityEntity(val code: String) {
 
     PUBLIC("public"),
     UNLISTED("unlisted"),

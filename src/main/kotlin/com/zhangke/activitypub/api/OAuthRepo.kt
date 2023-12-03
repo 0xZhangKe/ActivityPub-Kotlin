@@ -29,11 +29,29 @@ class OAuthRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
 
     private val api = createApi(OAuthApi::class.java)
 
-    suspend fun getToken(code: String, scopeList: Array<ActivityPubScope>): Result<ActivityPubTokenEntity> {
+    fun buildOAuthUrl(
+        baseUrl: String,
+        clientId: String,
+        redirectUri: String,
+    ): String {
+        return "${baseUrl}/oauth/authorize" +
+                "?response_type=code" +
+                "&client_id=$clientId" +
+                "&redirect_uri=$redirectUri" +
+                "&scope=read+write+follow+push"
+    }
+
+    suspend fun getToken(
+        code: String,
+        clientId: String,
+        clientSecret: String,
+        redirectUri: String,
+        scopeList: Array<ActivityPubScope>
+    ): Result<ActivityPubTokenEntity> {
         return api.getToken(
-            clientId = client.application.clientId,
-            clientSecret = client.application.clientSecret,
-            redirectUri = client.application.redirectUri,
+            clientId = clientId,
+            clientSecret = clientSecret,
+            redirectUri = redirectUri,
             grantType = "authorization_code",
             code = code,
             scope = scopeList.joinToString("+") { it.scope }

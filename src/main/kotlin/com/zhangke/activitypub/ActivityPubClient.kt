@@ -10,22 +10,26 @@ import com.zhangke.activitypub.api.StatusRepo
 import com.zhangke.activitypub.api.TimelinesRepo
 import com.zhangke.activitypub.entities.ActivityPubTokenEntity
 import com.zhangke.activitypub.utils.ResultCallAdapterFactory
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * Created by ZhangKe on 2022/12/3.
  */
 class ActivityPubClient(
-    val application: ActivityPubApplication,
-    retrofit: Retrofit,
+    val baseUrl: String,
+    httpClient: OkHttpClient,
     gson: Gson,
-    private val redirectUrl: String,
     val tokenProvider: suspend () -> ActivityPubTokenEntity?,
-    val onAuthorizeFailed: suspend (url: String, client: ActivityPubClient) -> Unit
+    val onAuthorizeFailed: suspend () -> Unit
 ) {
 
-    internal val retrofit: Retrofit = retrofit.newBuilder()
+    internal val retrofit: Retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(GsonConverterFactory.create(gson))
         .addCallAdapterFactory(ResultCallAdapterFactory(gson))
+        .client(httpClient)
         .build()
 
     val oauthRepo: OAuthRepo by lazy { OAuthRepo(this) }
@@ -41,20 +45,4 @@ class ActivityPubClient(
     val mediaRepo: MediaRepo by lazy { MediaRepo(this) }
 
     val emojiRepo: CustomEmojiRepo by lazy { CustomEmojiRepo(this) }
-
-    val baseUrl: String = buildBaseUrl(application.host)
-
-    fun buildOAuthUrl(): String {
-        ///oauth/authorize?response_type=code&client_id=&redirect_uri=&scope=read+write+follow+push
-        val baseUrl = baseUrl.removeSuffix("/")
-        return "${baseUrl}/oauth/authorize" +
-                "?response_type=code" +
-                "&client_id=${application.clientId}" +
-                "&redirect_uri=$redirectUrl" +
-                "&scope=read+write+follow+push"
-    }
-
-    private fun buildBaseUrl(host: String): String {
-        return "https://$host"
-    }
 }

@@ -15,7 +15,7 @@ abstract class ActivityPubBaseRepo(protected val client: ActivityPubClient) {
     protected suspend fun <T> Result<T>.collectAuthorizeFailed(): Result<T> {
         return onFailure {
             if (it is ActivityPubHttpException.UnauthorizedException) {
-                client.onAuthorizeFailed(client.buildOAuthUrl(), client)
+                client.onAuthorizeFailed()
             }
         }
     }

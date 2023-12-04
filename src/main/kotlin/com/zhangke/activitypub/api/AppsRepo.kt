@@ -11,7 +11,6 @@ import retrofit2.http.POST
  */
 private interface AppsApi {
 
-    //TODO 需要考虑这个接口
     @FormUrlEncoded
     @POST("/api/v1/apps")
     suspend fun registerApplication(
@@ -35,11 +34,6 @@ class AppsRepo(retrofit: Retrofit) {
         val redirectUrisString = redirectUris.joinToString(":")
         val scopesString = scopes.joinToString(" ")
         return api.registerApplication(clientName, redirectUrisString, scopesString, website)
-    }
-
-    fun startOAuth(){
-        // https://m.cmx.im/oauth/authorize?response_type=code&client_id=SgKN04a7lufOplcl_VEp41oTJfHlAr0k1vc6NVdss0g&redirect_uri=https://0xzhangke.github.io/&scope=read+write+follow+push
-
     }
 
     /**

@@ -6,6 +6,7 @@ import com.zhangke.activitypub.api.CustomEmojiRepo
 import com.zhangke.activitypub.api.InstanceRepo
 import com.zhangke.activitypub.api.MediaRepo
 import com.zhangke.activitypub.api.OAuthRepo
+import com.zhangke.activitypub.api.AppsRepo
 import com.zhangke.activitypub.api.StatusRepo
 import com.zhangke.activitypub.api.TimelinesRepo
 import com.zhangke.activitypub.entities.ActivityPubTokenEntity
@@ -33,6 +34,8 @@ class ActivityPubClient(
         .build()
 
     val oauthRepo: OAuthRepo by lazy { OAuthRepo(this) }
+
+    val appsRepo: AppsRepo by lazy { AppsRepo(retrofit) }
 
     val instanceRepo: InstanceRepo by lazy { InstanceRepo(this) }
 

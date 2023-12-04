@@ -9,7 +9,7 @@ import retrofit2.http.POST
 /**
  * Created by ZhangKe on 2022/12/2.
  */
-private interface RegisterApi {
+private interface AppsApi {
 
     //TODO 需要考虑这个接口
     @FormUrlEncoded
@@ -22,9 +22,9 @@ private interface RegisterApi {
     ): Result<RegisterApplicationEntry>
 }
 
-class RegisterRepo(retrofit: Retrofit) {
+class AppsRepo(retrofit: Retrofit) {
 
-    private val api = retrofit.create(RegisterApi::class.java)
+    private val api = retrofit.create(AppsApi::class.java)
 
     suspend fun registerApplication(
         clientName: String,

@@ -1,7 +1,6 @@
 package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.utils.newAndroidClient
-import com.zhangke.activitypub.utils.newMastodonClient
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
@@ -9,16 +8,16 @@ import org.junit.Test
  * Created by ZhangKe on 2022/12/2.
  */
 
-class RegisterApiTest {
+class AppsApiTest {
 
     @Test
     fun testRegister() = runBlocking {
         val activityPubClient = newAndroidClient()
         try {
-            RegisterRepo(activityPubClient.retrofit).registerApplication(
+            AppsRepo(activityPubClient.retrofit).registerApplication(
                 clientName = "utopia",
                 redirectUris = listOf("utopia://oauth.utopia"),
-                scopes = RegisterRepo.AppScopes.ALL,
+                scopes = AppsRepo.AppScopes.ALL,
                 website = "https://0xzhangke.github.io/"
             ).onFailure {
                 println("onError:$it")

@@ -24,6 +24,7 @@ private interface AccountsApi {
 
     @GET("/api/v1/accounts/{id}/statuses")
     suspend fun getStatuses(
+        @Header("Authorization") authorization: String,
         @Path("id") id: String,
         @Query("min_id") minId: String?,
         @Query("since_id") sinceId: String?,
@@ -64,6 +65,7 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         excludeBlogs: Boolean? = false,
     ): Result<List<ActivityPubStatusEntity>> {
         return api.getStatuses(
+            authorization = getAuthorizationHeader(),
             id = id,
             limit = limit,
             pinned = pinned,

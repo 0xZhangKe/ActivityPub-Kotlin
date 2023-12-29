@@ -8,6 +8,7 @@ import com.zhangke.activitypub.entities.ActivityPubStatusVisibilityEntity
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 private interface StatusService {
 
@@ -15,6 +16,48 @@ private interface StatusService {
     suspend fun postStatus(
         @Header("Authorization") authorization: String,
         @Body requestBody: ActivityPubPostStatusRequestEntity,
+    ): Result<ActivityPubStatusEntity>
+
+    @POST("/api/v1/statuses/{id}/favourite")
+    suspend fun favourite(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubStatusEntity>
+
+    @POST("/api/v1/statuses/{id}/unfavourite")
+    suspend fun unfavourite(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubStatusEntity>
+
+    @POST("/api/v1/statuses/{id}/reblog")
+    suspend fun reblog(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubStatusEntity>
+
+    @POST("/api/v1/statuses/{id}/unreblog")
+    suspend fun unreblog(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubStatusEntity>
+
+    @POST("/api/v1/statuses/{id}/bookmark")
+    suspend fun bookmark(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubStatusEntity>
+
+    @POST("/api/v1/statuses/{id}/unbookmark")
+    suspend fun unbookmark(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubStatusEntity>
+
+    @POST("/api/v1/statuses/{id}")
+    suspend fun delete(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
     ): Result<ActivityPubStatusEntity>
 }
 
@@ -47,6 +90,55 @@ class StatusRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.postStatus(
             authorization = getAuthorizationHeader(),
             requestBody = requestBody,
+        )
+    }
+
+    suspend fun favourite(id: String): Result<ActivityPubStatusEntity> {
+        return api.favourite(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        )
+    }
+
+    suspend fun unfavourite(id: String): Result<ActivityPubStatusEntity> {
+        return api.unfavourite(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        )
+    }
+
+    suspend fun reblog(id: String): Result<ActivityPubStatusEntity> {
+        return api.reblog(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        )
+    }
+
+    suspend fun unreblog(id: String): Result<ActivityPubStatusEntity> {
+        return api.unreblog(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        )
+    }
+
+    suspend fun bookmark(id: String): Result<ActivityPubStatusEntity> {
+        return api.bookmark(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        )
+    }
+
+    suspend fun unbookmark(id: String): Result<ActivityPubStatusEntity> {
+        return api.unbookmark(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        )
+    }
+
+    suspend fun delete(id: String): Result<ActivityPubStatusEntity> {
+        return api.delete(
+            authorization = getAuthorizationHeader(),
+            id = id,
         )
     }
 }

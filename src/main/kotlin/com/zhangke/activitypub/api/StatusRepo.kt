@@ -3,9 +3,11 @@ package com.zhangke.activitypub.api
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubPollRequestEntity
 import com.zhangke.activitypub.entities.ActivityPubPostStatusRequestEntity
+import com.zhangke.activitypub.entities.ActivityPubStatusContextEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusVisibilityEntity
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -59,6 +61,12 @@ private interface StatusService {
         @Header("Authorization") authorization: String,
         @Path("id") id: String,
     ): Result<ActivityPubStatusEntity>
+
+    @GET("/api/v1/statuses/{id}/context")
+    suspend fun getContext(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubStatusContextEntity>
 }
 
 class StatusRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -137,6 +145,13 @@ class StatusRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
 
     suspend fun delete(id: String): Result<ActivityPubStatusEntity> {
         return api.delete(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        )
+    }
+
+    suspend fun getStatusContext(id: String): Result<ActivityPubStatusContextEntity> {
+        return api.getContext(
             authorization = getAuthorizationHeader(),
             id = id,
         )

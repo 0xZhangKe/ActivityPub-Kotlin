@@ -2,6 +2,7 @@ package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubAccountEntity
+import com.zhangke.activitypub.entities.ActivityPubListEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -35,6 +36,12 @@ private interface AccountsApi {
         @Query("exclude_replies") excludeReplies: Boolean?,
         @Query("exclude_reblogs") excludeBlogs: Boolean?,
     ): Result<List<ActivityPubStatusEntity>>
+
+    @GET("/api/v1/accounts/{id}/lists")
+    suspend fun getAccountLists(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<List<ActivityPubListEntity>>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -76,5 +83,12 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             excludeReplies = excludeReplies,
             excludeBlogs = excludeBlogs,
         ).collectAuthorizeFailed()
+    }
+
+    suspend fun getAccountLists(id: String): Result<List<ActivityPubListEntity>> {
+        return api.getAccountLists(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        )
     }
 }

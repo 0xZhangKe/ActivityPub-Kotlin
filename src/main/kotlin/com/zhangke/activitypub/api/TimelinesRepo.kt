@@ -4,6 +4,7 @@ import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -30,6 +31,12 @@ private interface TimelinesApi {
         @Query("since_id") sinceId: String?,
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int,
+    ): Result<List<ActivityPubStatusEntity>>
+
+    @GET("/api/v1/timelines/list/{list_id}")
+    suspend fun getTimelineList(
+        @Header("Authorization") authorization: String,
+        @Path("list_id") listId: String,
     ): Result<List<ActivityPubStatusEntity>>
 }
 
@@ -89,6 +96,13 @@ class TimelinesRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             minId = minId,
             sinceId = sinceId,
             limit = limit
+        )
+    }
+
+    suspend fun getTimelineList(listId: String): Result<List<ActivityPubStatusEntity>> {
+        return api.getTimelineList(
+            authorization = getAuthorizationHeader(),
+            listId = listId,
         )
     }
 }

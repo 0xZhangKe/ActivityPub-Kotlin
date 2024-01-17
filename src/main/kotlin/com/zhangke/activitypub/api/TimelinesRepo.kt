@@ -37,6 +37,10 @@ private interface TimelinesApi {
     suspend fun getTimelineList(
         @Header("Authorization") authorization: String,
         @Path("list_id") listId: String,
+        @Query("max_id") maxId: String?,
+        @Query("since_id") sinceId: String?,
+        @Query("min_id") minId: String?,
+        @Query("limit") limit: Int,
     ): Result<List<ActivityPubStatusEntity>>
 }
 
@@ -95,14 +99,24 @@ class TimelinesRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             maxId = maxId,
             minId = minId,
             sinceId = sinceId,
-            limit = limit
+            limit = limit,
         )
     }
 
-    suspend fun getTimelineList(listId: String): Result<List<ActivityPubStatusEntity>> {
+    suspend fun getTimelineList(
+        listId: String,
+        limit: Int,
+        minId: String? = null,
+        maxId: String? = null,
+        sinceId: String? = null,
+    ): Result<List<ActivityPubStatusEntity>> {
         return api.getTimelineList(
             authorization = getAuthorizationHeader(),
             listId = listId,
+            maxId = maxId,
+            minId = minId,
+            sinceId = sinceId,
+            limit = limit,
         )
     }
 }

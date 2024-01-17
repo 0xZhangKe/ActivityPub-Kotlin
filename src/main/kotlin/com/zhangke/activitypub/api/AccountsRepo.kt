@@ -37,10 +37,9 @@ private interface AccountsApi {
         @Query("exclude_reblogs") excludeBlogs: Boolean?,
     ): Result<List<ActivityPubStatusEntity>>
 
-    @GET("/api/v1/accounts/{id}/lists")
+    @GET("/api/v1/lists")
     suspend fun getAccountLists(
         @Header("Authorization") authorization: String,
-        @Path("id") id: String,
     ): Result<List<ActivityPubListEntity>>
 }
 
@@ -85,10 +84,9 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         ).collectAuthorizeFailed()
     }
 
-    suspend fun getAccountLists(id: String): Result<List<ActivityPubListEntity>> {
+    suspend fun getAccountLists(): Result<List<ActivityPubListEntity>> {
         return api.getAccountLists(
             authorization = getAuthorizationHeader(),
-            id = id,
         )
     }
 }

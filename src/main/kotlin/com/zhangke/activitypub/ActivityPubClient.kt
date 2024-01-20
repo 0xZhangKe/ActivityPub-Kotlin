@@ -2,11 +2,12 @@ package com.zhangke.activitypub
 
 import com.google.gson.Gson
 import com.zhangke.activitypub.api.AccountsRepo
+import com.zhangke.activitypub.api.AppsRepo
 import com.zhangke.activitypub.api.CustomEmojiRepo
 import com.zhangke.activitypub.api.InstanceRepo
 import com.zhangke.activitypub.api.MediaRepo
+import com.zhangke.activitypub.api.NotificationsRepo
 import com.zhangke.activitypub.api.OAuthRepo
-import com.zhangke.activitypub.api.AppsRepo
 import com.zhangke.activitypub.api.StatusRepo
 import com.zhangke.activitypub.api.TimelinesRepo
 import com.zhangke.activitypub.entities.ActivityPubTokenEntity
@@ -48,4 +49,6 @@ class ActivityPubClient(
     val mediaRepo: MediaRepo by lazy { MediaRepo(this) }
 
     val emojiRepo: CustomEmojiRepo by lazy { CustomEmojiRepo(this) }
+
+    val notificationsRepo: NotificationsRepo by lazy { NotificationsRepo(this) }
 }

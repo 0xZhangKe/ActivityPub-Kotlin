@@ -7,10 +7,10 @@ data class ActivityPubNotificationsEntity(
     val type: String,
     @SerializedName("created_at")
     val createdAt: String,
-    val account: String,
+    val account: ActivityPubAccountEntity,
     val status: ActivityPubStatusEntity?,
     @SerializedName("relationship_severance_event")
-    val relationshipSeveranceEvent: ActivityPubRelationshipSeveranceEventEntity
+    val relationshipSeveranceEvent: ActivityPubRelationshipSeveranceEventEntity?,
 ) {
 
     companion object Type {

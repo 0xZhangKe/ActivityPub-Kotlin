@@ -22,7 +22,7 @@ private interface NotificationsApi {
          * Return only notifications received from the specified account.
          */
         @Query("account_id") accountId: String?,
-        @Query("types") types: List<String>?,
+        @Query("types[]") types: List<String>?,
         @Query("exclude_types") excludeTypes: List<String>?,
     ): Result<List<ActivityPubNotificationsEntity>>
 

@@ -3,9 +3,11 @@ package com.zhangke.activitypub.api
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubAccountEntity
 import com.zhangke.activitypub.entities.ActivityPubListEntity
+import com.zhangke.activitypub.entities.ActivityPubRelationshipEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -41,6 +43,18 @@ private interface AccountsApi {
     suspend fun getAccountLists(
         @Header("Authorization") authorization: String,
     ): Result<List<ActivityPubListEntity>>
+
+    @POST("/api/v1/follow_requests/{account_id}/authorize")
+    suspend fun authorizeFollowRequest(
+        @Header("Authorization") authorization: String,
+        @Path("account_id") accountId: String,
+    ): Result<ActivityPubRelationshipEntity>
+
+    @POST("/api/v1/follow_requests/{account_id}/reject")
+    suspend fun rejectFollowRequest(
+        @Header("Authorization") authorization: String,
+        @Path("account_id") accountId: String,
+    ): Result<ActivityPubRelationshipEntity>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -88,5 +102,23 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.getAccountLists(
             authorization = getAuthorizationHeader(),
         )
+    }
+
+    suspend fun authorizeFollowRequest(
+        accountId: String,
+    ): Result<ActivityPubRelationshipEntity> {
+        return api.authorizeFollowRequest(
+            authorization = getAuthorizationHeader(),
+            accountId = accountId,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun rejectFollowRequest(
+        accountId: String,
+    ): Result<ActivityPubRelationshipEntity> {
+        return api.rejectFollowRequest(
+            authorization = getAuthorizationHeader(),
+            accountId = accountId,
+        ).collectAuthorizeFailed()
     }
 }

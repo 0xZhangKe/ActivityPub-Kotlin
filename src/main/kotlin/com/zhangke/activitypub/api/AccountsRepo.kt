@@ -55,6 +55,13 @@ private interface AccountsApi {
         @Header("Authorization") authorization: String,
         @Path("account_id") accountId: String,
     ): Result<ActivityPubRelationshipEntity>
+
+    @GET("/api/v1/accounts/relationships")
+    suspend fun getRelationships(
+        @Header("Authorization") authorization: String,
+        @Query("id[]") ids: List<String>,
+        @Query("with_suspended") withSuspended: Boolean,
+    ): Result<List<ActivityPubRelationshipEntity>>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -119,6 +126,17 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.rejectFollowRequest(
             authorization = getAuthorizationHeader(),
             accountId = accountId,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun getRelationships(
+        idList: List<String>,
+        withSuspended: Boolean = false,
+    ): Result<List<ActivityPubRelationshipEntity>> {
+        return api.getRelationships(
+            authorization = getAuthorizationHeader(),
+            ids = idList,
+            withSuspended = withSuspended,
         ).collectAuthorizeFailed()
     }
 }

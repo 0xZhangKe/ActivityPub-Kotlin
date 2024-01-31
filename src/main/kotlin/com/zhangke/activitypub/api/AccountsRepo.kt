@@ -62,6 +62,30 @@ private interface AccountsApi {
         @Query("id[]") ids: List<String>,
         @Query("with_suspended") withSuspended: Boolean,
     ): Result<List<ActivityPubRelationshipEntity>>
+
+    @POST("/api/v1/accounts/{id}/follow")
+    suspend fun follow(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubRelationshipEntity>
+
+    @POST("/api/v1/accounts/{id}/unfollow")
+    suspend fun unfollow(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubRelationshipEntity>
+
+    @POST("/api/v1/accounts/{id}/block")
+    suspend fun block(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubRelationshipEntity>
+
+    @POST("/api/v1/accounts/{id}/unblock")
+    suspend fun unblock(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubRelationshipEntity>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -137,6 +161,42 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             authorization = getAuthorizationHeader(),
             ids = idList,
             withSuspended = withSuspended,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun follow(
+        id: String,
+    ): Result<ActivityPubRelationshipEntity> {
+        return api.follow(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun unfollow(
+        id: String,
+    ): Result<ActivityPubRelationshipEntity> {
+        return api.unfollow(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun block(
+        id: String,
+    ): Result<ActivityPubRelationshipEntity> {
+        return api.block(
+            authorization = getAuthorizationHeader(),
+            id = id,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun unblock(
+        id: String,
+    ): Result<ActivityPubRelationshipEntity> {
+        return api.unblock(
+            authorization = getAuthorizationHeader(),
+            id = id,
         ).collectAuthorizeFailed()
     }
 }

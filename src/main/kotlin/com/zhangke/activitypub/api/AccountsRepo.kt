@@ -1,11 +1,15 @@
 package com.zhangke.activitypub.api
 
+import com.google.gson.JsonObject
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubAccountEntity
 import com.zhangke.activitypub.entities.ActivityPubListEntity
 import com.zhangke.activitypub.entities.ActivityPubRelationshipEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -86,6 +90,25 @@ private interface AccountsApi {
         @Header("Authorization") authorization: String,
         @Path("id") id: String,
     ): Result<ActivityPubRelationshipEntity>
+
+    @GET("/api/v1/domain_blocks")
+    suspend fun getDomainBlocks(
+        @Header("Authorization") authorization: String,
+    ): Result<List<String>>
+
+    @FormUrlEncoded
+    @POST("/api/v1/domain_blocks")
+    suspend fun blockDomain(
+        @Header("Authorization") authorization: String,
+        @Field("domain") domain: String,
+    ): Result<JsonObject>
+
+    @FormUrlEncoded
+    @HTTP(method = "DELETE", path = "/api/v1/domain_blocks", hasBody = true)
+    suspend fun unblockDomain(
+        @Header("Authorization") authorization: String,
+        @Field("domain") domain: String,
+    ): Result<JsonObject>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -197,6 +220,30 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.unblock(
             authorization = getAuthorizationHeader(),
             id = id,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun getDomainBlocks(): Result<List<String>> {
+        return api.getDomainBlocks(
+            authorization = getAuthorizationHeader(),
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun blockDomain(
+        domain: String,
+    ): Result<JsonObject> {
+        return api.blockDomain(
+            authorization = getAuthorizationHeader(),
+            domain = domain,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun unblockDomain(
+        domain: String,
+    ): Result<JsonObject> {
+        return api.unblockDomain(
+            authorization = getAuthorizationHeader(),
+            domain = domain,
         ).collectAuthorizeFailed()
     }
 }

@@ -33,4 +33,5 @@ data class ActivityPubAccountEntity(
     val statusesCount: Int,
     @SerializedName("last_status_at")
     val lastStatusAt: String,
+    val fields: List<ActivityPubField>,
 )

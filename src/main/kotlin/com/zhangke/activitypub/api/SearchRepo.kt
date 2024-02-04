@@ -12,7 +12,7 @@ import retrofit2.http.Query
 private interface SearchApi {
 
     @GET("/api/v2/search")
-    fun search(
+    suspend fun search(
         @Header("Authorization") authorization: String,
         @Query("q") query: String,
         /**

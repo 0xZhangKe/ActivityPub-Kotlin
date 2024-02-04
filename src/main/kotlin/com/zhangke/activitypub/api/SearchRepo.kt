@@ -104,8 +104,6 @@ class SearchRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         following: Boolean? = null,
         accountId: String? = null,
         excludeUnreviewed: Boolean? = null,
-        maxId: String? = null,
-        minId: String? = null,
         limit: Int? = null,
         offset: Int? = null,
     ): Result<List<ActivityPubTagEntity>> {
@@ -117,8 +115,8 @@ class SearchRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             following = following,
             accountId = accountId,
             excludeUnreviewed = excludeUnreviewed,
-            maxId = maxId,
-            minId = minId,
+            maxId = null,
+            minId = null,
             limit = limit,
             offset = offset,
         ).map { it.hashtags }

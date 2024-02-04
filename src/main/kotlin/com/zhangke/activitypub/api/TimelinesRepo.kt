@@ -42,6 +42,14 @@ private interface TimelinesApi {
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int,
     ): Result<List<ActivityPubStatusEntity>>
+
+    @GET("/api/v1/timelines/tag/{hashtag}")
+    suspend fun getTagTimeline(
+        @Header("Authorization") authorization: String,
+        @Path("hashtag") hashtag: String,
+        @Query("max_id") maxId: String?,
+        @Query("limit") limit: Int,
+    ): Result<List<ActivityPubStatusEntity>>
 }
 
 class TimelinesRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -117,6 +125,19 @@ class TimelinesRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             minId = minId,
             sinceId = sinceId,
             limit = limit,
+        )
+    }
+
+    suspend fun getTagTimeline(
+        hashtag: String,
+        limit: Int,
+        maxId: String? = null,
+    ): Result<List<ActivityPubStatusEntity>> {
+        return api.getTagTimeline(
+            authorization = getAuthorizationHeader(),
+            hashtag = hashtag,
+            limit = limit,
+            maxId = maxId,
         )
     }
 }

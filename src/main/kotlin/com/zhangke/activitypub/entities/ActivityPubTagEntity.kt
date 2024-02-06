@@ -8,7 +8,7 @@ data class ActivityPubTagEntity(
 ) {
 
     data class History(
-        val day: String,
+        val day: Long,
         val uses: Int,
         val accounts: Int,
     )

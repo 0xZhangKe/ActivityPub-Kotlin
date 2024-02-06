@@ -6,6 +6,7 @@ import com.zhangke.activitypub.entities.ActivityPubAccountEntity
 import com.zhangke.activitypub.entities.ActivityPubListEntity
 import com.zhangke.activitypub.entities.ActivityPubRelationshipEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
+import com.zhangke.activitypub.entities.ActivityPubTagEntity
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -109,6 +110,12 @@ private interface AccountsApi {
         @Header("Authorization") authorization: String,
         @Field("domain") domain: String,
     ): Result<JsonObject>
+
+    @GET("/api/v1/tags/{id}")
+    suspend fun getTagInformation(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubTagEntity>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -244,6 +251,15 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.unblockDomain(
             authorization = getAuthorizationHeader(),
             domain = domain,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun getTagInformation(
+        name: String,
+    ): Result<ActivityPubTagEntity> {
+        return api.getTagInformation(
+            authorization = getAuthorizationHeader(),
+            id = name,
         ).collectAuthorizeFailed()
     }
 }

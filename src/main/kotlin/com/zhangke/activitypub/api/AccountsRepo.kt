@@ -116,6 +116,18 @@ private interface AccountsApi {
         @Header("Authorization") authorization: String,
         @Path("id") id: String,
     ): Result<ActivityPubTagEntity>
+
+    @POST("/api/v1/tags/{id}/follow")
+    suspend fun followTag(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubTagEntity>
+
+    @POST("/api/v1/tags/{id}/unfollow")
+    suspend fun unfollowTag(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubTagEntity>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -258,6 +270,24 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         name: String,
     ): Result<ActivityPubTagEntity> {
         return api.getTagInformation(
+            authorization = getAuthorizationHeader(),
+            id = name,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun followTag(
+        name: String,
+    ): Result<ActivityPubTagEntity> {
+        return api.followTag(
+            authorization = getAuthorizationHeader(),
+            id = name,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun unfollowTag(
+        name: String,
+    ): Result<ActivityPubTagEntity> {
+        return api.unfollowTag(
             authorization = getAuthorizationHeader(),
             id = name,
         ).collectAuthorizeFailed()

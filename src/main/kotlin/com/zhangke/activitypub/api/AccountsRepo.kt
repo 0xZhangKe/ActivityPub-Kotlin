@@ -7,12 +7,19 @@ import com.zhangke.activitypub.entities.ActivityPubListEntity
 import com.zhangke.activitypub.entities.ActivityPubRelationshipEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubTagEntity
+import com.zhangke.activitypub.entities.UpdateFieldRequestEntity
+import com.zhangke.activitypub.utils.MediaTypes
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.Header
+import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -128,6 +135,22 @@ private interface AccountsApi {
         @Header("Authorization") authorization: String,
         @Path("id") id: String,
     ): Result<ActivityPubTagEntity>
+
+//    @GET("/api/v1/accounts/verify_credentials")
+//    suspend fun verifyCredentials(
+//        @Header("Authorization") authorization: String,
+//    ): Result<ActivityPubAccountEntity>
+
+    @Multipart
+    @PATCH("/api/v1/accounts/update_credentials")
+    suspend fun updateCredentials(
+        @Header("Authorization") authorization: String,
+        @Part name: MultipartBody.Part?,
+        @Part note: MultipartBody.Part?,
+        @Part avatar: MultipartBody.Part?,
+        @Part header: MultipartBody.Part?,
+        @Part fieldPart: MultipartBody.Part?,
+    ): Result<ActivityPubAccountEntity>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -136,6 +159,10 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
 
     suspend fun verifyCredentials(accessToken: String): Result<ActivityPubAccountEntity> {
         return api.verifyCredentials(buildAuthorizationHeader(accessToken)).collectAuthorizeFailed()
+    }
+
+    suspend fun getCredentialAccount(): Result<ActivityPubAccountEntity> {
+        return api.verifyCredentials(getAuthorizationHeader()).collectAuthorizeFailed()
     }
 
     suspend fun lookup(acct: String): Result<ActivityPubAccountEntity?> {
@@ -290,6 +317,43 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.unfollowTag(
             authorization = getAuthorizationHeader(),
             id = name,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun updateCredentials(
+        name: String? = null,
+        note: String? = null,
+        avatarByteArray: ByteArray? = null,
+        avatarFileName: String? = null,
+        headerByteArray: ByteArray? = null,
+        headerFileName: String? = null,
+        fieldList: List<UpdateFieldRequestEntity>? = null,
+    ): Result<ActivityPubAccountEntity> {
+        val namePart = name?.let { MultipartBody.Part.createFormData("display_name", it) }
+        val notePart = note?.let { MultipartBody.Part.createFormData("note", it) }
+        val avatarPart = avatarByteArray?.toRequestBody(MediaTypes.image)
+            ?.let { MultipartBody.Part.createFormData("avatar", avatarFileName, it) }
+        val headerPart = headerByteArray?.toRequestBody(MediaTypes.image)
+            ?.let { MultipartBody.Part.createFormData("header", headerFileName, it) }
+        val fieldPart = fieldList?.let { list ->
+            val attributes = JsonObject()
+            list.forEachIndexed { index, entity ->
+                attributes.add(index.toString(), JsonObject().apply {
+                    addProperty("name", entity.name)
+                    addProperty("value", entity.value)
+                })
+            }
+//            val requestObject = JsonObject()
+//            requestObject.add("fields_attributes", attributes)
+            MultipartBody.Part.createFormData("fields_attributes", attributes.toString())
+        }
+        return api.updateCredentials(
+            authorization = getAuthorizationHeader(),
+            name = namePart,
+            note = notePart,
+            avatar = avatarPart,
+            header = headerPart,
+            fieldPart = fieldPart,
         ).collectAuthorizeFailed()
     }
 }

@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 class ActivityPubClient(
     val baseUrl: String,
-    httpClient: OkHttpClient,
+    val httpClient: OkHttpClient,
     gson: Gson,
     val tokenProvider: suspend () -> ActivityPubTokenEntity?,
     val onAuthorizeFailed: suspend () -> Unit

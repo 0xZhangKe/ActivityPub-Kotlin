@@ -22,6 +22,7 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 /**
  * Created by ZhangKe on 2022/12/13.
@@ -136,20 +137,21 @@ private interface AccountsApi {
         @Path("id") id: String,
     ): Result<ActivityPubTagEntity>
 
-//    @GET("/api/v1/accounts/verify_credentials")
-//    suspend fun verifyCredentials(
-//        @Header("Authorization") authorization: String,
-//    ): Result<ActivityPubAccountEntity>
+    @PATCH("/api/v1/accounts/update_credentials")
+    suspend fun updateCredentials(
+        @Header("Authorization") authorization: String,
+        @QueryMap queryMap: Map<String, String>,
+    ): Result<ActivityPubAccountEntity>
 
     @Multipart
     @PATCH("/api/v1/accounts/update_credentials")
     suspend fun updateCredentials(
         @Header("Authorization") authorization: String,
+        @QueryMap queryMap: Map<String, String>,
         @Part name: MultipartBody.Part?,
         @Part note: MultipartBody.Part?,
         @Part avatar: MultipartBody.Part?,
         @Part header: MultipartBody.Part?,
-        @Part fieldPart: MultipartBody.Part?,
     ): Result<ActivityPubAccountEntity>
 }
 
@@ -335,25 +337,31 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             ?.let { MultipartBody.Part.createFormData("avatar", avatarFileName, it) }
         val headerPart = headerByteArray?.toRequestBody(MediaTypes.image)
             ?.let { MultipartBody.Part.createFormData("header", headerFileName, it) }
-        val fieldPart = fieldList?.let { list ->
-            val attributes = JsonObject()
-            list.forEachIndexed { index, entity ->
-                attributes.add(index.toString(), JsonObject().apply {
-                    addProperty("name", entity.name)
-                    addProperty("value", entity.value)
-                })
+        val queryMap = mutableMapOf<String, String>()
+        if (fieldList.isNullOrEmpty().not()) {
+            fieldList!!.forEachIndexed { index, entity ->
+                queryMap["fields_attributes[$index][name]"] = entity.name
+                queryMap["fields_attributes[$index][value]"] = entity.value
             }
-//            val requestObject = JsonObject()
-//            requestObject.add("fields_attributes", attributes)
-            MultipartBody.Part.createFormData("fields_attributes", attributes.toString())
         }
-        return api.updateCredentials(
-            authorization = getAuthorizationHeader(),
-            name = namePart,
-            note = notePart,
-            avatar = avatarPart,
-            header = headerPart,
-            fieldPart = fieldPart,
-        ).collectAuthorizeFailed()
+        return if (namePart == null &&
+            notePart == null &&
+            avatarPart == null &&
+            headerPart == null
+        ) {
+            api.updateCredentials(
+                authorization = getAuthorizationHeader(),
+                queryMap = queryMap,
+            )
+        } else {
+            api.updateCredentials(
+                authorization = getAuthorizationHeader(),
+                queryMap = queryMap,
+                name = namePart,
+                note = notePart,
+                avatar = avatarPart,
+                header = headerPart,
+            ).collectAuthorizeFailed()
+        }
     }
 }

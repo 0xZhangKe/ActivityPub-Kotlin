@@ -1,12 +1,15 @@
 package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
+import com.zhangke.activitypub.entities.ActivityPubPollEntity
 import com.zhangke.activitypub.entities.ActivityPubPollRequestEntity
 import com.zhangke.activitypub.entities.ActivityPubPostStatusRequestEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusContextEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusVisibilityEntity
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -67,6 +70,14 @@ private interface StatusService {
         @Header("Authorization") authorization: String,
         @Path("id") id: String,
     ): Result<ActivityPubStatusContextEntity>
+
+    @FormUrlEncoded
+    @POST("/api/v1/statuses/{id}/votes")
+    suspend fun votes(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+        @Field("choices") choices: String,
+    ): Result<ActivityPubPollEntity>
 }
 
 class StatusRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -154,6 +165,17 @@ class StatusRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.getContext(
             authorization = getAuthorizationHeader(),
             id = id,
+        )
+    }
+
+    suspend fun votes(
+        id: String,
+        choices: List<Int>,
+    ): Result<ActivityPubPollEntity> {
+        return api.votes(
+            authorization = getAuthorizationHeader(),
+            id = id,
+            choices = choices.toString(),
         )
     }
 }

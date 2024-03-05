@@ -35,7 +35,17 @@ data class ActivityPubStatusEntity(
     val muted: Boolean?,
     val bookmarked: Boolean?,
     val content: String,
+    val emojis: List<ActivityPubCustomEmojiEntity>,
     val reblog: ActivityPubStatusEntity?,
     val tags: List<ActivityPubStatusTagEntity>,
     val poll: ActivityPubPollEntity?,
-)
+    val mentions: List<Mention>,
+) {
+
+    data class Mention(
+        val id: String,
+        val username: String,
+        val url: String,
+        val acct: String,
+    )
+}

@@ -34,5 +34,6 @@ data class ActivityPubAccountEntity(
     @SerializedName("last_status_at")
     val lastStatusAt: String,
     val fields: List<ActivityPubField>,
-    val source: ActivityPubCredentialAccountEntity,
+    val emojis: List<ActivityPubCustomEmojiEntity>,
+    val source: ActivityPubCredentialAccountEntity?,
 )

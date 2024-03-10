@@ -21,9 +21,9 @@ data class ActivityPubStatusEntity(
     @SerializedName("spoiler_text")
     val spoilerText: String,
     val visibility: String,
-    val language: String,
+    val language: String?,
     val uri: String,
-    val url: String,
+    val url: String?,
     @SerializedName("replies_count")
     val repliesCount: Int,
     @SerializedName("reblogs_count")

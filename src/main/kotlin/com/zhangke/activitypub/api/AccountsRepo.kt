@@ -6,6 +6,7 @@ import com.zhangke.activitypub.entities.ActivityPubAccountEntity
 import com.zhangke.activitypub.entities.ActivityPubListEntity
 import com.zhangke.activitypub.entities.ActivityPubRelationshipEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
+import com.zhangke.activitypub.entities.ActivityPubSuggestionEntry
 import com.zhangke.activitypub.entities.ActivityPubTagEntity
 import com.zhangke.activitypub.entities.UpdateFieldRequestEntity
 import com.zhangke.activitypub.utils.MediaTypes
@@ -153,6 +154,9 @@ private interface AccountsApi {
         @Part avatar: MultipartBody.Part?,
         @Part header: MultipartBody.Part?,
     ): Result<ActivityPubAccountEntity>
+
+    @GET("/api/v2/suggestions")
+    suspend fun getSuggestions(limit: Int): List<ActivityPubSuggestionEntry>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -363,5 +367,12 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
                 header = headerPart,
             ).collectAuthorizeFailed()
         }
+    }
+
+    /**
+     * Maximum number of results to return. Defaults to 40 accounts. Max 80 accounts.
+     */
+    suspend fun getSuggestions(limit: Int = 80): List<ActivityPubSuggestionEntry> {
+        return api.getSuggestions(limit)
     }
 }

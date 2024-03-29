@@ -156,7 +156,7 @@ private interface AccountsApi {
     ): Result<ActivityPubAccountEntity>
 
     @GET("/api/v2/suggestions")
-    suspend fun getSuggestions(limit: Int): List<ActivityPubSuggestionEntry>
+    suspend fun getSuggestions(limit: Int): Result<List<ActivityPubSuggestionEntry>>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -372,7 +372,7 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
     /**
      * Maximum number of results to return. Defaults to 40 accounts. Max 80 accounts.
      */
-    suspend fun getSuggestions(limit: Int = 80): List<ActivityPubSuggestionEntry> {
+    suspend fun getSuggestions(limit: Int = 80): Result<List<ActivityPubSuggestionEntry>> {
         return api.getSuggestions(limit)
     }
 }

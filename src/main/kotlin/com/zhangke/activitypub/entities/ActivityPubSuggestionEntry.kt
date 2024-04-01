@@ -2,7 +2,7 @@ package com.zhangke.activitypub.entities
 
 data class ActivityPubSuggestionEntry (
     val source: String,
-    val accountEntity: ActivityPubAccountEntity,
+    val account: ActivityPubAccountEntity,
 ){
 
     companion object{

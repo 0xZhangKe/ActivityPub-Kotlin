@@ -160,6 +160,26 @@ private interface AccountsApi {
         @Header("Authorization") authorization: String,
         @Query("limit") limit: Int,
     ): Result<List<ActivityPubSuggestionEntry>>
+
+    @GET("/api/v1/accounts/{id}/followers")
+    suspend fun getFollowers(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+        @Query("min_id") minId: String?,
+        @Query("since_id") sinceId: String?,
+        @Query("max_id") maxId: String?,
+        @Query("limit") limit: Int?,
+    ): Result<List<ActivityPubAccountEntity>>
+
+    @GET("/api/v1/accounts/{id}/following")
+    suspend fun getFollowing(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+        @Query("min_id") minId: String?,
+        @Query("since_id") sinceId: String?,
+        @Query("max_id") maxId: String?,
+        @Query("limit") limit: Int?,
+    ): Result<List<ActivityPubAccountEntity>>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -379,6 +399,40 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         return api.getSuggestions(
             authorization = getAuthorizationHeader(),
             limit = limit,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun getFollowers(
+        id: String,
+        limit: Int,
+        minId: String? = null,
+        sinceId: String? = null,
+        maxId: String? = null,
+    ): Result<List<ActivityPubAccountEntity>> {
+        return api.getFollowers(
+            authorization = getAuthorizationHeader(),
+            id = id,
+            limit = limit,
+            minId = minId,
+            sinceId = sinceId,
+            maxId = maxId,
+        ).collectAuthorizeFailed()
+    }
+
+    suspend fun getFollowing(
+        id: String,
+        limit: Int,
+        minId: String? = null,
+        sinceId: String? = null,
+        maxId: String? = null,
+    ): Result<List<ActivityPubAccountEntity>> {
+        return api.getFollowing(
+            authorization = getAuthorizationHeader(),
+            id = id,
+            limit = limit,
+            minId = minId,
+            sinceId = sinceId,
+            maxId = maxId,
         ).collectAuthorizeFailed()
     }
 }

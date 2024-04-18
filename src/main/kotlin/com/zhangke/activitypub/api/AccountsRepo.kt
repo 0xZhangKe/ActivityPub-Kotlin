@@ -10,8 +10,10 @@ import com.zhangke.activitypub.entities.ActivityPubSuggestionEntry
 import com.zhangke.activitypub.entities.ActivityPubTagEntity
 import com.zhangke.activitypub.entities.UpdateFieldRequestEntity
 import com.zhangke.activitypub.utils.MediaTypes
+import com.zhangke.activitypub.utils.performPagingRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -162,24 +164,24 @@ private interface AccountsApi {
     ): Result<List<ActivityPubSuggestionEntry>>
 
     @GET("/api/v1/accounts/{id}/followers")
-    suspend fun getFollowers(
+    fun getFollowers(
         @Header("Authorization") authorization: String,
         @Path("id") id: String,
         @Query("min_id") minId: String?,
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("limit") limit: Int?,
-    ): Result<List<ActivityPubAccountEntity>>
+    ): Call<List<ActivityPubAccountEntity>>
 
     @GET("/api/v1/accounts/{id}/following")
-    suspend fun getFollowing(
+    fun getFollowing(
         @Header("Authorization") authorization: String,
         @Path("id") id: String,
         @Query("min_id") minId: String?,
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("limit") limit: Int?,
-    ): Result<List<ActivityPubAccountEntity>>
+    ): Call<List<ActivityPubAccountEntity>>
 }
 
 class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
@@ -408,14 +410,19 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         minId: String? = null,
         sinceId: String? = null,
         maxId: String? = null,
-    ): Result<List<ActivityPubAccountEntity>> {
-        return api.getFollowers(
-            authorization = getAuthorizationHeader(),
-            id = id,
-            limit = limit,
-            minId = minId,
-            sinceId = sinceId,
-            maxId = maxId,
+    ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
+        return performPagingRequest(
+            gson = client.gson,
+            requester = {
+                api.getFollowers(
+                    authorization = getAuthorizationHeader(),
+                    id = id,
+                    limit = limit,
+                    minId = minId,
+                    sinceId = sinceId,
+                    maxId = maxId,
+                )
+            }
         ).collectAuthorizeFailed()
     }
 
@@ -425,14 +432,19 @@ class AccountsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         minId: String? = null,
         sinceId: String? = null,
         maxId: String? = null,
-    ): Result<List<ActivityPubAccountEntity>> {
-        return api.getFollowing(
-            authorization = getAuthorizationHeader(),
-            id = id,
-            limit = limit,
-            minId = minId,
-            sinceId = sinceId,
-            maxId = maxId,
+    ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
+        return performPagingRequest(
+            gson = client.gson,
+            requester = {
+                api.getFollowing(
+                    authorization = getAuthorizationHeader(),
+                    id = id,
+                    limit = limit,
+                    minId = minId,
+                    sinceId = sinceId,
+                    maxId = maxId,
+                )
+            }
         ).collectAuthorizeFailed()
     }
 }

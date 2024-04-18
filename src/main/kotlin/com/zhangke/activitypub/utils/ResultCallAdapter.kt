@@ -1,11 +1,14 @@
 package com.zhangke.activitypub.utils
 
 import com.google.gson.Gson
-import com.zhangke.activitypub.entities.ActivityPubErrorEntry
-import com.zhangke.activitypub.exception.ActivityPubHttpException
+import com.zhangke.activitypub.exception.handleErrorResponseToException
 import okhttp3.Request
 import okio.Timeout
-import retrofit2.*
+import retrofit2.Call
+import retrofit2.CallAdapter
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -61,34 +64,16 @@ private class ResultCall<S>(private val delegate: Call<S>, private val gson: Gso
                     val result = Result.success(response.body()!!)
                     callback.onResponse(this@ResultCall, Response.success(response.code(), result))
                 } else {
-                    val code = response.code()
-                    val errorMessage = response.errorBody()?.string()
-                    val errorEntry: ActivityPubErrorEntry? =
-                        errorMessage?.takeIf { it.isNotEmpty() }?.let {
-                            try {
-                                gson.fromJson(it, ActivityPubErrorEntry::class.java)
-                            } catch (e: Throwable) {
-                                null
-                            }
-                        }
-                    val exception: Exception = when (code) {
-                        in unauthorizedCode -> ActivityPubHttpException.UnauthorizedException(
-                            errorEntry,
-                            errorMessage
-                        )
-                        in 400..499 -> ActivityPubHttpException.RequestIllegalException(
-                            errorEntry,
-                            errorMessage
-                        )
-                        in 500..599 -> ActivityPubHttpException.ServerInternalException(
-                            errorEntry,
-                            errorMessage
-                        )
-                        else -> RuntimeException(errorMessage, null)
-                    }
                     callback.onResponse(
                         this@ResultCall,
-                        Response.success(Result.failure(exception))
+                        Response.success(
+                            Result.failure(
+                                handleErrorResponseToException(
+                                    gson,
+                                    response
+                                )
+                            )
+                        )
                     )
                 }
             }

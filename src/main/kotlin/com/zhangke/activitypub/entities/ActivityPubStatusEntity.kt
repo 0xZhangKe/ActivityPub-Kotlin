@@ -37,7 +37,7 @@ data class ActivityPubStatusEntity(
     val content: String,
     val emojis: List<ActivityPubCustomEmojiEntity>,
     val reblog: ActivityPubStatusEntity?,
-    val tags: List<ActivityPubStatusTagEntity>,
+    val tags: List<Tag>,
     val poll: ActivityPubPollEntity?,
     val mentions: List<Mention>,
 ) {
@@ -47,5 +47,10 @@ data class ActivityPubStatusEntity(
         val username: String,
         val url: String,
         val acct: String,
+    )
+
+    data class Tag(
+        val name: String,
+        val url: String,
     )
 }

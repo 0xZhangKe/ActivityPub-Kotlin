@@ -48,11 +48,6 @@ private class ResultCallAdapter(private val gson: Gson, private val type: Type) 
     }
 }
 
-private val unauthorizedCode = listOf(
-    401,
-    422
-)
-
 private class ResultCall<S>(private val delegate: Call<S>, private val gson: Gson) :
     Call<Result<S>> {
 

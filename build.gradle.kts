@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
-    id("utopia.jvm.library")
+    id("fread.jvm.library")
 }
 
 group = "com.zhangke.activitypub"

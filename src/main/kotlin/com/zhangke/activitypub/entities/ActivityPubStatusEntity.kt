@@ -32,6 +32,7 @@ data class ActivityPubStatusEntity(
     val favouritesCount: Int,
     val favourited: Boolean?,
     val reblogged: Boolean?,
+    val pinned: Boolean?,
     val muted: Boolean?,
     val bookmarked: Boolean?,
     val content: String,

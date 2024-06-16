@@ -10,6 +10,7 @@ import com.zhangke.activitypub.entities.ActivityPubStatusContextEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusVisibilityEntity
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -59,7 +60,7 @@ private interface StatusService {
         @Path("id") id: String,
     ): Result<ActivityPubStatusEntity>
 
-    @POST("/api/v1/statuses/{id}")
+    @DELETE("/api/v1/statuses/{id}")
     suspend fun delete(
         @Header("Authorization") authorization: String,
         @Path("id") id: String,

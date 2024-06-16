@@ -35,7 +35,7 @@ data class ActivityPubStatusEntity(
     val pinned: Boolean?,
     val muted: Boolean?,
     val bookmarked: Boolean?,
-    val content: String,
+    val content: String?,
     val emojis: List<ActivityPubCustomEmojiEntity>,
     val reblog: ActivityPubStatusEntity?,
     val tags: List<Tag>,

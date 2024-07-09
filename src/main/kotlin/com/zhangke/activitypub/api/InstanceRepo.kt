@@ -28,6 +28,7 @@ private interface InstanceApi {
 
     @GET("/api/v1/trends/statuses")
     suspend fun getTrendsStatuses(
+        @Header("Authorization") authorization: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
     ): Result<List<ActivityPubStatusEntity>>
@@ -61,6 +62,6 @@ class InstanceRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
      * 3.5.0 - added
      */
     suspend fun getTrendsStatuses(limit: Int, offset: Int): Result<List<ActivityPubStatusEntity>> {
-        return api.getTrendsStatuses(limit, offset)
+        return api.getTrendsStatuses(getAuthorizationHeader(), limit, offset)
     }
 }

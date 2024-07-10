@@ -18,6 +18,12 @@ import retrofit2.http.Path
 
 private interface StatusService {
 
+    @GET("/api/v1/statuses/{id}")
+    suspend fun getStatuses(
+        @Header("Authorization") authorization: String,
+        @Path("id") id: String,
+    ): Result<ActivityPubStatusEntity?>
+
     @POST("/api/v1/statuses")
     suspend fun postStatus(
         @Header("Authorization") authorization: String,
@@ -83,6 +89,13 @@ private interface StatusService {
 class StatusRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
 
     private val api = createApi(StatusService::class.java)
+
+    suspend fun getStatuses(statusId: String): Result<ActivityPubStatusEntity?> {
+        return api.getStatuses(
+            authorization = getAuthorizationHeader(),
+            id = statusId,
+        )
+    }
 
     suspend fun postStatus(
         status: String?,

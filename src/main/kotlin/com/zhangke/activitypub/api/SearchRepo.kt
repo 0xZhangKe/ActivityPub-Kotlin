@@ -6,14 +6,12 @@ import com.zhangke.activitypub.entities.ActivityPubSearchEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubTagEntity
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Query
 
 private interface SearchApi {
 
     @GET("/api/v2/search")
     suspend fun search(
-        @Header("Authorization") authorization: String,
         @Query("q") query: String,
         /**
          * Specify whether to search for only accounts, hashtags, statuses
@@ -42,9 +40,9 @@ private interface SearchApi {
     ): Result<ActivityPubSearchEntity>
 }
 
-class SearchRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
+class SearchRepo(client: ActivityPubClient) {
 
-    private val api = createApi(SearchApi::class.java)
+    private val api = client.retrofit.create(SearchApi::class.java)
 
     suspend fun query(
         query: String,
@@ -58,7 +56,6 @@ class SearchRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         offset: Int? = null,
     ): Result<ActivityPubSearchEntity> {
         return api.search(
-            authorization = getAuthorizationHeader(),
             type = null,
             query = query,
             resolve = resolve,
@@ -84,7 +81,6 @@ class SearchRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         offset: Int? = null,
     ): Result<List<ActivityPubAccountEntity>> {
         return api.search(
-            authorization = getAuthorizationHeader(),
             type = "accounts",
             query = query,
             resolve = resolve,
@@ -108,7 +104,6 @@ class SearchRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         offset: Int? = null,
     ): Result<List<ActivityPubTagEntity>> {
         return api.search(
-            authorization = getAuthorizationHeader(),
             type = "hashtags",
             query = query,
             resolve = resolve,
@@ -134,7 +129,6 @@ class SearchRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         offset: Int? = null,
     ): Result<List<ActivityPubStatusEntity>> {
         return api.search(
-            authorization = getAuthorizationHeader(),
             type = "statuses",
             query = query,
             resolve = resolve,

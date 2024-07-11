@@ -12,6 +12,7 @@ import com.zhangke.activitypub.api.SearchRepo
 import com.zhangke.activitypub.api.StatusRepo
 import com.zhangke.activitypub.api.TimelinesRepo
 import com.zhangke.activitypub.entities.ActivityPubTokenEntity
+import com.zhangke.activitypub.utils.ActivityPubHeaderInterceptor
 import com.zhangke.activitypub.utils.ResultCallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -21,19 +22,25 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Created by ZhangKe on 2022/12/3.
  */
 class ActivityPubClient(
-    val baseUrl: String,
-    val httpClient: OkHttpClient,
+    baseUrl: String,
+    private val httpClient: OkHttpClient,
     val gson: Gson,
-    val tokenProvider: suspend () -> ActivityPubTokenEntity?,
-    val onAuthorizeFailed: suspend () -> Unit
+    private val tokenProvider: suspend () -> ActivityPubTokenEntity?,
+    onAuthorizeFailed: () -> Unit,
 ) {
 
     internal val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(ResultCallAdapterFactory(gson))
-        .client(httpClient)
+        .addCallAdapterFactory(ResultCallAdapterFactory(gson, onAuthorizeFailed))
+        .client(createHttpClient())
         .build()
+
+    private fun createHttpClient(): OkHttpClient {
+        return httpClient.newBuilder()
+            .addInterceptor(ActivityPubHeaderInterceptor(tokenProvider))
+            .build()
+    }
 
     val oauthRepo: OAuthRepo by lazy { OAuthRepo(this) }
 

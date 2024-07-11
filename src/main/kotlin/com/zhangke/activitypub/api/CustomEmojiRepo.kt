@@ -10,9 +10,9 @@ private interface CustomEmojiService {
     suspend fun getCustomEmojis(): Result<List<ActivityPubCustomEmojiEntity>>
 }
 
-class CustomEmojiRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
+class CustomEmojiRepo(client: ActivityPubClient) {
 
-    private val api: CustomEmojiService = createApi(CustomEmojiService::class.java)
+    private val api: CustomEmojiService = client.retrofit.create(CustomEmojiService::class.java)
 
     suspend fun getCustomEmojis(): Result<List<ActivityPubCustomEmojiEntity>> {
         return api.getCustomEmojis()

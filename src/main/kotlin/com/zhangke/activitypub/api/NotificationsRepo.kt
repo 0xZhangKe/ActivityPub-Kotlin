@@ -3,14 +3,12 @@ package com.zhangke.activitypub.api
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubNotificationsEntity
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Query
 
 private interface NotificationsApi {
 
     @GET("/api/v1/notifications")
     suspend fun getNotifications(
-        @Header("Authorization") authorization: String,
         @Query("max_id") maxId: String?,
         @Query("since_id") sinceId: String?,
         @Query("min_id") minId: String?,
@@ -28,9 +26,9 @@ private interface NotificationsApi {
 
 }
 
-class NotificationsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
+class NotificationsRepo(client: ActivityPubClient) {
 
-    private val api = createApi(NotificationsApi::class.java)
+    private val api = client.retrofit.create(NotificationsApi::class.java)
 
     suspend fun getNotifications(
         maxId: String? = null,
@@ -42,7 +40,6 @@ class NotificationsRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client)
         excludeTypes: List<String>? = null,
     ): Result<List<ActivityPubNotificationsEntity>> {
         return api.getNotifications(
-            authorization = getAuthorizationHeader(),
             maxId = maxId,
             sinceId = sinceId,
             minId = minId,

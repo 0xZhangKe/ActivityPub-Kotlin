@@ -6,7 +6,6 @@ import com.zhangke.activitypub.entities.ActivityPubUpdateMediaRequestEntity
 import com.zhangke.activitypub.utils.ProgressRequestBody
 import okhttp3.MultipartBody
 import retrofit2.http.Body
-import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -18,21 +17,19 @@ private interface MediaService {
     @Multipart
     @POST("/api/v2/media")
     suspend fun postMedia(
-        @Header("Authorization") authorization: String,
         @Part file: MultipartBody.Part,
     ): Result<ActivityPubMediaAttachmentEntity>
 
     @PUT("/api/v1/media/{id}")
     suspend fun updateMedia(
-        @Header("Authorization") authorization: String,
         @Path("id") id: String,
         @Body requestBody: ActivityPubUpdateMediaRequestEntity,
     ): Result<ActivityPubMediaAttachmentEntity>
 }
 
-class MediaRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
+class MediaRepo(client: ActivityPubClient) {
 
-    private val api = createApi(MediaService::class.java)
+    private val api = client.retrofit.create(MediaService::class.java)
 
     suspend fun postFile(
         fileName: String,
@@ -48,10 +45,7 @@ class MediaRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             progressCallback = onProgress,
         )
         val filePart = MultipartBody.Part.createFormData("file", fileName, fileBody)
-        return api.postMedia(
-            authorization = getAuthorizationHeader(),
-            file = filePart,
-        ).collectAuthorizeFailed()
+        return api.postMedia(file = filePart)
     }
 
     suspend fun updateMedia(
@@ -61,7 +55,6 @@ class MediaRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
         focus: String? = null,
     ): Result<ActivityPubMediaAttachmentEntity> {
         return api.updateMedia(
-            authorization = getAuthorizationHeader(),
             id = id,
             requestBody = ActivityPubUpdateMediaRequestEntity(
                 thumbnail = thumbnail,

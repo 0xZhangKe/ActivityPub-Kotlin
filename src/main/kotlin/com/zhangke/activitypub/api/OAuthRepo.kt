@@ -25,9 +25,9 @@ private interface OAuthApi {
 
 }
 
-class OAuthRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
+class OAuthRepo(client: ActivityPubClient) {
 
-    private val api = createApi(OAuthApi::class.java)
+    private val api = client.retrofit.create(OAuthApi::class.java)
 
     fun buildOAuthUrl(
         baseUrl: String,

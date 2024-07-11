@@ -6,7 +6,6 @@ import com.zhangke.activitypub.entities.ActivityPubInstanceEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubTagEntity
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Query
 
 private interface InstanceApi {
@@ -15,28 +14,24 @@ private interface InstanceApi {
     suspend fun instanceInformation(): Result<ActivityPubInstanceEntity>
 
     @GET("/api/v1/announcements")
-    suspend fun getAnnouncement(
-        @Header("Authorization") authorization: String,
-    ): Result<List<ActivityPubAnnouncementEntity>>
+    suspend fun getAnnouncement(): Result<List<ActivityPubAnnouncementEntity>>
 
     @GET("/api/v1/trends/tags")
     suspend fun getTrendsTags(
-        @Header("Authorization") authorization: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
     ): Result<List<ActivityPubTagEntity>>
 
     @GET("/api/v1/trends/statuses")
     suspend fun getTrendsStatuses(
-        @Header("Authorization") authorization: String,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
     ): Result<List<ActivityPubStatusEntity>>
 }
 
-class InstanceRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
+class InstanceRepo(client: ActivityPubClient) {
 
-    private val api = createApi(InstanceApi::class.java)
+    private val api = client.retrofit.create(InstanceApi::class.java)
 
     suspend fun getInstanceInformation(): Result<ActivityPubInstanceEntity> {
         return api.instanceInformation()
@@ -46,7 +41,7 @@ class InstanceRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
      * need login
      */
     suspend fun getAnnouncement(): Result<List<ActivityPubAnnouncementEntity>> {
-        return api.getAnnouncement(getAuthorizationHeader())
+        return api.getAnnouncement()
     }
 
     /**
@@ -55,13 +50,13 @@ class InstanceRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
      * The former is a deprecated alias that may be removed in the future.
      */
     suspend fun getTrendsTags(limit: Int, offset: Int): Result<List<ActivityPubTagEntity>> {
-        return api.getTrendsTags(getAuthorizationHeader(), limit, offset)
+        return api.getTrendsTags(limit, offset)
     }
 
     /**
      * 3.5.0 - added
      */
     suspend fun getTrendsStatuses(limit: Int, offset: Int): Result<List<ActivityPubStatusEntity>> {
-        return api.getTrendsStatuses(getAuthorizationHeader(), limit, offset)
+        return api.getTrendsStatuses(limit, offset)
     }
 }

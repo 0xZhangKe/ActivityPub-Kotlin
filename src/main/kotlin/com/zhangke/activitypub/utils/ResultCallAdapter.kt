@@ -1,6 +1,7 @@
 package com.zhangke.activitypub.utils
 
 import com.google.gson.Gson
+import com.zhangke.activitypub.exception.ActivityPubHttpException
 import com.zhangke.activitypub.exception.handleErrorResponseToException
 import okhttp3.Request
 import okio.Timeout
@@ -15,7 +16,10 @@ import java.lang.reflect.Type
 /**
  * Created by ZhangKe on 2022/12/3.
  */
-internal class ResultCallAdapterFactory(private val gson: Gson) : CallAdapter.Factory() {
+internal class ResultCallAdapterFactory(
+    private val gson: Gson,
+    private val onAuthorizeFailed: () -> Unit,
+) : CallAdapter.Factory() {
 
     override fun get(
         returnType: Type,
@@ -33,23 +37,29 @@ internal class ResultCallAdapterFactory(private val gson: Gson) : CallAdapter.Fa
         if (!Result::class.java.isAssignableFrom(responseRawType)) {
             return null
         }
-        return ResultCallAdapter(gson, getParameterUpperBound(0, responseType))
+        return ResultCallAdapter(gson, getParameterUpperBound(0, responseType), onAuthorizeFailed)
     }
 }
 
-private class ResultCallAdapter(private val gson: Gson, private val type: Type) :
-    CallAdapter<Any, Call<Result<*>>> {
+private class ResultCallAdapter(
+    private val gson: Gson,
+    private val type: Type,
+    private val onAuthorizeFailed: () -> Unit,
+) : CallAdapter<Any, Call<Result<*>>> {
 
     override fun responseType(): Type = type
 
     @Suppress("UNCHECKED_CAST")
     override fun adapt(call: Call<Any>): Call<Result<*>> {
-        return ResultCall(call, gson) as Call<Result<*>>
+        return ResultCall(call, gson, onAuthorizeFailed) as Call<Result<*>>
     }
 }
 
-private class ResultCall<S>(private val delegate: Call<S>, private val gson: Gson) :
-    Call<Result<S>> {
+private class ResultCall<S>(
+    private val delegate: Call<S>,
+    private val gson: Gson,
+    private val onAuthorizeFailed: () -> Unit,
+) : Call<Result<S>> {
 
     override fun enqueue(callback: Callback<Result<S>>) {
         return delegate.enqueue(object : Callback<S> {
@@ -59,16 +69,13 @@ private class ResultCall<S>(private val delegate: Call<S>, private val gson: Gso
                     val result = Result.success(response.body()!!)
                     callback.onResponse(this@ResultCall, Response.success(response.code(), result))
                 } else {
+                    val errorResponseException = handleErrorResponseToException(gson, response)
+                    if (errorResponseException is ActivityPubHttpException.UnauthorizedException) {
+                        onAuthorizeFailed()
+                    }
                     callback.onResponse(
                         this@ResultCall,
-                        Response.success(
-                            Result.failure(
-                                handleErrorResponseToException(
-                                    gson,
-                                    response
-                                )
-                            )
-                        )
+                        Response.success(Result.failure(errorResponseException))
                     )
                 }
             }
@@ -82,7 +89,7 @@ private class ResultCall<S>(private val delegate: Call<S>, private val gson: Gso
     override fun isExecuted(): Boolean = delegate.isExecuted
 
     override fun clone(): Call<Result<S>> {
-        return ResultCall(delegate.clone(), gson)
+        return ResultCall(delegate.clone(), gson, onAuthorizeFailed)
     }
 
     override fun cancel() {

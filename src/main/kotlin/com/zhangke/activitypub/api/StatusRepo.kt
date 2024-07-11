@@ -12,89 +12,58 @@ import com.zhangke.activitypub.entities.ActivityPubStatusVisibilityEntity
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Path
 
 private interface StatusService {
 
     @GET("/api/v1/statuses/{id}")
-    suspend fun getStatuses(
-        @Header("Authorization") authorization: String,
-        @Path("id") id: String,
-    ): Result<ActivityPubStatusEntity?>
+    suspend fun getStatuses(@Path("id") id: String): Result<ActivityPubStatusEntity?>
 
     @POST("/api/v1/statuses")
     suspend fun postStatus(
-        @Header("Authorization") authorization: String,
         @Body requestBody: ActivityPubPostStatusRequestEntity,
     ): Result<ActivityPubStatusEntity>
 
     @POST("/api/v1/statuses/{id}/favourite")
     suspend fun favourite(
-        @Header("Authorization") authorization: String,
         @Path("id") id: String,
     ): Result<ActivityPubStatusEntity>
 
     @POST("/api/v1/statuses/{id}/unfavourite")
-    suspend fun unfavourite(
-        @Header("Authorization") authorization: String,
-        @Path("id") id: String,
-    ): Result<ActivityPubStatusEntity>
+    suspend fun unfavourite(@Path("id") id: String): Result<ActivityPubStatusEntity>
 
     @POST("/api/v1/statuses/{id}/reblog")
-    suspend fun reblog(
-        @Header("Authorization") authorization: String,
-        @Path("id") id: String,
-    ): Result<ActivityPubStatusEntity>
+    suspend fun reblog(@Path("id") id: String): Result<ActivityPubStatusEntity>
 
     @POST("/api/v1/statuses/{id}/unreblog")
-    suspend fun unreblog(
-        @Header("Authorization") authorization: String,
-        @Path("id") id: String,
-    ): Result<ActivityPubStatusEntity>
+    suspend fun unreblog(@Path("id") id: String): Result<ActivityPubStatusEntity>
 
     @POST("/api/v1/statuses/{id}/bookmark")
-    suspend fun bookmark(
-        @Header("Authorization") authorization: String,
-        @Path("id") id: String,
-    ): Result<ActivityPubStatusEntity>
+    suspend fun bookmark(@Path("id") id: String): Result<ActivityPubStatusEntity>
 
     @POST("/api/v1/statuses/{id}/unbookmark")
-    suspend fun unbookmark(
-        @Header("Authorization") authorization: String,
-        @Path("id") id: String,
-    ): Result<ActivityPubStatusEntity>
+    suspend fun unbookmark(@Path("id") id: String): Result<ActivityPubStatusEntity>
 
     @DELETE("/api/v1/statuses/{id}")
-    suspend fun delete(
-        @Header("Authorization") authorization: String,
-        @Path("id") id: String,
-    ): Result<ActivityPubStatusEntity>
+    suspend fun delete(@Path("id") id: String): Result<ActivityPubStatusEntity>
 
     @GET("/api/v1/statuses/{id}/context")
-    suspend fun getContext(
-        @Header("Authorization") authorization: String,
-        @Path("id") id: String,
-    ): Result<ActivityPubStatusContextEntity>
+    suspend fun getContext(@Path("id") id: String): Result<ActivityPubStatusContextEntity>
 
     @POST("/api/v1/polls/{id}/votes")
     suspend fun votes(
-        @Header("Authorization") authorization: String,
         @Path("id") id: String,
-        @Body choices: JsonObject,
+        @Body choices: JsonObject
     ): Result<ActivityPubPollEntity>
 }
 
-class StatusRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
+class StatusRepo(client: ActivityPubClient) {
 
-    private val api = createApi(StatusService::class.java)
+    private val api = client.retrofit.create(StatusService::class.java)
 
     suspend fun getStatuses(statusId: String): Result<ActivityPubStatusEntity?> {
-        return api.getStatuses(
-            authorization = getAuthorizationHeader(),
-            id = statusId,
-        )
+        return api.getStatuses(id = statusId)
     }
 
     suspend fun postStatus(
@@ -119,66 +88,39 @@ class StatusRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             language = language,
             scheduledAt = scheduledAt,
         )
-        return api.postStatus(
-            authorization = getAuthorizationHeader(),
-            requestBody = requestBody,
-        )
+        return api.postStatus(requestBody = requestBody)
     }
 
     suspend fun favourite(id: String): Result<ActivityPubStatusEntity> {
-        return api.favourite(
-            authorization = getAuthorizationHeader(),
-            id = id,
-        )
+        return api.favourite(id = id)
     }
 
     suspend fun unfavourite(id: String): Result<ActivityPubStatusEntity> {
-        return api.unfavourite(
-            authorization = getAuthorizationHeader(),
-            id = id,
-        )
+        return api.unfavourite(id = id)
     }
 
     suspend fun reblog(id: String): Result<ActivityPubStatusEntity> {
-        return api.reblog(
-            authorization = getAuthorizationHeader(),
-            id = id,
-        )
+        return api.reblog(id = id)
     }
 
     suspend fun unreblog(id: String): Result<ActivityPubStatusEntity> {
-        return api.unreblog(
-            authorization = getAuthorizationHeader(),
-            id = id,
-        )
+        return api.unreblog(id = id)
     }
 
     suspend fun bookmark(id: String): Result<ActivityPubStatusEntity> {
-        return api.bookmark(
-            authorization = getAuthorizationHeader(),
-            id = id,
-        )
+        return api.bookmark(id = id)
     }
 
     suspend fun unbookmark(id: String): Result<ActivityPubStatusEntity> {
-        return api.unbookmark(
-            authorization = getAuthorizationHeader(),
-            id = id,
-        )
+        return api.unbookmark(id = id)
     }
 
     suspend fun delete(id: String): Result<ActivityPubStatusEntity> {
-        return api.delete(
-            authorization = getAuthorizationHeader(),
-            id = id,
-        )
+        return api.delete(id = id)
     }
 
     suspend fun getStatusContext(id: String): Result<ActivityPubStatusContextEntity> {
-        return api.getContext(
-            authorization = getAuthorizationHeader(),
-            id = id,
-        )
+        return api.getContext(id = id)
     }
 
     suspend fun votes(
@@ -193,7 +135,6 @@ class StatusRepo(client: ActivityPubClient) : ActivityPubBaseRepo(client) {
             })
         }
         return api.votes(
-            authorization = getAuthorizationHeader(),
             id = id,
             choices = params,
         )

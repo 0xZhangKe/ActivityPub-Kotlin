@@ -161,6 +161,13 @@ private interface AccountsApi {
         @Query("max_id") maxId: String?,
         @Query("limit") limit: Int?,
     ): Call<List<ActivityPubAccountEntity>>
+
+    @FormUrlEncoded
+    @POST("/api/v1/accounts/{id}/note")
+    suspend fun updateNote(
+        @Path("id") id: String,
+        @Field("comment") comment: String,
+    ): Result<ActivityPubRelationshipEntity>
 }
 
 class AccountsRepo(private val client: ActivityPubClient) {
@@ -295,6 +302,13 @@ class AccountsRepo(private val client: ActivityPubClient) {
         name: String,
     ): Result<ActivityPubTagEntity> {
         return api.unfollowTag(id = name)
+    }
+
+    suspend fun updateNote(
+        accountId: String,
+        note: String,
+    ): Result<ActivityPubRelationshipEntity> {
+        return api.updateNote(accountId, note)
     }
 
     suspend fun updateCredentials(

@@ -10,7 +10,7 @@ data class ActivityPubInstanceEntity(
     val description: String,
     val usage: Usage,
     val thumbnail: Thumbnail,
-    val languages: List<String>,
+    val languages: List<String>?,
     val rules: List<Rule>,
     val contact: Contact,
 ) {

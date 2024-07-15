@@ -8,7 +8,7 @@ data class ActivityPubRelationshipEntity(
     @SerializedName("showing_reblogs")
     val showingReblogs: Boolean,
     val notifying: Boolean,
-    val languages: List<String>,
+    val languages: List<String>?,
     @SerializedName("followed_by")
     val followedBy: Boolean,
     val blocking: Boolean,

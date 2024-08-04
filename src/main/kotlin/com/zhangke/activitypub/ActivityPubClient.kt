@@ -42,6 +42,8 @@ class ActivityPubClient(
             .build()
     }
 
+    var apiLevel: ActivityPubInstanceApiLevel = ActivityPubInstanceApiLevel.V2
+
     val oauthRepo: OAuthRepo by lazy { OAuthRepo(this) }
 
     val appsRepo: AppsRepo by lazy { AppsRepo(retrofit) }

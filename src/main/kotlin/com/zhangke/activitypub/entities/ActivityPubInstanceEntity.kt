@@ -34,3 +34,49 @@ data class ActivityPubInstanceEntity(
         val account: ActivityPubAccountEntity,
     )
 }
+
+internal data class ActivityPubV1InstanceEntity(
+    val uri: String,
+    val title: String,
+    val version: String,
+    @SerializedName("source_url") val sourceUrl: String?,
+    val description: String,
+    val usage: ActivityPubInstanceEntity.Usage?,
+    val thumbnail: String,
+    val languages: List<String>?,
+    val stats: Stats,
+    val rules: List<ActivityPubInstanceEntity.Rule>,
+    @SerializedName("contact_account") val contactAccount: ActivityPubAccountEntity,
+) {
+
+    data class Stats(
+        @SerializedName("user_count") val userCount: Int,
+        @SerializedName("status_count") val statusCount: Int,
+        @SerializedName("domain_count") val domainCount: Int,
+    ) {
+
+        fun toUsage(): ActivityPubInstanceEntity.Usage {
+            return ActivityPubInstanceEntity.Usage(
+                users = ActivityPubInstanceEntity.Usage.Users(userCount)
+            )
+        }
+    }
+
+    fun toInstanceEntity(): ActivityPubInstanceEntity {
+        return ActivityPubInstanceEntity(
+            domain = uri,
+            title = title,
+            version = version,
+            sourceUrl = sourceUrl,
+            description = description,
+            usage = usage ?: stats.toUsage(),
+            thumbnail = ActivityPubInstanceEntity.Thumbnail(thumbnail),
+            languages = languages,
+            rules = rules,
+            contact = ActivityPubInstanceEntity.Contact(
+                email = "",
+                account = contactAccount,
+            ),
+        )
+    }
+}

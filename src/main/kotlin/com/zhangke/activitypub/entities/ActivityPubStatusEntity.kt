@@ -54,4 +54,12 @@ data class ActivityPubStatusEntity(
         val name: String,
         val url: String,
     )
+
+    companion object {
+
+        const val VISIBILITY_PUBLIC = "public"
+        const val VISIBILITY_UNLISTED = "unlisted"
+        const val VISIBILITY_PRIVATE = "private"
+        const val VISIBILITY_DIRECT = "direct"
+    }
 }

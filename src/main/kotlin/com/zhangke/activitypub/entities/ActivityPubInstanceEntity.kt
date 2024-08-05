@@ -12,7 +12,7 @@ data class ActivityPubInstanceEntity(
     val thumbnail: Thumbnail,
     val languages: List<String>?,
     val rules: List<Rule>,
-    val contact: Contact,
+    val contact: Contact?,
 ) {
 
     data class Usage(val users: Users) {
@@ -46,7 +46,7 @@ internal data class ActivityPubV1InstanceEntity(
     val languages: List<String>?,
     val stats: Stats,
     val rules: List<ActivityPubInstanceEntity.Rule>,
-    @SerializedName("contact_account") val contactAccount: ActivityPubAccountEntity,
+    @SerializedName("contact_account") val contactAccount: ActivityPubAccountEntity?,
 ) {
 
     data class Stats(
@@ -73,10 +73,12 @@ internal data class ActivityPubV1InstanceEntity(
             thumbnail = ActivityPubInstanceEntity.Thumbnail(thumbnail),
             languages = languages,
             rules = rules,
-            contact = ActivityPubInstanceEntity.Contact(
-                email = "",
-                account = contactAccount,
-            ),
+            contact = contactAccount?.let {
+                ActivityPubInstanceEntity.Contact(
+                    email = "",
+                    account = it,
+                )
+            },
         )
     }
 }

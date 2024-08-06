@@ -187,7 +187,12 @@ private interface AccountsApi {
     ): Result<ActivityPubRelationshipEntity>
 
     @GET("/api/v1/favourites")
-    suspend fun getFavourites(): Result<List<ActivityPubStatusEntity>>
+    fun getFavourites(
+        @Query("since_id") sinceId: String?,
+        @Query("max_id") maxId: String?,
+        @Query("min_id") minId: String?,
+        @Query("limit") limit: Int?,
+    ): Call<List<ActivityPubStatusEntity>>
 
     @GET("/api/v1/blocks")
     fun getBlockedUserList(
@@ -463,15 +468,30 @@ class AccountsRepo(private val client: ActivityPubClient) {
         )
     }
 
+    suspend fun getFavourites(
+        maxId: String? = null,
+        sinceId: String? = null,
+        minId: String? = null,
+        limit: Int = 40,
+    ): Result<PagingResult<List<ActivityPubStatusEntity>>> {
+        return performPagingRequest(
+            gson = client.gson,
+            requester = {
+                api.getFavourites(
+                    maxId = maxId,
+                    minId = minId,
+                    sinceId = sinceId,
+                    limit = limit,
+                )
+            }
+        )
+    }
+
     suspend fun mute(id: String): Result<ActivityPubRelationshipEntity> {
         return api.mute(id)
     }
 
     suspend fun unmute(id: String): Result<ActivityPubRelationshipEntity> {
         return api.unmute(id)
-    }
-
-    suspend fun getFavourites(): Result<List<ActivityPubStatusEntity>> {
-        return api.getFavourites()
     }
 }

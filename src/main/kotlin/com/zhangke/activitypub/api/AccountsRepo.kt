@@ -168,6 +168,34 @@ private interface AccountsApi {
         @Path("id") id: String,
         @Field("comment") comment: String,
     ): Result<ActivityPubRelationshipEntity>
+
+    @GET("/api/v1/mutes")
+    fun getMutedUserList(
+        @Query("since_id") sinceId: String?,
+        @Query("max_id") maxId: String?,
+        @Query("limit") limit: Int?,
+    ): Call<List<ActivityPubAccountEntity>>
+
+    @POST("/api/v1/accounts/{id}/mute")
+    suspend fun mute(
+        @Path("id") id: String,
+    ): Result<ActivityPubRelationshipEntity>
+
+    @POST("/api/v1/accounts/{id}/unmute")
+    suspend fun unmute(
+        @Path("id") id: String,
+    ): Result<ActivityPubRelationshipEntity>
+
+    @GET("/api/v1/favourites")
+    suspend fun getFavourites(): Result<List<ActivityPubStatusEntity>>
+
+    @GET("/api/v1/blocks")
+    suspend fun getBlockedUserList(
+        @Query("since_id") sinceId: String?,
+        @Query("max_id") maxId: String?,
+        @Query("min_id") minId: String?,
+        @Query("limit") limit: Int?,
+    ): Call<List<ActivityPubAccountEntity>>
 }
 
 class AccountsRepo(private val client: ActivityPubClient) {
@@ -397,5 +425,53 @@ class AccountsRepo(private val client: ActivityPubClient) {
                 )
             }
         )
+    }
+
+    suspend fun getMutedUserList(
+        maxId: String? = null,
+        sinceId: String? = null,
+        limit: Int = 40,
+    ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
+        return performPagingRequest(
+            gson = client.gson,
+            requester = {
+                api.getMutedUserList(
+                    maxId = maxId,
+                    sinceId = sinceId,
+                    limit = limit,
+                )
+            },
+        )
+    }
+
+    suspend fun getBlockedUserList(
+        maxId: String? = null,
+        sinceId: String? = null,
+        minId: String? = null,
+        limit: Int = 40,
+    ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
+        return performPagingRequest(
+            gson = client.gson,
+            requester = {
+                api.getBlockedUserList(
+                    maxId = maxId,
+                    minId = minId,
+                    sinceId = sinceId,
+                    limit = limit,
+                )
+            }
+        )
+    }
+
+    suspend fun mute(id: String): Result<ActivityPubRelationshipEntity> {
+        return api.mute(id)
+    }
+
+    suspend fun unmute(id: String): Result<ActivityPubRelationshipEntity> {
+        return api.unmute(id)
+    }
+
+    suspend fun getFavourites(): Result<List<ActivityPubStatusEntity>> {
+        return api.getFavourites()
     }
 }

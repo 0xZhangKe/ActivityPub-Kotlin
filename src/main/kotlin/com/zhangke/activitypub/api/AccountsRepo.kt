@@ -190,7 +190,7 @@ private interface AccountsApi {
     suspend fun getFavourites(): Result<List<ActivityPubStatusEntity>>
 
     @GET("/api/v1/blocks")
-    suspend fun getBlockedUserList(
+    fun getBlockedUserList(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("min_id") minId: String?,

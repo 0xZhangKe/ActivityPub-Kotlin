@@ -186,6 +186,14 @@ private interface AccountsApi {
         @Path("id") id: String,
     ): Result<ActivityPubRelationshipEntity>
 
+    @GET("/api/v1/bookmarks")
+    fun getBookmarks(
+        @Query("since_id") sinceId: String?,
+        @Query("max_id") maxId: String?,
+        @Query("min_id") minId: String?,
+        @Query("limit") limit: Int?,
+    ): Call<List<ActivityPubStatusEntity>>
+
     @GET("/api/v1/favourites")
     fun getFavourites(
         @Query("since_id") sinceId: String?,
@@ -459,6 +467,25 @@ class AccountsRepo(private val client: ActivityPubClient) {
             gson = client.gson,
             requester = {
                 api.getBlockedUserList(
+                    maxId = maxId,
+                    minId = minId,
+                    sinceId = sinceId,
+                    limit = limit,
+                )
+            }
+        )
+    }
+
+    suspend fun getBookmarks(
+        maxId: String? = null,
+        sinceId: String? = null,
+        minId: String? = null,
+        limit: Int = 40,
+    ): Result<PagingResult<List<ActivityPubStatusEntity>>> {
+        return performPagingRequest(
+            gson = client.gson,
+            requester = {
+                api.getBookmarks(
                     maxId = maxId,
                     minId = minId,
                     sinceId = sinceId,

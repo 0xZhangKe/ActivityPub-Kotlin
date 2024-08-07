@@ -45,6 +45,12 @@ private interface StatusService {
     @POST("/api/v1/statuses/{id}/unbookmark")
     suspend fun unbookmark(@Path("id") id: String): Result<ActivityPubStatusEntity>
 
+    @POST("/api/v1/statuses/{id}/pin")
+    suspend fun pin(@Path("id") id: String): Result<ActivityPubStatusEntity>
+
+    @POST("/api/v1/statuses/{id}/unpin")
+    suspend fun unpin(@Path("id") id: String): Result<ActivityPubStatusEntity>
+
     @DELETE("/api/v1/statuses/{id}")
     suspend fun delete(@Path("id") id: String): Result<ActivityPubStatusEntity>
 
@@ -113,6 +119,14 @@ class StatusRepo(client: ActivityPubClient) {
 
     suspend fun unbookmark(id: String): Result<ActivityPubStatusEntity> {
         return api.unbookmark(id = id)
+    }
+
+    suspend fun pin(id: String): Result<ActivityPubStatusEntity> {
+        return api.pin(id = id)
+    }
+
+    suspend fun unpin(id: String): Result<ActivityPubStatusEntity> {
+        return api.unpin(id = id)
     }
 
     suspend fun delete(id: String): Result<ActivityPubStatusEntity> {

@@ -41,6 +41,7 @@ data class ActivityPubStatusEntity(
     val tags: List<Tag>,
     val poll: ActivityPubPollEntity?,
     val mentions: List<Mention>,
+    val card: PreviewCard?,
 ) {
 
     data class Mention(
@@ -54,6 +55,32 @@ data class ActivityPubStatusEntity(
         val name: String,
         val url: String,
     )
+
+    data class PreviewCard(
+        val url: String,
+        val title: String,
+        val description: String,
+        val type: String,
+        @SerializedName("author_name") val authorName: String,
+        @SerializedName("author_url") val authorUrl: String,
+        @SerializedName("provider_name") val providerName: String,
+        @SerializedName("provider_url") val providerUrl: String,
+        val html: String,
+        val width: Int,
+        val height: Int,
+        val image: String?,
+        @SerializedName("embed_url") val embedUrl: String,
+        val blurhash: String?,
+    ) {
+
+        companion object {
+
+            const val TYPE_LINK = "link"
+            const val TYPE_PHOTO = "photo"
+            const val TYPE_VIDEO = "video"
+            const val TYPE_RICH = "rich"
+        }
+    }
 
     companion object {
 

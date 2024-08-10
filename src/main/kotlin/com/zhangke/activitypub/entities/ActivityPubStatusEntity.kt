@@ -42,6 +42,7 @@ data class ActivityPubStatusEntity(
     val poll: ActivityPubPollEntity?,
     val mentions: List<Mention>,
     val card: PreviewCard?,
+    @SerializedName("edited_at") val editedAt: String?,
 ) {
 
     data class Mention(

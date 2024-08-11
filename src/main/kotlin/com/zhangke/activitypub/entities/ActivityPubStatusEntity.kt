@@ -43,6 +43,7 @@ data class ActivityPubStatusEntity(
     val mentions: List<Mention>,
     val card: PreviewCard?,
     @SerializedName("edited_at") val editedAt: String?,
+    val application: Application?,
 ) {
 
     data class Mention(
@@ -82,6 +83,11 @@ data class ActivityPubStatusEntity(
             const val TYPE_RICH = "rich"
         }
     }
+
+    data class Application(
+        val name: String,
+        val website: String?,
+    )
 
     companion object {
 

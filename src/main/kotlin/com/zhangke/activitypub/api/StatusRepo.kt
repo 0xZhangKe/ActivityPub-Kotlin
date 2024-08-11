@@ -3,17 +3,21 @@ package com.zhangke.activitypub.api
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.zhangke.activitypub.ActivityPubClient
+import com.zhangke.activitypub.entities.ActivityPubAccountEntity
 import com.zhangke.activitypub.entities.ActivityPubPollEntity
 import com.zhangke.activitypub.entities.ActivityPubPollRequestEntity
 import com.zhangke.activitypub.entities.ActivityPubPostStatusRequestEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusContextEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusVisibilityEntity
+import com.zhangke.activitypub.utils.performPagingRequest
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 private interface StatusService {
 
@@ -62,9 +66,25 @@ private interface StatusService {
         @Path("id") id: String,
         @Body choices: JsonObject
     ): Result<ActivityPubPollEntity>
+
+    @GET("/api/v1/statuses/{id}/reblogged_by")
+    fun getReblogBy(
+        @Path("id") id: String,
+        @Query("since_id") sinceId: String?,
+        @Query("max_id") maxId: String?,
+        @Query("limit") limit: Int?,
+    ): Call<List<ActivityPubAccountEntity>>
+
+    @GET("/api/v1/statuses/{id}/favourited_by")
+    fun getFavouritesBy(
+        @Path("id") id: String,
+        @Query("since_id") sinceId: String?,
+        @Query("max_id") maxId: String?,
+        @Query("limit") limit: Int?,
+    ): Call<List<ActivityPubAccountEntity>>
 }
 
-class StatusRepo(client: ActivityPubClient) {
+class StatusRepo(private val client: ActivityPubClient) {
 
     private val api = client.retrofit.create(StatusService::class.java)
 
@@ -151,6 +171,44 @@ class StatusRepo(client: ActivityPubClient) {
         return api.votes(
             id = id,
             choices = params,
+        )
+    }
+
+    suspend fun getReblogBy(
+        statusId: String,
+        maxId: String? = null,
+        sinceId: String? = null,
+        limit: Int = 40,
+    ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
+        return performPagingRequest(
+            gson = client.gson,
+            requester = {
+                api.getReblogBy(
+                    id = statusId,
+                    maxId = maxId,
+                    sinceId = sinceId,
+                    limit = limit,
+                )
+            },
+        )
+    }
+
+    suspend fun getFavouritesBy(
+        statusId: String,
+        maxId: String? = null,
+        sinceId: String? = null,
+        limit: Int = 40,
+    ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
+        return performPagingRequest(
+            gson = client.gson,
+            requester = {
+                api.getFavouritesBy(
+                    id = statusId,
+                    maxId = maxId,
+                    sinceId = sinceId,
+                    limit = limit,
+                )
+            },
         )
     }
 }

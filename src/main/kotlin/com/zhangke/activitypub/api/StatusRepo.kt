@@ -10,10 +10,13 @@ import com.zhangke.activitypub.entities.ActivityPubPostStatusRequestEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusContextEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusVisibilityEntity
+import com.zhangke.activitypub.entities.ActivityPubTranslationEntity
 import com.zhangke.activitypub.utils.performPagingRequest
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -82,6 +85,13 @@ private interface StatusService {
         @Query("max_id") maxId: String?,
         @Query("limit") limit: Int?,
     ): Call<List<ActivityPubAccountEntity>>
+
+    @FormUrlEncoded
+    @POST("/api/v1/statuses/{id}/translate")
+    suspend fun translate(
+        @Path("id") id: String,
+        @Field("lang") lang: String,
+    ): Result<ActivityPubTranslationEntity>
 }
 
 class StatusRepo(private val client: ActivityPubClient) {
@@ -210,5 +220,9 @@ class StatusRepo(private val client: ActivityPubClient) {
                 )
             },
         )
+    }
+
+    suspend fun translate(id: String, lan: String): Result<ActivityPubTranslationEntity> {
+        return api.translate(id = id, lang = lan)
     }
 }

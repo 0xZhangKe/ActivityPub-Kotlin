@@ -39,23 +39,27 @@ class InstanceRepo(private val client: ActivityPubClient) {
     private val api = client.retrofit.create(InstanceApi::class.java)
 
     suspend fun getInstanceInformation(): Result<ActivityPubInstanceEntity> {
-        if (client.apiLevel == ActivityPubInstanceApiLevel.V1) {
-            val result = api.v1InstanceInformation()
-            if (result.isSuccess) return result.map { it.toInstanceEntity() }
-        }
-        val v2Result = api.v2InstanceInformation()
-        if (v2Result.isSuccess) {
-            if (client.apiLevel != ActivityPubInstanceApiLevel.V2) {
-                client.apiLevel = ActivityPubInstanceApiLevel.V2
+        try {
+            if (client.apiLevel == ActivityPubInstanceApiLevel.V1) {
+                val result = api.v1InstanceInformation()
+                if (result.isSuccess) return result.map { it.toInstanceEntity() }
+            }
+            val v2Result = api.v2InstanceInformation()
+            if (v2Result.isSuccess) {
+                if (client.apiLevel != ActivityPubInstanceApiLevel.V2) {
+                    client.apiLevel = ActivityPubInstanceApiLevel.V2
+                }
+                return v2Result
+            }
+            val v1Result = api.v1InstanceInformation()
+            if (v1Result.isSuccess) {
+                client.apiLevel = ActivityPubInstanceApiLevel.V1
+                return v1Result.map { it.toInstanceEntity() }
             }
             return v2Result
+        } catch (e: Throwable) {
+            return Result.failure(e)
         }
-        val v1Result = api.v1InstanceInformation()
-        if (v1Result.isSuccess) {
-            client.apiLevel = ActivityPubInstanceApiLevel.V1
-            return v1Result.map { it.toInstanceEntity() }
-        }
-        return v2Result
     }
 
     /**

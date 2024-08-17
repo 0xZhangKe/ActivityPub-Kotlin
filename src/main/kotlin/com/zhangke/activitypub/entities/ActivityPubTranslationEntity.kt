@@ -6,7 +6,7 @@ data class ActivityPubTranslationEntity(
     val content: String,
     @SerializedName("spoiler_text") val spoilerText: String,
     val poll: Poll?,
-    @SerializedName("Attachment") val mediaAttachments: Attachment,
+    @SerializedName("Attachment") val mediaAttachments: List<Attachment>?,
     @SerializedName("detected_source_language") val detectedSourceLanguage: String,
     val provider: String,
 ) {

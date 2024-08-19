@@ -209,6 +209,14 @@ private interface AccountsApi {
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int?,
     ): Call<List<ActivityPubAccountEntity>>
+
+    @GET("/api/v1/followed_tags")
+    fun getFollowedTags(
+        @Query("since_id") sinceId: String?,
+        @Query("max_id") maxId: String?,
+        @Query("min_id") minId: String?,
+        @Query("limit") limit: Int?,
+    ): Call<List<ActivityPubTagEntity>>
 }
 
 class AccountsRepo(private val client: ActivityPubClient) {
@@ -511,6 +519,25 @@ class AccountsRepo(private val client: ActivityPubClient) {
                     limit = limit,
                 )
             }
+        )
+    }
+
+    suspend fun getFollowedTags(
+        maxId: String? = null,
+        sinceId: String? = null,
+        minId: String? = null,
+        limit: Int = 40,
+    ): Result<PagingResult<List<ActivityPubTagEntity>>> {
+        return performPagingRequest(
+            gson = client.gson,
+            requester = {
+                api.getFollowedTags(
+                    maxId = maxId,
+                    sinceId = sinceId,
+                    minId = minId,
+                    limit = limit,
+                )
+            },
         )
     }
 

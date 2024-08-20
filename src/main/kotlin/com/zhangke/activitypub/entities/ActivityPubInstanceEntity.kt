@@ -13,6 +13,7 @@ data class ActivityPubInstanceEntity(
     val languages: List<String>?,
     val rules: List<Rule>,
     val contact: Contact?,
+    val configuration: ActivityPubInstanceConfigurationEntity,
 ) {
 
     data class Usage(val users: Users) {
@@ -33,6 +34,7 @@ data class ActivityPubInstanceEntity(
         val email: String,
         val account: ActivityPubAccountEntity,
     )
+
 }
 
 internal data class ActivityPubV1InstanceEntity(
@@ -47,6 +49,7 @@ internal data class ActivityPubV1InstanceEntity(
     val stats: Stats,
     val rules: List<ActivityPubInstanceEntity.Rule>?,
     @SerializedName("contact_account") val contactAccount: ActivityPubAccountEntity?,
+    val configuration: ActivityPubInstanceConfigurationEntity,
 ) {
 
     data class Stats(
@@ -79,6 +82,7 @@ internal data class ActivityPubV1InstanceEntity(
                     account = it,
                 )
             },
+            configuration = configuration,
         )
     }
 }

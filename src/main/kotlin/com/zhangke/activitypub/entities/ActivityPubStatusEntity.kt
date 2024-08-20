@@ -71,7 +71,7 @@ data class ActivityPubStatusEntity(
         val width: Int,
         val height: Int,
         val image: String?,
-        @SerializedName("embed_url") val embedUrl: String,
+        @SerializedName("embed_url") val embedUrl: String?,
         val blurhash: String?,
     ) {
 

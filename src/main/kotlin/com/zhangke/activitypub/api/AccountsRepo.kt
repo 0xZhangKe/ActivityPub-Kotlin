@@ -3,6 +3,7 @@ package com.zhangke.activitypub.api
 import com.google.gson.JsonObject
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubAccountEntity
+import com.zhangke.activitypub.entities.ActivityPubCreateFilterEntity
 import com.zhangke.activitypub.entities.ActivityPubFilterEntity
 import com.zhangke.activitypub.entities.ActivityPubListEntity
 import com.zhangke.activitypub.entities.ActivityPubRelationshipEntity
@@ -221,6 +222,11 @@ private interface AccountsApi {
 
     @GET("/api/v2/filters")
     suspend fun getFilters(): Result<List<ActivityPubFilterEntity>>
+
+    @POST("/api/v2/filters")
+    suspend fun createFilters(
+        data: ActivityPubCreateFilterEntity,
+    ): Result<List<ActivityPubFilterEntity>>
 }
 
 class AccountsRepo(private val client: ActivityPubClient) {

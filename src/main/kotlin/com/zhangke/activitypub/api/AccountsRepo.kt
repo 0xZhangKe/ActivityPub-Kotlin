@@ -3,6 +3,7 @@ package com.zhangke.activitypub.api
 import com.google.gson.JsonObject
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubAccountEntity
+import com.zhangke.activitypub.entities.ActivityPubFilterEntity
 import com.zhangke.activitypub.entities.ActivityPubListEntity
 import com.zhangke.activitypub.entities.ActivityPubRelationshipEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
@@ -217,6 +218,9 @@ private interface AccountsApi {
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int?,
     ): Call<List<ActivityPubTagEntity>>
+
+    @GET("/api/v2/filters")
+    suspend fun getFilters(): Result<List<ActivityPubFilterEntity>>
 }
 
 class AccountsRepo(private val client: ActivityPubClient) {
@@ -547,5 +551,9 @@ class AccountsRepo(private val client: ActivityPubClient) {
 
     suspend fun unmute(id: String): Result<ActivityPubRelationshipEntity> {
         return api.unmute(id)
+    }
+
+    suspend fun getFilters(): Result<List<ActivityPubFilterEntity>> {
+        return api.getFilters()
     }
 }

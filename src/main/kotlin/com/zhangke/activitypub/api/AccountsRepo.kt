@@ -17,6 +17,7 @@ import com.zhangke.activitypub.utils.performPagingRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -25,6 +26,7 @@ import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -224,9 +226,17 @@ private interface AccountsApi {
     suspend fun getFilters(): Result<List<ActivityPubFilterEntity>>
 
     @POST("/api/v2/filters")
-    suspend fun createFilters(
+    suspend fun createFilter(
         data: ActivityPubCreateFilterEntity,
-    ): Result<List<ActivityPubFilterEntity>>
+    ): Result<ActivityPubFilterEntity>
+
+    @PUT("/api/v2/filters")
+    suspend fun updateFilter(
+        data: ActivityPubCreateFilterEntity,
+    ): Result<ActivityPubFilterEntity>
+
+    @DELETE("/api/v2/filters/{id}")
+    suspend fun deleteFilter(@Path("id") id: String): Result<Unit>
 }
 
 class AccountsRepo(private val client: ActivityPubClient) {
@@ -561,5 +571,21 @@ class AccountsRepo(private val client: ActivityPubClient) {
 
     suspend fun getFilters(): Result<List<ActivityPubFilterEntity>> {
         return api.getFilters()
+    }
+
+    suspend fun createFilters(
+        data: ActivityPubCreateFilterEntity,
+    ): Result<ActivityPubFilterEntity> {
+        return api.createFilter(data)
+    }
+
+    suspend fun updateFilters(
+        data: ActivityPubCreateFilterEntity,
+    ): Result<ActivityPubFilterEntity> {
+        return api.updateFilter(data)
+    }
+
+    suspend fun deleteFilter(id: String): Result<Unit> {
+        return api.deleteFilter(id)
     }
 }

@@ -18,7 +18,7 @@ data class ActivityPubFilterEntity(
     companion object {
 
         const val FILTER_ACTION_WARN = "warn"
-        const val FILTER_ACTION_KEYWORDS = "keywords"
+        const val FILTER_ACTION_KEYWORDS = "hide"
 
         const val CONTEXT_HOME = "home"
         const val CONTEXT_NOTIFICATIONS = "notifications"

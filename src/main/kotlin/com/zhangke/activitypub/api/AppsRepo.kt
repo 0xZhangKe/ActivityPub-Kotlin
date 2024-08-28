@@ -1,29 +1,18 @@
 package com.zhangke.activitypub.api
 
+import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.RegisterApplicationEntry
-import retrofit2.Retrofit
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import io.ktor.client.call.body
+import io.ktor.client.request.forms.FormDataContent
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.Parameters
+import io.ktor.http.takeFrom
 
 /**
  * Created by ZhangKe on 2022/12/2.
  */
-private interface AppsApi {
-
-    @FormUrlEncoded
-    @POST("/api/v1/apps")
-    suspend fun registerApplication(
-        @Field("client_name") clientName: String,
-        @Field("redirect_uris") redirectUris: String,
-        @Field("scopes") scopes: String,
-        @Field("website") website: String
-    ): Result<RegisterApplicationEntry>
-}
-
-class AppsRepo(retrofit: Retrofit) {
-
-    private val api = retrofit.create(AppsApi::class.java)
+class AppsRepo(private val client: ActivityPubClient) {
 
     suspend fun registerApplication(
         clientName: String,
@@ -31,9 +20,23 @@ class AppsRepo(retrofit: Retrofit) {
         scopes: List<String>,
         website: String
     ): Result<RegisterApplicationEntry> {
-        val redirectUrisString = redirectUris.joinToString(":")
-        val scopesString = scopes.joinToString(" ")
-        return api.registerApplication(clientName, redirectUrisString, scopesString, website)
+        return runCatching {
+            client.ktorfit.httpClient.post {
+                url {
+                    takeFrom(client.ktorfit.baseUrl + "/api/v1/apps")
+                }
+                setBody(
+                    FormDataContent(
+                        Parameters.build {
+                            append("client_name", clientName)
+                            append("redirect_uris", redirectUris.joinToString(":"))
+                            append("scopes", scopes.joinToString(" "))
+                            append("website", website)
+                        }
+                    )
+                )
+            }.body()
+        }
     }
 
     /**

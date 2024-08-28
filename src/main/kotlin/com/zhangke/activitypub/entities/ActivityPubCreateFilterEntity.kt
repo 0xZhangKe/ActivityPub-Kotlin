@@ -1,19 +1,22 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubCreateFilterEntity(
     val title: String,
     val context: List<String>,
-    @SerializedName("filter_action") val filterAction: String,
-    @SerializedName("expires_in") val expiresIn: Int?,
-    @SerializedName("keywords_attributes") val keywordsAttributes: List<KeywordAttribute>,
+    @SerialName("filter_action") val filterAction: String,
+    @SerialName("expires_in") val expiresIn: Int? = null,
+    @SerialName("keywords_attributes") val keywordsAttributes: List<KeywordAttribute>,
 ) {
 
+    @Serializable
     data class KeywordAttribute(
         val keyword: String,
-        @SerializedName("whole_word") val wholeWord: Boolean,
+        @SerialName("whole_word") val wholeWord: Boolean,
         val id: String?,
-        @SerializedName("_destroy") val destroy: Boolean?,
+        @SerialName("_destroy") val destroy: Boolean?,
     )
 }

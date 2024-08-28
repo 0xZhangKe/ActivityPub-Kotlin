@@ -1,20 +1,22 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubPostStatusRequestEntity(
     val status: String?,
-    @SerializedName("media_ids")
+    @SerialName("media_ids")
     val mediaIds: List<String>?,
-    val poll: ActivityPubPollRequestEntity?,
-    @SerializedName("in_reply_to_id")
-    val replyToId: String?,
-    @SerializedName("sensitive")
-    val isSensitive: Boolean?,
-    @SerializedName("spoiler_text")
-    val spoilerText: String?,
-    val visibility: String?,
-    val language: String?,
-    @SerializedName("scheduled_at")
-    val scheduledAt: String?,
+    val poll: ActivityPubPollRequestEntity? = null,
+    @SerialName("in_reply_to_id")
+    val replyToId: String? = null,
+    @SerialName("sensitive")
+    val isSensitive: Boolean? = null,
+    @SerialName("spoiler_text")
+    val spoilerText: String? = null,
+    val visibility: String? = null,
+    val language: String? = null,
+    @SerialName("scheduled_at")
+    val scheduledAt: String? = null,
 )

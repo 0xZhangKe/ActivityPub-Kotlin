@@ -1,51 +1,54 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by ZhangKe on 2022/12/13.
  * https://docs.joinmastodon.org/entities/Status/
  */
+@Serializable
 data class ActivityPubStatusEntity(
     val id: String,
-    @SerializedName("created_at")
+    @SerialName("created_at")
     val createdAt: String,
-    @SerializedName("in_reply_to_id")
-    val inReplyToId: String?,
-    @SerializedName("in_reply_to_account_id")
-    val inReplyToAccountId: String?,
+    @SerialName("in_reply_to_id")
+    val inReplyToId: String? = null,
+    @SerialName("in_reply_to_account_id")
+    val inReplyToAccountId: String? = null,
     val account: ActivityPubAccountEntity,
-    @SerializedName("media_attachments")
-    val mediaAttachments: List<ActivityPubMediaAttachmentEntity>?,
+    @SerialName("media_attachments")
+    val mediaAttachments: List<ActivityPubMediaAttachmentEntity>? = null,
     val sensitive: Boolean,
-    @SerializedName("spoiler_text")
+    @SerialName("spoiler_text")
     val spoilerText: String,
     val visibility: String,
     val language: String?,
     val uri: String,
     val url: String?,
-    @SerializedName("replies_count")
+    @SerialName("replies_count")
     val repliesCount: Int,
-    @SerializedName("reblogs_count")
+    @SerialName("reblogs_count")
     val reblogsCount: Int,
-    @SerializedName("favourites_count")
+    @SerialName("favourites_count")
     val favouritesCount: Int,
-    val favourited: Boolean?,
-    val reblogged: Boolean?,
-    val pinned: Boolean?,
-    val muted: Boolean?,
-    val bookmarked: Boolean?,
-    val content: String?,
+    val favourited: Boolean? = null,
+    val reblogged: Boolean? = null,
+    val pinned: Boolean? = null,
+    val muted: Boolean? = null,
+    val bookmarked: Boolean? = null,
+    val content: String? = null,
     val emojis: List<ActivityPubCustomEmojiEntity>,
-    val reblog: ActivityPubStatusEntity?,
+    val reblog: ActivityPubStatusEntity? = null,
     val tags: List<Tag>,
-    val poll: ActivityPubPollEntity?,
+    val poll: ActivityPubPollEntity? = null,
     val mentions: List<Mention>,
     val card: PreviewCard?,
-    @SerializedName("edited_at") val editedAt: String?,
-    val application: Application?,
+    @SerialName("edited_at") val editedAt: String? = null,
+    val application: Application? = null,
 ) {
 
+    @Serializable
     data class Mention(
         val id: String,
         val username: String,
@@ -53,25 +56,27 @@ data class ActivityPubStatusEntity(
         val acct: String,
     )
 
+    @Serializable
     data class Tag(
         val name: String,
         val url: String,
     )
 
+    @Serializable
     data class PreviewCard(
         val url: String,
         val title: String,
         val description: String,
         val type: String,
-        @SerializedName("author_name") val authorName: String,
-        @SerializedName("author_url") val authorUrl: String,
-        @SerializedName("provider_name") val providerName: String,
-        @SerializedName("provider_url") val providerUrl: String,
+        @SerialName("author_name") val authorName: String,
+        @SerialName("author_url") val authorUrl: String,
+        @SerialName("provider_name") val providerName: String,
+        @SerialName("provider_url") val providerUrl: String,
         val html: String,
         val width: Int,
         val height: Int,
         val image: String?,
-        @SerializedName("embed_url") val embedUrl: String?,
+        @SerialName("embed_url") val embedUrl: String?,
         val blurhash: String?,
     ) {
 
@@ -84,6 +89,7 @@ data class ActivityPubStatusEntity(
         }
     }
 
+    @Serializable
     data class Application(
         val name: String,
         val website: String?,

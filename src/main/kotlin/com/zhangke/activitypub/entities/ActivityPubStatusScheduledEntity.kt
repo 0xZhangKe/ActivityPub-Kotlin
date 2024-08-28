@@ -1,13 +1,15 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.JsonObject
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
+@Serializable
 data class ActivityPubStatusScheduledEntity(
     val id: String,
-    @SerializedName("scheduled_at")
+    @SerialName("scheduled_at")
     val scheduledAt: String,
-    @SerializedName("media_attachments")
+    @SerialName("media_attachments")
     val mediaAttachments: List<ActivityPubMediaAttachmentEntity>,
-    val params: JsonObject,
+    val params: JsonElement,
 )

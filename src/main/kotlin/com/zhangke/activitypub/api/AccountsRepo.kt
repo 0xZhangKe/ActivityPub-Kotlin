@@ -1,6 +1,5 @@
 package com.zhangke.activitypub.api
 
-import com.google.gson.JsonObject
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubAccountEntity
 import com.zhangke.activitypub.entities.ActivityPubCreateFilterEntity
@@ -11,41 +10,56 @@ import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubSuggestionEntry
 import com.zhangke.activitypub.entities.ActivityPubTagEntity
 import com.zhangke.activitypub.entities.UpdateFieldRequestEntity
-import com.zhangke.activitypub.utils.ActivityPubHeaders
-import com.zhangke.activitypub.utils.MediaTypes
 import com.zhangke.activitypub.utils.performPagingRequest
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.HTTP
-import retrofit2.http.Header
-import retrofit2.http.Multipart
-import retrofit2.http.PATCH
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Part
-import retrofit2.http.Path
-import retrofit2.http.Query
-import retrofit2.http.QueryMap
+import de.jensklingenberg.ktorfit.Response
+import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.DELETE
+import de.jensklingenberg.ktorfit.http.Field
+import de.jensklingenberg.ktorfit.http.FormUrlEncoded
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.PUT
+import de.jensklingenberg.ktorfit.http.Path
+import de.jensklingenberg.ktorfit.http.Query
+import de.jensklingenberg.ktorfit.http.ReqBuilder
+import io.ktor.client.call.body
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.bearerAuth
+import io.ktor.client.request.delete
+import io.ktor.client.request.forms.FormDataContent
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.headers
+import io.ktor.client.request.parameter
+import io.ktor.client.request.patch
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import io.ktor.http.Parameters
+import io.ktor.http.contentType
+import io.ktor.http.takeFrom
+import kotlinx.serialization.json.JsonElement
 
 /**
  * Created by ZhangKe on 2022/12/13.
  */
-private interface AccountsApi {
+internal interface AccountsApi {
 
     @GET("/api/v1/accounts/verify_credentials")
-    suspend fun verifyCredentials(@Header("Authorization") authorization: String?): Result<ActivityPubAccountEntity>
+    suspend fun verifyCredentials(
+        @ReqBuilder ext: HttpRequestBuilder.() -> Unit
+    ): ActivityPubAccountEntity
 
     @GET("/api/v1/accounts/lookup")
-    suspend fun lookup(@Query("acct") acct: String): Result<ActivityPubAccountEntity?>
+    suspend fun lookup(
+        @Query("acct") acct: String
+    ): ActivityPubAccountEntity?
 
     @GET("/api/v1/accounts/{id}")
-    suspend fun getAccount(@Path("id") id: String): Result<ActivityPubAccountEntity>
+    suspend fun getAccount(
+        @Path("id") id: String
+    ): ActivityPubAccountEntity
 
     @GET("/api/v1/accounts/{id}/statuses")
     suspend fun getStatuses(
@@ -58,96 +72,98 @@ private interface AccountsApi {
         @Query("pinned") pinned: Boolean?,
         @Query("exclude_replies") excludeReplies: Boolean?,
         @Query("exclude_reblogs") excludeBlogs: Boolean?,
-    ): Result<List<ActivityPubStatusEntity>>
+    ): List<ActivityPubStatusEntity>
 
     @GET("/api/v1/lists")
-    suspend fun getAccountLists(): Result<List<ActivityPubListEntity>>
+    suspend fun getAccountLists(): List<ActivityPubListEntity>
 
     @POST("/api/v1/follow_requests/{account_id}/authorize")
     suspend fun authorizeFollowRequest(
         @Path("account_id") accountId: String,
-    ): Result<ActivityPubRelationshipEntity>
+    ): ActivityPubRelationshipEntity
 
     @POST("/api/v1/follow_requests/{account_id}/reject")
     suspend fun rejectFollowRequest(
         @Path("account_id") accountId: String,
-    ): Result<ActivityPubRelationshipEntity>
+    ): ActivityPubRelationshipEntity
 
     @GET("/api/v1/accounts/relationships")
     suspend fun getRelationships(
         @Query("id[]") ids: List<String>,
         @Query("with_suspended") withSuspended: Boolean,
-    ): Result<List<ActivityPubRelationshipEntity>>
+    ): List<ActivityPubRelationshipEntity>
 
     @POST("/api/v1/accounts/{id}/follow")
     suspend fun follow(
         @Path("id") id: String,
-    ): Result<ActivityPubRelationshipEntity>
+    ): ActivityPubRelationshipEntity
 
     @POST("/api/v1/accounts/{id}/unfollow")
     suspend fun unfollow(
         @Path("id") id: String,
-    ): Result<ActivityPubRelationshipEntity>
+    ): ActivityPubRelationshipEntity
 
     @POST("/api/v1/accounts/{id}/block")
     suspend fun block(
         @Path("id") id: String,
-    ): Result<ActivityPubRelationshipEntity>
+    ): ActivityPubRelationshipEntity
 
     @POST("/api/v1/accounts/{id}/unblock")
     suspend fun unblock(
         @Path("id") id: String,
-    ): Result<ActivityPubRelationshipEntity>
+    ): ActivityPubRelationshipEntity
 
     @GET("/api/v1/domain_blocks")
-    suspend fun getDomainBlocks(): Result<List<String>>
+    suspend fun getDomainBlocks(): List<String>
 
     @FormUrlEncoded
     @POST("/api/v1/domain_blocks")
     suspend fun blockDomain(
         @Field("domain") domain: String,
-    ): Result<JsonObject>
+    ): JsonElement
 
-    @FormUrlEncoded
-    @HTTP(method = "DELETE", path = "/api/v1/domain_blocks", hasBody = true)
-    suspend fun unblockDomain(
-        @Field("domain") domain: String,
-    ): Result<JsonObject>
+    // FIXME: ktorfit support it
+    // @FormUrlEncoded
+    // @HTTP(method = "DELETE", path = "/api/v1/domain_blocks", hasBody = true)
+    // suspend fun unblockDomain(
+    //     @Field("domain") domain: String,
+    // ): Result<JsonElement>
 
     @GET("/api/v1/tags/{id}")
     suspend fun getTagInformation(
         @Path("id") id: String,
-    ): Result<ActivityPubTagEntity>
+    ): ActivityPubTagEntity
 
     @POST("/api/v1/tags/{id}/follow")
     suspend fun followTag(
         @Path("id") id: String,
-    ): Result<ActivityPubTagEntity>
+    ): ActivityPubTagEntity
 
     @POST("/api/v1/tags/{id}/unfollow")
     suspend fun unfollowTag(
         @Path("id") id: String,
-    ): Result<ActivityPubTagEntity>
+    ): ActivityPubTagEntity
 
-    @PATCH("/api/v1/accounts/update_credentials")
-    suspend fun updateCredentials(
-        @QueryMap queryMap: Map<String, String>,
-    ): Result<ActivityPubAccountEntity>
+    // @PATCH("/api/v1/accounts/update_credentials")
+    // suspend fun updateCredentials(
+    //     @QueryMap queryMap: Map<String, String>,
+    // ): Result<ActivityPubAccountEntity>
 
-    @Multipart
-    @PATCH("/api/v1/accounts/update_credentials")
-    suspend fun updateCredentials(
-        @QueryMap queryMap: Map<String, String>,
-        @Part name: MultipartBody.Part?,
-        @Part note: MultipartBody.Part?,
-        @Part avatar: MultipartBody.Part?,
-        @Part header: MultipartBody.Part?,
-    ): Result<ActivityPubAccountEntity>
+    // FIXME: ktorfit support it
+    // @Multipart
+    // @PATCH("/api/v1/accounts/update_credentials")
+    // suspend fun updateCredentials(
+    //     @QueryMap queryMap: Map<String, String>,
+    //     @Part name: MultipartBody.Part?,
+    //     @Part note: MultipartBody.Part?,
+    //     @Part avatar: MultipartBody.Part?,
+    //     @Part header: MultipartBody.Part?,
+    // ): Result<ActivityPubAccountEntity>
 
     @GET("/api/v2/suggestions")
     suspend fun getSuggestions(
         @Query("limit") limit: Int,
-    ): Result<List<ActivityPubSuggestionEntry>>
+    ): List<ActivityPubSuggestionEntry>
 
     @GET("/api/v1/accounts/{id}/followers")
     fun getFollowers(
@@ -156,7 +172,7 @@ private interface AccountsApi {
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("limit") limit: Int?,
-    ): Call<List<ActivityPubAccountEntity>>
+    ): Response<List<ActivityPubAccountEntity>>
 
     @GET("/api/v1/accounts/{id}/following")
     fun getFollowing(
@@ -165,31 +181,31 @@ private interface AccountsApi {
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("limit") limit: Int?,
-    ): Call<List<ActivityPubAccountEntity>>
+    ): Response<List<ActivityPubAccountEntity>>
 
     @FormUrlEncoded
     @POST("/api/v1/accounts/{id}/note")
     suspend fun updateNote(
         @Path("id") id: String,
         @Field("comment") comment: String,
-    ): Result<ActivityPubRelationshipEntity>
+    ): ActivityPubRelationshipEntity
 
     @GET("/api/v1/mutes")
     fun getMutedUserList(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("limit") limit: Int?,
-    ): Call<List<ActivityPubAccountEntity>>
+    ): Response<List<ActivityPubAccountEntity>>
 
     @POST("/api/v1/accounts/{id}/mute")
     suspend fun mute(
         @Path("id") id: String,
-    ): Result<ActivityPubRelationshipEntity>
+    ): ActivityPubRelationshipEntity
 
     @POST("/api/v1/accounts/{id}/unmute")
     suspend fun unmute(
         @Path("id") id: String,
-    ): Result<ActivityPubRelationshipEntity>
+    ): ActivityPubRelationshipEntity
 
     @GET("/api/v1/bookmarks")
     fun getBookmarks(
@@ -197,7 +213,7 @@ private interface AccountsApi {
         @Query("max_id") maxId: String?,
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int?,
-    ): Call<List<ActivityPubStatusEntity>>
+    ): Response<List<ActivityPubStatusEntity>>
 
     @GET("/api/v1/favourites")
     fun getFavourites(
@@ -205,7 +221,7 @@ private interface AccountsApi {
         @Query("max_id") maxId: String?,
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int?,
-    ): Call<List<ActivityPubStatusEntity>>
+    ): Response<List<ActivityPubStatusEntity>>
 
     @GET("/api/v1/blocks")
     fun getBlockedUserList(
@@ -213,7 +229,7 @@ private interface AccountsApi {
         @Query("max_id") maxId: String?,
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int?,
-    ): Call<List<ActivityPubAccountEntity>>
+    ): Response<List<ActivityPubAccountEntity>>
 
     @GET("/api/v1/followed_tags")
     fun getFollowedTags(
@@ -221,47 +237,57 @@ private interface AccountsApi {
         @Query("max_id") maxId: String?,
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int?,
-    ): Call<List<ActivityPubTagEntity>>
+    ): Response<List<ActivityPubTagEntity>>
 
     @GET("/api/v2/filters")
-    suspend fun getFilters(): Result<List<ActivityPubFilterEntity>>
+    suspend fun getFilters(): List<ActivityPubFilterEntity>
 
     @GET("/api/v2/filters/{id}")
-    suspend fun getFilter(@Path("id") id: String): Result<ActivityPubFilterEntity>
+    suspend fun getFilter(@Path("id") id: String): ActivityPubFilterEntity
 
     @POST("/api/v2/filters")
     suspend fun createFilter(
         @Body data: ActivityPubCreateFilterEntity,
-    ): Result<ActivityPubFilterEntity>
+    ): ActivityPubFilterEntity
 
     @PUT("/api/v2/filters/{id}")
     suspend fun updateFilter(
         @Path("id") id: String,
         @Body data: ActivityPubCreateFilterEntity,
-    ): Result<ActivityPubFilterEntity>
+    ): ActivityPubFilterEntity
 
     @DELETE("/api/v2/filters/{id}")
-    suspend fun deleteFilter(@Path("id") id: String): Result<Unit>
+    suspend fun deleteFilter(@Path("id") id: String): Unit
 }
 
 class AccountsRepo(private val client: ActivityPubClient) {
 
-    private val api = client.retrofit.create(AccountsApi::class.java)
+    private val api = client.ktorfit.createAccountsApi()
 
     suspend fun verifyCredentials(accessToken: String): Result<ActivityPubAccountEntity> {
-        return api.verifyCredentials(ActivityPubHeaders.buildAuthTokenHeader(accessToken))
+        return runCatching {
+            api.verifyCredentials {
+                bearerAuth(accessToken)
+            }
+        }
     }
 
     suspend fun getCredentialAccount(): Result<ActivityPubAccountEntity> {
-        return api.verifyCredentials(null)
+        return runCatching {
+            api.verifyCredentials {}
+        }
     }
 
     suspend fun lookup(acct: String): Result<ActivityPubAccountEntity?> {
-        return api.lookup(acct)
+        return runCatching {
+            api.lookup(acct)
+        }
     }
 
     suspend fun getAccount(id: String): Result<ActivityPubAccountEntity> {
-        return api.getAccount(id)
+        return runCatching {
+            api.getAccount(id)
+        }
     }
 
     suspend fun getStatuses(
@@ -275,114 +301,160 @@ class AccountsRepo(private val client: ActivityPubClient) {
         excludeReplies: Boolean? = false,
         excludeBlogs: Boolean? = false,
     ): Result<List<ActivityPubStatusEntity>> {
-        return api.getStatuses(
-            id = id,
-            limit = limit,
-            pinned = pinned,
-            maxId = maxId,
-            minId = minId,
-            sinceId = sinceId,
-            onlyMedia = onlyMedia,
-            excludeReplies = excludeReplies,
-            excludeBlogs = excludeBlogs,
-        )
+        return runCatching {
+            api.getStatuses(
+                id = id,
+                limit = limit,
+                pinned = pinned,
+                maxId = maxId,
+                minId = minId,
+                sinceId = sinceId,
+                onlyMedia = onlyMedia,
+                excludeReplies = excludeReplies,
+                excludeBlogs = excludeBlogs,
+            )
+        }
     }
 
     suspend fun getAccountLists(): Result<List<ActivityPubListEntity>> {
-        return api.getAccountLists()
+        return runCatching {
+            api.getAccountLists()
+        }
     }
 
     suspend fun authorizeFollowRequest(
         accountId: String,
     ): Result<ActivityPubRelationshipEntity> {
-        return api.authorizeFollowRequest(
-            accountId = accountId,
-        )
+        return runCatching {
+            api.authorizeFollowRequest(
+                accountId = accountId,
+            )
+        }
     }
 
     suspend fun rejectFollowRequest(
         accountId: String,
     ): Result<ActivityPubRelationshipEntity> {
-        return api.rejectFollowRequest(accountId = accountId)
+        return runCatching {
+            api.rejectFollowRequest(accountId = accountId)
+        }
     }
 
     suspend fun getRelationships(
         idList: List<String>,
         withSuspended: Boolean = false,
     ): Result<List<ActivityPubRelationshipEntity>> {
-        return api.getRelationships(
-            ids = idList,
-            withSuspended = withSuspended,
-        )
+        return runCatching {
+            api.getRelationships(
+                ids = idList,
+                withSuspended = withSuspended,
+            )
+        }
     }
 
     suspend fun follow(
         id: String,
     ): Result<ActivityPubRelationshipEntity> {
-        return api.follow(
-            id = id,
-        )
+        return runCatching {
+            api.follow(
+                id = id,
+            )
+        }
     }
 
     suspend fun unfollow(
         id: String,
     ): Result<ActivityPubRelationshipEntity> {
-        return api.unfollow(
-            id = id,
-        )
+        return runCatching {
+            api.unfollow(
+                id = id,
+            )
+        }
     }
 
     suspend fun block(
         id: String,
     ): Result<ActivityPubRelationshipEntity> {
-        return api.block(id = id)
+        return runCatching {
+            api.block(id = id)
+        }
     }
 
     suspend fun unblock(
         id: String,
     ): Result<ActivityPubRelationshipEntity> {
-        return api.unblock(id = id)
+        return runCatching {
+            api.unblock(id = id)
+        }
     }
 
     suspend fun getDomainBlocks(): Result<List<String>> {
-        return api.getDomainBlocks()
+        return runCatching {
+            api.getDomainBlocks()
+        }
     }
 
     suspend fun blockDomain(
         domain: String,
-    ): Result<JsonObject> {
-        return api.blockDomain(domain = domain)
+    ): Result<JsonElement> {
+        return runCatching {
+            api.blockDomain(domain = domain)
+        }
     }
 
     suspend fun unblockDomain(
         domain: String,
-    ): Result<JsonObject> {
-        return api.unblockDomain(domain = domain)
+    ): Result<JsonElement> {
+        return runCatching {
+            client.ktorfit.httpClient.delete {
+                url {
+                    takeFrom(client.ktorfit.baseUrl + "/api/v1/domain_blocks")
+                }
+                headers {
+                    contentType(ContentType.Application.FormUrlEncoded)
+                }
+                setBody(
+                    FormDataContent(
+                        Parameters.build {
+                            append("domain", domain)
+                        }
+                    )
+                )
+            }.body()
+        }
     }
 
     suspend fun getTagInformation(
         name: String,
     ): Result<ActivityPubTagEntity> {
-        return api.getTagInformation(id = name)
+        return runCatching {
+            api.getTagInformation(id = name)
+        }
     }
 
     suspend fun followTag(
         name: String,
     ): Result<ActivityPubTagEntity> {
-        return api.followTag(id = name)
+        return runCatching {
+            api.followTag(id = name)
+        }
     }
 
     suspend fun unfollowTag(
         name: String,
     ): Result<ActivityPubTagEntity> {
-        return api.unfollowTag(id = name)
+        return runCatching {
+            api.unfollowTag(id = name)
+        }
     }
 
     suspend fun updateNote(
         accountId: String,
         note: String,
     ): Result<ActivityPubRelationshipEntity> {
-        return api.updateNote(accountId, note)
+        return runCatching {
+            api.updateNote(accountId, note)
+        }
     }
 
     suspend fun updateCredentials(
@@ -394,33 +466,40 @@ class AccountsRepo(private val client: ActivityPubClient) {
         headerFileName: String? = null,
         fieldList: List<UpdateFieldRequestEntity>? = null,
     ): Result<ActivityPubAccountEntity> {
-        val namePart = name?.let { MultipartBody.Part.createFormData("display_name", it) }
-        val notePart = note?.let { MultipartBody.Part.createFormData("note", it) }
-        val avatarPart = avatarByteArray?.toRequestBody(MediaTypes.image)
-            ?.let { MultipartBody.Part.createFormData("avatar", avatarFileName, it) }
-        val headerPart = headerByteArray?.toRequestBody(MediaTypes.image)
-            ?.let { MultipartBody.Part.createFormData("header", headerFileName, it) }
-        val queryMap = mutableMapOf<String, String>()
-        if (fieldList.isNullOrEmpty().not()) {
-            fieldList!!.forEachIndexed { index, entity ->
-                queryMap["fields_attributes[$index][name]"] = entity.name
-                queryMap["fields_attributes[$index][value]"] = entity.value
-            }
-        }
-        return if (namePart == null &&
-            notePart == null &&
-            avatarPart == null &&
-            headerPart == null
-        ) {
-            api.updateCredentials(queryMap = queryMap)
-        } else {
-            api.updateCredentials(
-                queryMap = queryMap,
-                name = namePart,
-                note = notePart,
-                avatar = avatarPart,
-                header = headerPart,
-            )
+        return runCatching {
+            client.ktorfit.httpClient.patch {
+                url {
+                    takeFrom(client.ktorfit.baseUrl + "/api/v1/accounts/update_credentials")
+                    fieldList?.forEachIndexed { index, entity ->
+                        parameter("fields_attributes[$index][name]", entity.name)
+                        parameter("fields_attributes[$index][value]", entity.value)
+                    }
+                }
+                setBody(
+                    MultiPartFormDataContent(
+                        formData {
+                            if (!name.isNullOrEmpty()) {
+                                append("display_name", name)
+                            }
+                            if (!note.isNullOrEmpty()) {
+                                append("note", note)
+                            }
+                            if (avatarFileName != null && avatarByteArray != null) {
+                                append("avatar", avatarByteArray, Headers.build {
+                                    append(HttpHeaders.ContentType, "image/*")
+                                    append(HttpHeaders.ContentDisposition, "filename=\"$avatarFileName\"")
+                                })
+                            }
+                            if (headerFileName != null && headerByteArray != null) {
+                                append("header", headerByteArray, Headers.build {
+                                    append(HttpHeaders.ContentType, "image/*")
+                                    append(HttpHeaders.ContentDisposition, "filename=\"$headerFileName\"")
+                                })
+                            }
+                        }
+                    )
+                )
+            }.body()
         }
     }
 
@@ -428,7 +507,9 @@ class AccountsRepo(private val client: ActivityPubClient) {
      * Maximum number of results to return. Defaults to 40 accounts. Max 80 accounts.
      */
     suspend fun getSuggestions(limit: Int = 80): Result<List<ActivityPubSuggestionEntry>> {
-        return api.getSuggestions(limit = limit)
+        return runCatching {
+            api.getSuggestions(limit = limit)
+        }
     }
 
     suspend fun getFollowers(
@@ -438,18 +519,20 @@ class AccountsRepo(private val client: ActivityPubClient) {
         sinceId: String? = null,
         maxId: String? = null,
     ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
-        return performPagingRequest(
-            gson = client.gson,
-            requester = {
-                api.getFollowers(
-                    id = id,
-                    limit = limit,
-                    minId = minId,
-                    sinceId = sinceId,
-                    maxId = maxId,
-                )
-            }
-        )
+        return runCatching {
+            performPagingRequest(
+                json = client.json,
+                requester = {
+                    api.getFollowers(
+                        id = id,
+                        limit = limit,
+                        minId = minId,
+                        sinceId = sinceId,
+                        maxId = maxId,
+                    )
+                }
+            )
+        }
     }
 
     suspend fun getFollowing(
@@ -459,18 +542,20 @@ class AccountsRepo(private val client: ActivityPubClient) {
         sinceId: String? = null,
         maxId: String? = null,
     ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
-        return performPagingRequest(
-            gson = client.gson,
-            requester = {
-                api.getFollowing(
-                    id = id,
-                    limit = limit,
-                    minId = minId,
-                    sinceId = sinceId,
-                    maxId = maxId,
-                )
-            }
-        )
+        return runCatching {
+            performPagingRequest(
+                json = client.json,
+                requester = {
+                    api.getFollowing(
+                        id = id,
+                        limit = limit,
+                        minId = minId,
+                        sinceId = sinceId,
+                        maxId = maxId,
+                    )
+                }
+            )
+        }
     }
 
     suspend fun getMutedUserList(
@@ -478,16 +563,18 @@ class AccountsRepo(private val client: ActivityPubClient) {
         sinceId: String? = null,
         limit: Int = 40,
     ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
-        return performPagingRequest(
-            gson = client.gson,
-            requester = {
-                api.getMutedUserList(
-                    maxId = maxId,
-                    sinceId = sinceId,
-                    limit = limit,
-                )
-            },
-        )
+        return runCatching {
+            performPagingRequest(
+                json = client.json,
+                requester = {
+                    api.getMutedUserList(
+                        maxId = maxId,
+                        sinceId = sinceId,
+                        limit = limit,
+                    )
+                },
+            )
+        }
     }
 
     suspend fun getBlockedUserList(
@@ -496,17 +583,19 @@ class AccountsRepo(private val client: ActivityPubClient) {
         minId: String? = null,
         limit: Int = 40,
     ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
-        return performPagingRequest(
-            gson = client.gson,
-            requester = {
-                api.getBlockedUserList(
-                    maxId = maxId,
-                    minId = minId,
-                    sinceId = sinceId,
-                    limit = limit,
-                )
-            }
-        )
+        return runCatching {
+            performPagingRequest(
+                json = client.json,
+                requester = {
+                    api.getBlockedUserList(
+                        maxId = maxId,
+                        minId = minId,
+                        sinceId = sinceId,
+                        limit = limit,
+                    )
+                }
+            )
+        }
     }
 
     suspend fun getBookmarks(
@@ -515,17 +604,19 @@ class AccountsRepo(private val client: ActivityPubClient) {
         minId: String? = null,
         limit: Int = 40,
     ): Result<PagingResult<List<ActivityPubStatusEntity>>> {
-        return performPagingRequest(
-            gson = client.gson,
-            requester = {
-                api.getBookmarks(
-                    maxId = maxId,
-                    minId = minId,
-                    sinceId = sinceId,
-                    limit = limit,
-                )
-            }
-        )
+        return runCatching {
+            performPagingRequest(
+                json = client.json,
+                requester = {
+                    api.getBookmarks(
+                        maxId = maxId,
+                        minId = minId,
+                        sinceId = sinceId,
+                        limit = limit,
+                    )
+                }
+            )
+        }
     }
 
     suspend fun getFavourites(
@@ -534,17 +625,19 @@ class AccountsRepo(private val client: ActivityPubClient) {
         minId: String? = null,
         limit: Int = 40,
     ): Result<PagingResult<List<ActivityPubStatusEntity>>> {
-        return performPagingRequest(
-            gson = client.gson,
-            requester = {
-                api.getFavourites(
-                    maxId = maxId,
-                    minId = minId,
-                    sinceId = sinceId,
-                    limit = limit,
-                )
-            }
-        )
+        return runCatching {
+            performPagingRequest(
+                json = client.json,
+                requester = {
+                    api.getFavourites(
+                        maxId = maxId,
+                        minId = minId,
+                        sinceId = sinceId,
+                        limit = limit,
+                    )
+                }
+            )
+        }
     }
 
     suspend fun getFollowedTags(
@@ -553,49 +646,65 @@ class AccountsRepo(private val client: ActivityPubClient) {
         minId: String? = null,
         limit: Int = 40,
     ): Result<PagingResult<List<ActivityPubTagEntity>>> {
-        return performPagingRequest(
-            gson = client.gson,
-            requester = {
-                api.getFollowedTags(
-                    maxId = maxId,
-                    sinceId = sinceId,
-                    minId = minId,
-                    limit = limit,
-                )
-            },
-        )
+        return runCatching {
+            performPagingRequest(
+                json = client.json,
+                requester = {
+                    api.getFollowedTags(
+                        maxId = maxId,
+                        sinceId = sinceId,
+                        minId = minId,
+                        limit = limit,
+                    )
+                },
+            )
+        }
     }
 
     suspend fun mute(id: String): Result<ActivityPubRelationshipEntity> {
-        return api.mute(id)
+        return runCatching {
+            api.mute(id)
+        }
     }
 
     suspend fun unmute(id: String): Result<ActivityPubRelationshipEntity> {
-        return api.unmute(id)
+        return runCatching {
+            api.unmute(id)
+        }
     }
 
     suspend fun getFilters(): Result<List<ActivityPubFilterEntity>> {
-        return api.getFilters()
+        return runCatching {
+            api.getFilters()
+        }
     }
 
     suspend fun getFilter(id: String): Result<ActivityPubFilterEntity> {
-        return api.getFilter(id)
+        return runCatching {
+            api.getFilter(id)
+        }
     }
 
     suspend fun createFilters(
         data: ActivityPubCreateFilterEntity,
     ): Result<ActivityPubFilterEntity> {
-        return api.createFilter(data)
+        return runCatching {
+            api.createFilter(data)
+        }
     }
 
     suspend fun updateFilters(
         id: String,
         data: ActivityPubCreateFilterEntity,
     ): Result<ActivityPubFilterEntity> {
-        return api.updateFilter(id, data)
+        return runCatching {
+            api.updateFilter(id, data)
+        }
     }
 
     suspend fun deleteFilter(id: String): Result<Unit> {
-        return api.deleteFilter(id)
+        return runCatching {
+            api.deleteFilter(id)
+        }
     }
 }

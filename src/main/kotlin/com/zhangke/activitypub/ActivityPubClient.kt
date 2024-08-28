@@ -1,6 +1,5 @@
 package com.zhangke.activitypub
 
-import com.google.gson.Gson
 import com.zhangke.activitypub.api.AccountsRepo
 import com.zhangke.activitypub.api.AppsRepo
 import com.zhangke.activitypub.api.CustomEmojiRepo
@@ -11,12 +10,21 @@ import com.zhangke.activitypub.api.OAuthRepo
 import com.zhangke.activitypub.api.SearchRepo
 import com.zhangke.activitypub.api.StatusRepo
 import com.zhangke.activitypub.api.TimelinesRepo
+import com.zhangke.activitypub.entities.ActivityPubErrorEntry
 import com.zhangke.activitypub.entities.ActivityPubTokenEntity
-import com.zhangke.activitypub.utils.ActivityPubHeaderInterceptor
-import com.zhangke.activitypub.utils.ResultCallAdapterFactory
+import com.zhangke.activitypub.exception.handleErrorResponseToException
+import com.zhangke.activitypub.utils.AuthorizationPlugin
+import de.jensklingenberg.ktorfit.Ktorfit
+import de.jensklingenberg.ktorfit.converter.ResponseConverterFactory
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpResponseValidator
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.http.isSuccess
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * Created by ZhangKe on 2022/12/3.
@@ -24,29 +32,50 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ActivityPubClient(
     baseUrl: String,
     private val httpClient: OkHttpClient,
-    val gson: Gson,
+    val json: Json,
     private val tokenProvider: suspend () -> ActivityPubTokenEntity?,
     onAuthorizeFailed: () -> Unit,
 ) {
 
-    internal val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(ResultCallAdapterFactory(gson, onAuthorizeFailed))
-        .client(createHttpClient())
-        .build()
-
-    private fun createHttpClient(): OkHttpClient {
-        return httpClient.newBuilder()
-            .addInterceptor(ActivityPubHeaderInterceptor(tokenProvider))
+    internal val ktorfit: Ktorfit by lazy {
+        Ktorfit.Builder()
+            .baseUrl(baseUrl)
+            .converterFactories(
+                ResponseConverterFactory(),
+            )
+            .httpClient(createHttpClient())
             .build()
+    }
+
+    private fun createHttpClient(): HttpClient {
+        return HttpClient(OkHttp) {
+            engine {
+                preconfigured = httpClient
+            }
+            install(ContentNegotiation) {
+                json(json)
+            }
+            install(AuthorizationPlugin) {
+                tokenProvider = this@ActivityPubClient.tokenProvider
+            }
+            HttpResponseValidator {
+                validateResponse { response ->
+                    if (!response.status.isSuccess()) {
+                        throw handleErrorResponseToException(
+                            json = json,
+                            response = response,
+                        )
+                    }
+                }
+            }
+        }
     }
 
     var apiLevel: ActivityPubInstanceApiLevel = ActivityPubInstanceApiLevel.V2
 
     val oauthRepo: OAuthRepo by lazy { OAuthRepo(this) }
 
-    val appsRepo: AppsRepo by lazy { AppsRepo(retrofit) }
+    val appsRepo: AppsRepo by lazy { AppsRepo(this) }
 
     val instanceRepo: InstanceRepo by lazy { InstanceRepo(this) }
 

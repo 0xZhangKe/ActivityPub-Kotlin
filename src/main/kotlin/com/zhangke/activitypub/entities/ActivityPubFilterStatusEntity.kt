@@ -1,8 +1,10 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubFilterStatusEntity(
     val id: String,
-    @SerializedName("status_id") val statusId: String,
+    @SerialName("status_id") val statusId: String,
 )

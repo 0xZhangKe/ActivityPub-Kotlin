@@ -1,24 +1,26 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubAnnouncementEntity(
     val id: String,
     val content: String,
-    @SerializedName("starts_at")
+    @SerialName("starts_at")
     val startsAt: String? = null,
-    @SerializedName("ends_at")
+    @SerialName("ends_at")
     val endsAt: String? = null,
     val published: Boolean,
     /**
      * Whether the announcement should start and end on dates only instead of datetimes.
      * Will be false if there is no starts_at or ends_at time.
      */
-    @SerializedName("all_day")
+    @SerialName("all_day")
     val allDay: Boolean,
-    @SerializedName("published_at")
+    @SerialName("published_at")
     val publishedAt: String,
-    @SerializedName("updated_at")
+    @SerialName("updated_at")
     val updatedAt: String,
     /**
      * Whether the announcement has been read by the current user.
@@ -31,6 +33,7 @@ data class ActivityPubAnnouncementEntity(
     val reactions: List<ActivityPubReactionEntity>,
 ){
 
+    @Serializable
     data class Account(
         val id: String,
         val username: String,
@@ -38,10 +41,10 @@ data class ActivityPubAnnouncementEntity(
         val acct: String,
     )
 
+    @Serializable
     data class Status(
         val id: String,
         val url: String,
-
     )
 }
 

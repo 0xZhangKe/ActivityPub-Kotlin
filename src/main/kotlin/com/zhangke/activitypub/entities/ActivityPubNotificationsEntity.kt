@@ -1,16 +1,18 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubNotificationsEntity(
     val id: String,
     val type: String,
-    @SerializedName("created_at")
+    @SerialName("created_at")
     val createdAt: String,
     val account: ActivityPubAccountEntity,
-    @SerializedName("status")
-    val status: ActivityPubStatusEntity?,
-    @SerializedName("relationship_severance_event")
+    @SerialName("status")
+    val status: ActivityPubStatusEntity? = null,
+    @SerialName("relationship_severance_event")
     val relationshipSeveranceEvent: ActivityPubRelationshipSeveranceEventEntity?,
 ) {
 

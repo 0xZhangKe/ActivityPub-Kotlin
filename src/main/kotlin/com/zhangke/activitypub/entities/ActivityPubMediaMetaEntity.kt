@@ -1,39 +1,43 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubMediaMetaEntity(
-    val length: String?,
-    val duration: Double?,
-    val fps: Int?,
-    val size: String?,
-    val width: Int?,
-    val height: Int?,
-    val aspect: Float?,
-    @SerializedName("audio_encode")
-    val audioEncode: String?,
-    @SerializedName("audio_bitrate")
-    val audioBitrate: String?,
-    @SerializedName("audio_channels")
-    val audioChannels: String?,
-    val original: LayoutMeta?,
-    val small: LayoutMeta?,
-    val focus: FocusMeta?,
+    val length: String? = null,
+    val duration: Double? = null,
+    val fps: Int? = null,
+    val size: String? = null,
+    val width: Int? = null,
+    val height: Int? = null,
+    val aspect: Float? = null,
+    @SerialName("audio_encode")
+    val audioEncode: String? = null,
+    @SerialName("audio_bitrate")
+    val audioBitrate: String? = null,
+    @SerialName("audio_channels")
+    val audioChannels: String? = null,
+    val original: LayoutMeta? = null,
+    val small: LayoutMeta? = null,
+    val focus: FocusMeta? = null,
 ) {
 
+    @Serializable
     data class LayoutMeta(
-        val width: Int?,
-        val height: Int?,
-        val size: String?,
-        val aspect: Float?,
-        @SerializedName("frame_rate")
-        val frameRate: String?,
-        val bitrate: Int?,
-        val duration: Double?,
+        val width: Int? = null,
+        val height: Int? = null,
+        val size: String? = null,
+        val aspect: Float? = null,
+        @SerialName("frame_rate")
+        val frameRate: String? = null,
+        val bitrate: Int? = null,
+        val duration: Double? = null,
     )
 
+    @Serializable
     data class FocusMeta(
-        val x: Float?,
-        val y: Float?,
+        val x: Float? = null,
+        val y: Float? = null,
     )
 }

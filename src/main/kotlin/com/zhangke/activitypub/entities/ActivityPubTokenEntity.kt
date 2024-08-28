@@ -1,16 +1,18 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 /**
  * Created by ZhangKe on 2022/12/14.
  */
+@Serializable
 data class ActivityPubTokenEntity(
-    @SerializedName("access_token")
+    @SerialName("access_token")
     val accessToken: String,
-    @SerializedName("token_type")
+    @SerialName("token_type")
     val tokenType: String,
     val scope: String,
-    @SerializedName("created_at")
+    @SerialName("created_at")
     val createdAt: String,
 )

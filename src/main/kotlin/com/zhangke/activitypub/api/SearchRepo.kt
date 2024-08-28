@@ -5,10 +5,10 @@ import com.zhangke.activitypub.entities.ActivityPubAccountEntity
 import com.zhangke.activitypub.entities.ActivityPubSearchEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubTagEntity
-import retrofit2.http.GET
-import retrofit2.http.Query
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Query
 
-private interface SearchApi {
+internal interface SearchApi {
 
     @GET("/api/v2/search")
     suspend fun search(
@@ -37,12 +37,12 @@ private interface SearchApi {
         @Query("min_id") minId: String?,
         @Query("limit") limit: Int?,
         @Query("offset") offset: Int?,
-    ): Result<ActivityPubSearchEntity>
+    ): ActivityPubSearchEntity
 }
 
 class SearchRepo(client: ActivityPubClient) {
 
-    private val api = client.retrofit.create(SearchApi::class.java)
+    private val api = client.ktorfit.createSearchApi()
 
     suspend fun query(
         query: String,
@@ -55,18 +55,20 @@ class SearchRepo(client: ActivityPubClient) {
         limit: Int? = null,
         offset: Int? = null,
     ): Result<ActivityPubSearchEntity> {
-        return api.search(
-            type = null,
-            query = query,
-            resolve = resolve,
-            following = following,
-            accountId = accountId,
-            excludeUnreviewed = excludeUnreviewed,
-            maxId = maxId,
-            minId = minId,
-            limit = limit,
-            offset = offset,
-        )
+        return runCatching {
+            api.search(
+                type = null,
+                query = query,
+                resolve = resolve,
+                following = following,
+                accountId = accountId,
+                excludeUnreviewed = excludeUnreviewed,
+                maxId = maxId,
+                minId = minId,
+                limit = limit,
+                offset = offset,
+            )
+        }
     }
 
     suspend fun queryAccount(
@@ -80,18 +82,20 @@ class SearchRepo(client: ActivityPubClient) {
         limit: Int? = null,
         offset: Int? = null,
     ): Result<List<ActivityPubAccountEntity>> {
-        return api.search(
-            type = "accounts",
-            query = query,
-            resolve = resolve,
-            following = following,
-            accountId = accountId,
-            excludeUnreviewed = excludeUnreviewed,
-            maxId = maxId,
-            minId = minId,
-            limit = limit,
-            offset = offset,
-        ).map { it.accounts }
+        return runCatching {
+            api.search(
+                type = "accounts",
+                query = query,
+                resolve = resolve,
+                following = following,
+                accountId = accountId,
+                excludeUnreviewed = excludeUnreviewed,
+                maxId = maxId,
+                minId = minId,
+                limit = limit,
+                offset = offset,
+            )
+        }.map { it.accounts }
     }
 
     suspend fun queryHashtags(
@@ -103,18 +107,20 @@ class SearchRepo(client: ActivityPubClient) {
         limit: Int? = null,
         offset: Int? = null,
     ): Result<List<ActivityPubTagEntity>> {
-        return api.search(
-            type = "hashtags",
-            query = query,
-            resolve = resolve,
-            following = following,
-            accountId = accountId,
-            excludeUnreviewed = excludeUnreviewed,
-            maxId = null,
-            minId = null,
-            limit = limit,
-            offset = offset,
-        ).map { it.hashtags }
+        return runCatching {
+            api.search(
+                type = "hashtags",
+                query = query,
+                resolve = resolve,
+                following = following,
+                accountId = accountId,
+                excludeUnreviewed = excludeUnreviewed,
+                maxId = null,
+                minId = null,
+                limit = limit,
+                offset = offset,
+            )
+        }.map { it.hashtags }
     }
 
     suspend fun queryStatus(
@@ -128,17 +134,19 @@ class SearchRepo(client: ActivityPubClient) {
         limit: Int? = null,
         offset: Int? = null,
     ): Result<List<ActivityPubStatusEntity>> {
-        return api.search(
-            type = "statuses",
-            query = query,
-            resolve = resolve,
-            following = following,
-            accountId = accountId,
-            excludeUnreviewed = excludeUnreviewed,
-            maxId = maxId,
-            minId = minId,
-            limit = limit,
-            offset = offset,
-        ).map { it.statuses }
+        return runCatching {
+            api.search(
+                type = "statuses",
+                query = query,
+                resolve = resolve,
+                following = following,
+                accountId = accountId,
+                excludeUnreviewed = excludeUnreviewed,
+                maxId = maxId,
+                minId = minId,
+                limit = limit,
+                offset = offset,
+            )
+        }.map { it.statuses }
     }
 }

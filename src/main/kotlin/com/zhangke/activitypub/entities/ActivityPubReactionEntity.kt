@@ -1,7 +1,9 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubReactionEntity(
     val name: String,
     val count: Int,
@@ -10,6 +12,6 @@ data class ActivityPubReactionEntity(
      */
     val me: Boolean? = null,
     val url: String? = null,
-    @SerializedName("static_url")
+    @SerialName("static_url")
     val staticUrl: String? = null,
 )

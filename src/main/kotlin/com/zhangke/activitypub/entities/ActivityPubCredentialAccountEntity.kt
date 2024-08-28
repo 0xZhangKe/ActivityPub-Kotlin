@@ -1,5 +1,8 @@
 package com.zhangke.activitypub.entities
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ActivityPubCredentialAccountEntity(
     /**
      * The default post privacy to be used for new statuses.

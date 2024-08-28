@@ -1,35 +1,42 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubInstanceEntity(
     val domain: String,
     val title: String,
     val version: String,
-    @SerializedName("source_url") val sourceUrl: String?,
+    @SerialName("source_url") val sourceUrl: String? = null,
     val description: String,
     val usage: Usage,
     val thumbnail: Thumbnail,
-    val languages: List<String>?,
+    val languages: List<String>? = null,
     val rules: List<Rule>,
-    val contact: Contact?,
+    val contact: Contact? = null,
     val configuration: ActivityPubInstanceConfigurationEntity,
 ) {
 
+    @Serializable
     data class Usage(val users: Users) {
 
+        @Serializable
         data class Users(
-            @SerializedName("active_month") val activeMonth: Int
+            @SerialName("active_month") val activeMonth: Int
         )
     }
 
+    @Serializable
     data class Thumbnail(val url: String)
 
+    @Serializable
     data class Rule(
         val id: String,
         val text: String,
     )
 
+    @Serializable
     data class Contact(
         val email: String,
         val account: ActivityPubAccountEntity,
@@ -37,25 +44,27 @@ data class ActivityPubInstanceEntity(
 
 }
 
+@Serializable
 internal data class ActivityPubV1InstanceEntity(
     val uri: String,
     val title: String,
     val version: String,
-    @SerializedName("source_url") val sourceUrl: String?,
+    @SerialName("source_url") val sourceUrl: String?,
     val description: String,
     val usage: ActivityPubInstanceEntity.Usage?,
     val thumbnail: String,
     val languages: List<String>?,
     val stats: Stats,
     val rules: List<ActivityPubInstanceEntity.Rule>?,
-    @SerializedName("contact_account") val contactAccount: ActivityPubAccountEntity?,
+    @SerialName("contact_account") val contactAccount: ActivityPubAccountEntity?,
     val configuration: ActivityPubInstanceConfigurationEntity,
 ) {
 
+    @Serializable
     data class Stats(
-        @SerializedName("user_count") val userCount: Int,
-        @SerializedName("status_count") val statusCount: Int,
-        @SerializedName("domain_count") val domainCount: Int,
+        @SerialName("user_count") val userCount: Int,
+        @SerialName("status_count") val statusCount: Int,
+        @SerialName("domain_count") val domainCount: Int,
     ) {
 
         fun toUsage(): ActivityPubInstanceEntity.Usage {

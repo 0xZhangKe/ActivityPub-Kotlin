@@ -2,10 +2,10 @@ package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubNotificationsEntity
-import retrofit2.http.GET
-import retrofit2.http.Query
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Query
 
-private interface NotificationsApi {
+internal interface NotificationsApi {
 
     @GET("/api/v1/notifications")
     suspend fun getNotifications(
@@ -22,13 +22,13 @@ private interface NotificationsApi {
         @Query("account_id") accountId: String?,
         @Query("types[]") types: List<String>?,
         @Query("exclude_types") excludeTypes: List<String>?,
-    ): Result<List<ActivityPubNotificationsEntity>>
+    ): List<ActivityPubNotificationsEntity>
 
 }
 
 class NotificationsRepo(client: ActivityPubClient) {
 
-    private val api = client.retrofit.create(NotificationsApi::class.java)
+    private val api = client.ktorfit.createNotificationsApi()
 
     suspend fun getNotifications(
         maxId: String? = null,
@@ -39,14 +39,16 @@ class NotificationsRepo(client: ActivityPubClient) {
         types: List<String>? = null,
         excludeTypes: List<String>? = null,
     ): Result<List<ActivityPubNotificationsEntity>> {
-        return api.getNotifications(
-            maxId = maxId,
-            sinceId = sinceId,
-            minId = minId,
-            limit = limit,
-            accountId = accountId,
-            types = types,
-            excludeTypes = excludeTypes,
-        )
+        return runCatching {
+            api.getNotifications(
+                maxId = maxId,
+                sinceId = sinceId,
+                minId = minId,
+                limit = limit,
+                accountId = accountId,
+                types = types,
+                excludeTypes = excludeTypes,
+            )
+        }
     }
 }

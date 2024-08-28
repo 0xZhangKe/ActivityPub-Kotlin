@@ -7,51 +7,51 @@ import com.zhangke.activitypub.entities.ActivityPubInstanceEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubTagEntity
 import com.zhangke.activitypub.entities.ActivityPubV1InstanceEntity
-import retrofit2.http.GET
-import retrofit2.http.Query
+import de.jensklingenberg.ktorfit.http.GET
+import de.jensklingenberg.ktorfit.http.Query
 
-private interface InstanceApi {
+internal interface InstanceApi {
 
     @GET("/api/v2/instance")
-    suspend fun v2InstanceInformation(): Result<ActivityPubInstanceEntity>
+    suspend fun v2InstanceInformation(): ActivityPubInstanceEntity
 
     @GET("/api/v1/instance")
-    suspend fun v1InstanceInformation(): Result<ActivityPubV1InstanceEntity>
+    suspend fun v1InstanceInformation(): ActivityPubV1InstanceEntity
 
     @GET("/api/v1/announcements")
-    suspend fun getAnnouncement(): Result<List<ActivityPubAnnouncementEntity>>
+    suspend fun getAnnouncement(): List<ActivityPubAnnouncementEntity>
 
     @GET("/api/v1/trends/tags")
     suspend fun getTrendsTags(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
-    ): Result<List<ActivityPubTagEntity>>
+    ): List<ActivityPubTagEntity>
 
     @GET("/api/v1/trends/statuses")
     suspend fun getTrendsStatuses(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
-    ): Result<List<ActivityPubStatusEntity>>
+    ): List<ActivityPubStatusEntity>
 }
 
 class InstanceRepo(private val client: ActivityPubClient) {
 
-    private val api = client.retrofit.create(InstanceApi::class.java)
+    private val api = client.ktorfit.createInstanceApi()
 
     suspend fun getInstanceInformation(): Result<ActivityPubInstanceEntity> {
         try {
             if (client.apiLevel == ActivityPubInstanceApiLevel.V1) {
-                val result = api.v1InstanceInformation()
+                val result = runCatching { api.v1InstanceInformation() }
                 if (result.isSuccess) return result.map { it.toInstanceEntity() }
             }
-            val v2Result = api.v2InstanceInformation()
+            val v2Result = runCatching { api.v2InstanceInformation() }
             if (v2Result.isSuccess) {
                 if (client.apiLevel != ActivityPubInstanceApiLevel.V2) {
                     client.apiLevel = ActivityPubInstanceApiLevel.V2
                 }
                 return v2Result
             }
-            val v1Result = api.v1InstanceInformation()
+            val v1Result = runCatching { api.v1InstanceInformation() }
             if (v1Result.isSuccess) {
                 client.apiLevel = ActivityPubInstanceApiLevel.V1
                 return v1Result.map { it.toInstanceEntity() }
@@ -66,7 +66,7 @@ class InstanceRepo(private val client: ActivityPubClient) {
      * need login
      */
     suspend fun getAnnouncement(): Result<List<ActivityPubAnnouncementEntity>> {
-        return api.getAnnouncement()
+        return runCatching { api.getAnnouncement() }
     }
 
     /**
@@ -75,13 +75,13 @@ class InstanceRepo(private val client: ActivityPubClient) {
      * The former is a deprecated alias that may be removed in the future.
      */
     suspend fun getTrendsTags(limit: Int, offset: Int): Result<List<ActivityPubTagEntity>> {
-        return api.getTrendsTags(limit, offset)
+        return runCatching { api.getTrendsTags(limit, offset) }
     }
 
     /**
      * 3.5.0 - added
      */
     suspend fun getTrendsStatuses(limit: Int, offset: Int): Result<List<ActivityPubStatusEntity>> {
-        return api.getTrendsStatuses(limit, offset)
+        return runCatching { api.getTrendsStatuses(limit, offset) }
     }
 }

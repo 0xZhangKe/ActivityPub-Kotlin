@@ -1,16 +1,18 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubRelationshipSeveranceEventEntity(
     val id: String,
     val type: String,
     val purged: Boolean,
-    @SerializedName("target_name")
+    @SerialName("target_name")
     val targetName: String,
-    @SerializedName("relationships_count")
-    val relationshipsCount: Int?,
-    @SerializedName("created_at")
+    @SerialName("relationships_count")
+    val relationshipsCount: Int? = null,
+    @SerialName("created_at")
     val createdAt: String,
 ) {
 

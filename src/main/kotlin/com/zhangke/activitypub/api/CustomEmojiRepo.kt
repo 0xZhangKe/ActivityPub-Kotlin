@@ -2,19 +2,19 @@ package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubCustomEmojiEntity
-import retrofit2.http.GET
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.http.takeFrom
 
-private interface CustomEmojiService {
-
-    @GET("/api/v1/custom_emojis")
-    suspend fun getCustomEmojis(): Result<List<ActivityPubCustomEmojiEntity>>
-}
-
-class CustomEmojiRepo(client: ActivityPubClient) {
-
-    private val api: CustomEmojiService = client.retrofit.create(CustomEmojiService::class.java)
+class CustomEmojiRepo(private val client: ActivityPubClient) {
 
     suspend fun getCustomEmojis(): Result<List<ActivityPubCustomEmojiEntity>> {
-        return api.getCustomEmojis()
+        return runCatching {
+            client.ktorfit.httpClient.get {
+                url {
+                    takeFrom(client.ktorfit.baseUrl + "/api/v1/custom_emojis")
+                }
+            }.body()
+        }
     }
 }

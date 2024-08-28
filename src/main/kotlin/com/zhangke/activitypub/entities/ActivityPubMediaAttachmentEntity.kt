@@ -1,12 +1,14 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity.Companion.TYPE_AUDIO
 import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity.Companion.TYPE_GIFV
 import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity.Companion.TYPE_IMAGE
 import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity.Companion.TYPE_UNKNOWN
 import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity.Companion.TYPE_VIDEO
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubMediaAttachmentEntity(
     val id: String,
     /**
@@ -15,13 +17,13 @@ data class ActivityPubMediaAttachmentEntity(
      */
     val type: String,
     val url: String,
-    @SerializedName("preview_url")
+    @SerialName("preview_url")
     val previewUrl: String,
-    @SerializedName("remote_url")
+    @SerialName("remote_url")
     val remoteUrl: String? = null,
     val description: String? = null,
     val blurhash: String? = null,
-    val meta: ActivityPubMediaMetaEntity?,
+    val meta: ActivityPubMediaMetaEntity? = null,
 ) {
 
     companion object {

@@ -2,15 +2,15 @@ package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubTokenEntity
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import de.jensklingenberg.ktorfit.http.Field
+import de.jensklingenberg.ktorfit.http.FormUrlEncoded
+import de.jensklingenberg.ktorfit.http.POST
 
 /**
  * Created by ZhangKe on 2022/12/14.
  */
 
-private interface OAuthApi {
+internal interface OAuthApi {
 
     @FormUrlEncoded
     @POST("/oauth/token")
@@ -21,13 +21,13 @@ private interface OAuthApi {
         @Field("grant_type") grantType: String,
         @Field("code") code: String,
         @Field("scope") scope: String,
-    ): Result<ActivityPubTokenEntity>
+    ): ActivityPubTokenEntity
 
 }
 
 class OAuthRepo(client: ActivityPubClient) {
 
-    private val api = client.retrofit.create(OAuthApi::class.java)
+    private val api = client.ktorfit.createOAuthApi()
 
     fun buildOAuthUrl(
         baseUrl: String,
@@ -48,13 +48,15 @@ class OAuthRepo(client: ActivityPubClient) {
         redirectUri: String,
         scopeList: Array<ActivityPubScope>
     ): Result<ActivityPubTokenEntity> {
-        return api.getToken(
-            clientId = clientId,
-            clientSecret = clientSecret,
-            redirectUri = redirectUri,
-            grantType = "authorization_code",
-            code = code,
-            scope = scopeList.joinToString("+") { it.scope }
-        )
+        return runCatching {
+            api.getToken(
+                clientId = clientId,
+                clientSecret = clientSecret,
+                redirectUri = redirectUri,
+                grantType = "authorization_code",
+                code = code,
+                scope = scopeList.joinToString("+") { it.scope }
+            )
+        }
     }
 }

@@ -1,14 +1,16 @@
 package com.zhangke.activitypub.entities
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubPollEntity(
     val id: String,
     /**
      * ISO 8601 Datetime
      */
-    @SerializedName("expires_at")
-    val expiresAt: String?,
+    @SerialName("expires_at")
+    val expiresAt: String? = null,
     val expired: Boolean,
     /**
      * Does the poll allow multiple-choice answers?
@@ -17,23 +19,24 @@ data class ActivityPubPollEntity(
     /**
      * How many votes have been received.
      */
-    @SerializedName("votes_count")
+    @SerialName("votes_count")
     val votesCount: Int,
     /**
      * How many unique accounts have voted on a multiple-choice poll.
      */
-    @SerializedName("voters_count")
+    @SerialName("voters_count")
     val votersCount: Int,
     val options: List<Option>,
     val emojis: List<ActivityPubCustomEmojiEntity>,
-    val voted: Boolean?,
-    @SerializedName("own_votes")
-    val ownVotes: List<Int>?,
+    val voted: Boolean? = null,
+    @SerialName("own_votes")
+    val ownVotes: List<Int>? = null,
 ) {
 
+    @Serializable
     data class Option(
         val title: String,
-        @SerializedName("votes_count")
+        @SerialName("votes_count")
         val votesCount: Int?,
     )
 }

@@ -2,6 +2,7 @@ package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubAccountEntity
+import com.zhangke.activitypub.entities.ActivityPubEditStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubPollEntity
 import com.zhangke.activitypub.entities.ActivityPubPollRequestEntity
 import com.zhangke.activitypub.entities.ActivityPubPostStatusRequestEntity
@@ -17,6 +18,7 @@ import de.jensklingenberg.ktorfit.http.Field
 import de.jensklingenberg.ktorfit.http.FormUrlEncoded
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.POST
+import de.jensklingenberg.ktorfit.http.PUT
 import de.jensklingenberg.ktorfit.http.Path
 import de.jensklingenberg.ktorfit.http.Query
 import kotlinx.serialization.json.JsonArray
@@ -32,6 +34,12 @@ internal interface StatusService {
     @POST("/api/v1/statuses")
     suspend fun postStatus(
         @Body requestBody: ActivityPubPostStatusRequestEntity,
+    ): ActivityPubStatusEntity
+
+    @PUT("/api/v1/statuses/{id}")
+    suspend fun editStatus(
+        @Path("id") id: String,
+        @Body requestBody: ActivityPubEditStatusEntity,
     ): ActivityPubStatusEntity
 
     @POST("/api/v1/statuses/{id}/favourite")
@@ -130,6 +138,30 @@ class StatusRepo(private val client: ActivityPubClient) {
                 scheduledAt = scheduledAt,
             )
             api.postStatus(requestBody = requestBody)
+        }
+    }
+
+    suspend fun editStatus(
+        id: String,
+        status: String,
+        spoilerText: String,
+        sensitive: Boolean,
+        mediaIds: List<String>? = null,
+        mediaAttributes: List<String>? = null,
+        poll: ActivityPubPollRequestEntity? = null,
+        language: String? = null,
+    ): Result<ActivityPubStatusEntity>{
+        return runCatching {
+            val requestBody = ActivityPubEditStatusEntity(
+                status = status,
+                spoilerText = spoilerText,
+                sensitive = sensitive,
+                language = language,
+                mediaIds = mediaIds,
+                mediaAttributes = mediaAttributes,
+                poll = poll,
+            )
+            api.editStatus(id, requestBody)
         }
     }
 

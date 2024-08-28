@@ -4,6 +4,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubAccountEntity
+import com.zhangke.activitypub.entities.ActivityPubEditStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubPollEntity
 import com.zhangke.activitypub.entities.ActivityPubPollRequestEntity
 import com.zhangke.activitypub.entities.ActivityPubPostStatusRequestEntity
@@ -19,6 +20,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -30,6 +32,12 @@ private interface StatusService {
     @POST("/api/v1/statuses")
     suspend fun postStatus(
         @Body requestBody: ActivityPubPostStatusRequestEntity,
+    ): Result<ActivityPubStatusEntity>
+
+    @PUT("/api/v1/statuses/{id}")
+    suspend fun editStatus(
+        @Path("id") id: String,
+        @Body requestBody: ActivityPubEditStatusEntity,
     ): Result<ActivityPubStatusEntity>
 
     @POST("/api/v1/statuses/{id}/favourite")
@@ -125,6 +133,28 @@ class StatusRepo(private val client: ActivityPubClient) {
             scheduledAt = scheduledAt,
         )
         return api.postStatus(requestBody = requestBody)
+    }
+
+    suspend fun editStatus(
+        id: String,
+        status: String,
+        spoilerText: String,
+        sensitive: Boolean,
+        mediaIds: List<String>? = null,
+        mediaAttributes: List<String>? = null,
+        poll: ActivityPubPollRequestEntity? = null,
+        language: String? = null,
+    ): Result<ActivityPubStatusEntity>{
+        val requestBody = ActivityPubEditStatusEntity(
+            status = status,
+            spoilerText = spoilerText,
+            sensitive = sensitive,
+            language = language,
+            mediaIds = mediaIds,
+            mediaAttributes = mediaAttributes,
+            poll = poll,
+        )
+        return api.editStatus(id, requestBody)
     }
 
     suspend fun favourite(id: String): Result<ActivityPubStatusEntity> {

@@ -137,11 +137,11 @@ class StatusRepo(private val client: ActivityPubClient) {
 
     suspend fun editStatus(
         id: String,
-        status: String,
-        spoilerText: String,
-        sensitive: Boolean,
+        status: String?,
+        spoilerText: String?,
+        sensitive: Boolean?,
         mediaIds: List<String>? = null,
-        mediaAttributes: List<String>? = null,
+        mediaAttributes: List<ActivityPubEditStatusEntity.MediaAttributes>? = null,
         poll: ActivityPubPollRequestEntity? = null,
         language: String? = null,
     ): Result<ActivityPubStatusEntity>{

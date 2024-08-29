@@ -44,6 +44,15 @@ private interface AccountsApi {
     @GET("/api/v1/accounts/lookup")
     suspend fun lookup(@Query("acct") acct: String): Result<ActivityPubAccountEntity?>
 
+    @GET("/api/v1/accounts/search")
+    suspend fun search(
+        @Query("q") q: String,
+        @Query("limit") limit: Int?,
+        @Query("offset") offset: Int?,
+        @Query("resolve") resolve: Boolean?,
+        @Query("following") following: Boolean?,
+    ): Result<List<ActivityPubAccountEntity>>
+
     @GET("/api/v1/accounts/{id}")
     suspend fun getAccount(@Path("id") id: String): Result<ActivityPubAccountEntity>
 
@@ -242,6 +251,8 @@ private interface AccountsApi {
 
     @DELETE("/api/v2/filters/{id}")
     suspend fun deleteFilter(@Path("id") id: String): Result<Unit>
+
+
 }
 
 class AccountsRepo(private val client: ActivityPubClient) {
@@ -258,6 +269,22 @@ class AccountsRepo(private val client: ActivityPubClient) {
 
     suspend fun lookup(acct: String): Result<ActivityPubAccountEntity?> {
         return api.lookup(acct)
+    }
+
+    suspend fun search(
+        query: String,
+        limit: Int = 40,
+        offset: Int? = null,
+        resolve: Boolean? = null,
+        following: Boolean? = null,
+    ): Result<List<ActivityPubAccountEntity>> {
+        return api.search(
+            q = query,
+            limit = limit,
+            offset = offset,
+            resolve = resolve,
+            following = following,
+        )
     }
 
     suspend fun getAccount(id: String): Result<ActivityPubAccountEntity> {

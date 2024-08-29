@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ActivityPubInstanceConfigurationEntity(
-    val urls: Urls,
-    val vapid: Vapid,
+    val urls: Urls? = null,
+    val vapid: Vapid? = null,
     val accounts: Accounts,
     val statuses: Statuses,
     @SerialName("media_attachments") val mediaAttachments: MediaAttachments,
@@ -23,7 +23,7 @@ data class ActivityPubInstanceConfigurationEntity(
     @Serializable
     data class Accounts(
         @SerialName("max_featured_tags") val maxFeaturedTags: Int,
-        @SerialName("max_pinned_statuses") val maxPinnedStatuses: Int?,
+        @SerialName("max_pinned_statuses") val maxPinnedStatuses: Int? = null,
     )
 
     @Serializable

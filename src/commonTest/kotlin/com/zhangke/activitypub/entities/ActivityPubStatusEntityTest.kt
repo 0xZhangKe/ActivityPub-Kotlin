@@ -1,8 +1,8 @@
 package com.zhangke.activitypub.entities
 
 import com.zhangke.activitypub.utils.testGlobalJson
-import org.junit.Assert.*
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class ActivityPubStatusEntityTest {
     @Test

@@ -521,7 +521,6 @@ class AccountsRepo(private val client: ActivityPubClient) {
     ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
         return runCatching {
             performPagingRequest(
-                json = client.json,
                 requester = {
                     api.getFollowers(
                         id = id,
@@ -544,7 +543,6 @@ class AccountsRepo(private val client: ActivityPubClient) {
     ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
         return runCatching {
             performPagingRequest(
-                json = client.json,
                 requester = {
                     api.getFollowing(
                         id = id,
@@ -565,7 +563,6 @@ class AccountsRepo(private val client: ActivityPubClient) {
     ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
         return runCatching {
             performPagingRequest(
-                json = client.json,
                 requester = {
                     api.getMutedUserList(
                         maxId = maxId,
@@ -585,7 +582,6 @@ class AccountsRepo(private val client: ActivityPubClient) {
     ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
         return runCatching {
             performPagingRequest(
-                json = client.json,
                 requester = {
                     api.getBlockedUserList(
                         maxId = maxId,
@@ -606,7 +602,6 @@ class AccountsRepo(private val client: ActivityPubClient) {
     ): Result<PagingResult<List<ActivityPubStatusEntity>>> {
         return runCatching {
             performPagingRequest(
-                json = client.json,
                 requester = {
                     api.getBookmarks(
                         maxId = maxId,
@@ -627,7 +622,6 @@ class AccountsRepo(private val client: ActivityPubClient) {
     ): Result<PagingResult<List<ActivityPubStatusEntity>>> {
         return runCatching {
             performPagingRequest(
-                json = client.json,
                 requester = {
                     api.getFavourites(
                         maxId = maxId,
@@ -648,7 +642,6 @@ class AccountsRepo(private val client: ActivityPubClient) {
     ): Result<PagingResult<List<ActivityPubTagEntity>>> {
         return runCatching {
             performPagingRequest(
-                json = client.json,
                 requester = {
                     api.getFollowedTags(
                         maxId = maxId,

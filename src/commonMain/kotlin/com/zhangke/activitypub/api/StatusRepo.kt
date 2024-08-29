@@ -250,7 +250,6 @@ class StatusRepo(private val client: ActivityPubClient) {
     ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
         return runCatching {
             performPagingRequest(
-                json = client.json,
                 requester = {
                     api.getReblogBy(
                         id = statusId,
@@ -271,7 +270,6 @@ class StatusRepo(private val client: ActivityPubClient) {
     ): Result<PagingResult<List<ActivityPubAccountEntity>>> {
         return runCatching {
             performPagingRequest(
-                json = client.json,
                 requester = {
                     api.getFavouritesBy(
                         id = statusId,

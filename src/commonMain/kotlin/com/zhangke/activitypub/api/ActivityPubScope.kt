@@ -11,7 +11,6 @@ enum class ActivityPubScope(val scope: String) {
     PUSH("push");
 
     companion object {
-
-        val ALL = values()
+        val ALL get() = entries
     }
 }

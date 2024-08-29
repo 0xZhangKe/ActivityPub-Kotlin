@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktorfit)
@@ -8,20 +8,27 @@ plugins {
 group = "com.zhangke.activitypub"
 version = "1.0.0-SNAPSHOT"
 
-dependencies {
-    testImplementation("junit:junit:4.+")
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
+kotlin {
+    jvm()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.bundles.kotlin)
-    implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.client.serialization.kotlinx.json)
 
-    implementation(libs.okhttp3)
-    implementation(libs.okhttp3.logging)
-
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.client.serialization.kotlinx.json)
-    implementation(libs.ktor.client.okhttp)
-
-    implementation(libs.ktorfit.lib)
-    implementation(libs.ktorfit.converters.response)
+                implementation(libs.ktorfit.lib)
+                implementation(libs.ktorfit.converters.response)
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+    }
 }

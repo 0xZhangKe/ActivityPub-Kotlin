@@ -10,28 +10,25 @@ import com.zhangke.activitypub.api.OAuthRepo
 import com.zhangke.activitypub.api.SearchRepo
 import com.zhangke.activitypub.api.StatusRepo
 import com.zhangke.activitypub.api.TimelinesRepo
-import com.zhangke.activitypub.entities.ActivityPubErrorEntry
 import com.zhangke.activitypub.entities.ActivityPubTokenEntity
 import com.zhangke.activitypub.exception.handleErrorResponseToException
 import com.zhangke.activitypub.utils.AuthorizationPlugin
 import de.jensklingenberg.ktorfit.Ktorfit
 import de.jensklingenberg.ktorfit.converter.ResponseConverterFactory
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
 
 /**
  * Created by ZhangKe on 2022/12/3.
  */
 class ActivityPubClient(
     baseUrl: String,
-    private val httpClient: OkHttpClient,
+    private val engine: HttpClientEngine,
     val json: Json,
     private val tokenProvider: suspend () -> ActivityPubTokenEntity?,
     onAuthorizeFailed: () -> Unit,
@@ -48,10 +45,7 @@ class ActivityPubClient(
     }
 
     private fun createHttpClient(): HttpClient {
-        return HttpClient(OkHttp) {
-            engine {
-                preconfigured = httpClient
-            }
+        return HttpClient(engine) {
             install(ContentNegotiation) {
                 json(json)
             }
@@ -62,7 +56,6 @@ class ActivityPubClient(
                 validateResponse { response ->
                     if (!response.status.isSuccess()) {
                         throw handleErrorResponseToException(
-                            json = json,
                             response = response,
                         )
                     }

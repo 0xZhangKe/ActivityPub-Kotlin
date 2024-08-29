@@ -46,7 +46,7 @@ class OAuthRepo(client: ActivityPubClient) {
         clientId: String,
         clientSecret: String,
         redirectUri: String,
-        scopeList: Array<ActivityPubScope>
+        scopeList: List<ActivityPubScope>
     ): Result<ActivityPubTokenEntity> {
         return runCatching {
             api.getToken(

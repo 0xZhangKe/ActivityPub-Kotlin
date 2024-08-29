@@ -1,14 +1,9 @@
 package com.zhangke.activitypub.exception
 
 import com.zhangke.activitypub.entities.ActivityPubErrorEntry
-import de.jensklingenberg.ktorfit.Response
+import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsChannel
 import io.ktor.http.isSuccess
-import io.ktor.utils.io.jvm.javaio.toInputStream
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.decodeFromStream
 
 /**
  * Created by ZhangKe on 2022/12/3.
@@ -33,14 +28,11 @@ private val unauthorizedCode = listOf(
     422
 )
 
-@OptIn(ExperimentalSerializationApi::class)
-internal suspend fun handleErrorResponseToException(json: Json, response: HttpResponse): Exception {
+internal suspend fun handleErrorResponseToException(response: HttpResponse): Exception {
     val code = response.status.value
     val errorEntry = if (!response.status.isSuccess()) {
         runCatching {
-            json.decodeFromStream<ActivityPubErrorEntry>(
-                response.bodyAsChannel().toInputStream(),
-            )
+            response.body<ActivityPubErrorEntry>()
         }.getOrNull()
     } else null
     val errorMessage = errorEntry?.error

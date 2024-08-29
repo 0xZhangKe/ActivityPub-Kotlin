@@ -6,11 +6,10 @@ import com.zhangke.activitypub.exception.handleErrorResponseToException
 import de.jensklingenberg.ktorfit.Response
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 
 internal suspend fun <T> performPagingRequest(
-    json: Json,
     requester: suspend () -> Response<T>,
 ): PagingResult<T> = withContext(Dispatchers.IO) {
     val response = requester()
@@ -24,7 +23,6 @@ internal suspend fun <T> performPagingRequest(
         )
     } else {
         throw handleErrorResponseToException(
-            json = json,
             response = response.raw(),
         )
     }

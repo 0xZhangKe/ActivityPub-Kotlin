@@ -14,7 +14,7 @@ data class ActivityPubCredentialAccountEntity(
      */
     val privacy: String,
     val sensitive: Boolean,
-    val language: String,
+    val language: String? = null,
     val note: String,
     val fields: List<ActivityPubField>,
 )

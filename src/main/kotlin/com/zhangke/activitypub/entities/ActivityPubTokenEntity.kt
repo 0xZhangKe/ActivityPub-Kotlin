@@ -14,5 +14,5 @@ data class ActivityPubTokenEntity(
     val tokenType: String,
     val scope: String,
     @SerialName("created_at")
-    val createdAt: String,
+    val createdAt: Long,
 )

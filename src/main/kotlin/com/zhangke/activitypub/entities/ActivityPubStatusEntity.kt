@@ -38,7 +38,7 @@ data class ActivityPubStatusEntity(
     val muted: Boolean? = null,
     val bookmarked: Boolean? = null,
     val content: String? = null,
-    val emojis: List<ActivityPubCustomEmojiEntity>,
+    val emojis: List<ActivityPubCustomEmojiEntity> = emptyList(),
     val reblog: ActivityPubStatusEntity? = null,
     val tags: List<Tag>,
     val poll: ActivityPubPollEntity? = null,

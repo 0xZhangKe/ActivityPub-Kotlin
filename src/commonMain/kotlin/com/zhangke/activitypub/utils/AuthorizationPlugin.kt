@@ -5,10 +5,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpClientPlugin
 import io.ktor.client.request.HttpRequestPipeline
 import io.ktor.client.request.bearerAuth
-import io.ktor.client.request.header
 import io.ktor.util.AttributeKey
-import io.ktor.util.KtorDsl
-import kotlinx.coroutines.runBlocking
+import io.ktor.utils.io.KtorDsl
 
 class AuthorizationPlugin private constructor(
   private val tokenProvider: (suspend () -> ActivityPubTokenEntity?)?,

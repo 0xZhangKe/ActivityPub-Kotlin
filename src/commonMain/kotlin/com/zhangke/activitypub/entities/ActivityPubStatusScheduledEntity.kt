@@ -8,8 +8,8 @@ import kotlinx.serialization.json.JsonElement
 data class ActivityPubStatusScheduledEntity(
     val id: String,
     @SerialName("scheduled_at")
-    val scheduledAt: String,
+    val scheduledAt: String = "",
     @SerialName("media_attachments")
-    val mediaAttachments: List<ActivityPubMediaAttachmentEntity>,
-    val params: JsonElement,
+    val mediaAttachments: List<ActivityPubMediaAttachmentEntity> = emptyList(),
+    val params: JsonElement? = null,
 )

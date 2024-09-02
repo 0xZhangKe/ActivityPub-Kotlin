@@ -10,6 +10,6 @@ data class ActivityPubCustomEmojiEntity(
     @SerialName("static_url")
     val staticUrl: String,
     @SerialName("visible_in_picker")
-    val visibleInPicker: Boolean,
+    val visibleInPicker: Boolean = false,
     val category: String? = null,
 )

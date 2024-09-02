@@ -12,9 +12,9 @@ data class ActivityPubFilterEntity(
     /**
      * enum of: warn,keywords
      */
-    @SerialName("filter_action") val filterAction: String,
+    @SerialName("filter_action") val filterAction: String = "",
     val keywords: List<ActivityPubFilterKeywordEntity>? = null,
-    val statuses: List<ActivityPubFilterStatusEntity>,
+    val statuses: List<ActivityPubFilterStatusEntity> = emptyList(),
 ) {
 
     companion object {

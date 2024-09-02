@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ActivityPubReactionEntity(
     val name: String,
-    val count: Int,
+    val count: Int = 0,
     /**
      * If there is a currently authorized user: Have you added this reaction?
      */

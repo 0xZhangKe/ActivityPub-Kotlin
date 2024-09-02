@@ -11,40 +11,40 @@ data class ActivityPubAnnouncementEntity(
     val startsAt: String? = null,
     @SerialName("ends_at")
     val endsAt: String? = null,
-    val published: Boolean,
+    val published: Boolean = false,
     /**
      * Whether the announcement should start and end on dates only instead of datetimes.
      * Will be false if there is no starts_at or ends_at time.
      */
     @SerialName("all_day")
-    val allDay: Boolean,
+    val allDay: Boolean = false,
     @SerialName("published_at")
-    val publishedAt: String,
+    val publishedAt: String = "",
     @SerialName("updated_at")
-    val updatedAt: String,
+    val updatedAt: String = "",
     /**
      * Whether the announcement has been read by the current user.
      */
     val read: Boolean = false,
-    val mentions: List<Account>,
-    val statuses: List<Status>,
-    val tags: List<ActivityPubStatusTagEntity>,
-    val emojis: List<ActivityPubCustomEmojiEntity>,
-    val reactions: List<ActivityPubReactionEntity>,
+    val mentions: List<Account> = emptyList(),
+    val statuses: List<Status> = emptyList(),
+    val tags: List<ActivityPubStatusTagEntity> = emptyList(),
+    val emojis: List<ActivityPubCustomEmojiEntity> = emptyList(),
+    val reactions: List<ActivityPubReactionEntity> = emptyList(),
 ){
 
     @Serializable
     data class Account(
         val id: String,
-        val username: String,
-        val url: String,
-        val acct: String,
+        val username: String = "",
+        val url: String = "",
+        val acct: String = "",
     )
 
     @Serializable
     data class Status(
         val id: String,
-        val url: String,
+        val url: String = "",
     )
 }
 

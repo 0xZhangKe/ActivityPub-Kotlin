@@ -13,7 +13,7 @@ data class ActivityPubInstanceEntity(
     val usage: Usage,
     val thumbnail: Thumbnail,
     val languages: List<String>? = null,
-    val rules: List<Rule>,
+    val rules: List<Rule> = emptyList(),
     val contact: Contact? = null,
     val configuration: ActivityPubInstanceConfigurationEntity,
 ) {
@@ -55,8 +55,8 @@ internal data class ActivityPubV1InstanceEntity(
     val thumbnail: String = "",
     val languages: List<String>? = null,
     val stats: Stats,
-    val rules: List<ActivityPubInstanceEntity.Rule>?,
-    @SerialName("contact_account") val contactAccount: ActivityPubAccountEntity?,
+    val rules: List<ActivityPubInstanceEntity.Rule>? = null,
+    @SerialName("contact_account") val contactAccount: ActivityPubAccountEntity? = null,
     val configuration: ActivityPubInstanceConfigurationEntity,
 ) {
 

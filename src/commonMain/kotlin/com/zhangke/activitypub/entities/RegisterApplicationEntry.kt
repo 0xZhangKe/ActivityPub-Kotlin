@@ -11,7 +11,7 @@ data class RegisterApplicationEntry(
     val id: String,
     val name: String,
     val website: String? = null,
-    @SerialName("redirect_uri") val redirectUri: String,
+    @SerialName("redirect_uri") val redirectUri: String = "",
     @SerialName("client_id") val clientId: String? = null,
     @SerialName("client_secret") val clientSecret: String? = null,
     @SerialName("vapid_key") val vapidKey: String? = null,

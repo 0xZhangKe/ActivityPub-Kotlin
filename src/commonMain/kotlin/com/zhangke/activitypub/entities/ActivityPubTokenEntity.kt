@@ -12,7 +12,7 @@ data class ActivityPubTokenEntity(
     val accessToken: String,
     @SerialName("token_type")
     val tokenType: String,
-    val scope: String,
+    val scope: String = "",
     @SerialName("created_at")
-    val createdAt: Long,
+    val createdAt: Long = 0,
 )

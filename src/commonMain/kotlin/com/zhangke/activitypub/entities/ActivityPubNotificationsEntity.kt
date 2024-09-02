@@ -13,7 +13,7 @@ data class ActivityPubNotificationsEntity(
     @SerialName("status")
     val status: ActivityPubStatusEntity? = null,
     @SerialName("relationship_severance_event")
-    val relationshipSeveranceEvent: ActivityPubRelationshipSeveranceEventEntity?,
+    val relationshipSeveranceEvent: ActivityPubRelationshipSeveranceEventEntity? = null,
 ) {
 
     companion object Type {

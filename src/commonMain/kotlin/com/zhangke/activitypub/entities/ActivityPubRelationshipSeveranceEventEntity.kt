@@ -7,13 +7,13 @@ import kotlinx.serialization.Serializable
 data class ActivityPubRelationshipSeveranceEventEntity(
     val id: String,
     val type: String,
-    val purged: Boolean,
+    val purged: Boolean = false,
     @SerialName("target_name")
-    val targetName: String,
+    val targetName: String = "",
     @SerialName("relationships_count")
     val relationshipsCount: Int? = null,
     @SerialName("created_at")
-    val createdAt: String,
+    val createdAt: String = "",
 ) {
 
     companion object Type {

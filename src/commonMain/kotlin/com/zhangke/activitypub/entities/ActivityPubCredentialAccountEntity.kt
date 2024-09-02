@@ -15,6 +15,6 @@ data class ActivityPubCredentialAccountEntity(
     val privacy: String,
     val sensitive: Boolean,
     val language: String? = null,
-    val note: String,
-    val fields: List<ActivityPubField>,
+    val note: String = "",
+    val fields: List<ActivityPubField> = emptyList(),
 )

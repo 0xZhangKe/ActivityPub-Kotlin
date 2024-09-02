@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class ActivityPubFilterKeywordEntity(
     val id: String,
     val keyword: String,
-    @SerialName("whole_word") val wholeWord: Boolean,
+    @SerialName("whole_word") val wholeWord: Boolean = false,
 )

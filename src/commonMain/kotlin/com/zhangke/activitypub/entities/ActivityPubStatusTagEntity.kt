@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ActivityPubStatusTagEntity(
     val name: String,
-    val url: String,
+    val url: String = "",
 )

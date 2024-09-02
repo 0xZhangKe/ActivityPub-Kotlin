@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ActivityPubFilterStatusEntity(
     val id: String,
-    @SerialName("status_id") val statusId: String,
+    @SerialName("status_id") val statusId: String = "",
 )

@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ActivityPubPostStatusRequestEntity(
-    val status: String?,
+    val status: String? = null,
     @SerialName("media_ids")
-    val mediaIds: List<String>?,
+    val mediaIds: List<String>? = null,
     val poll: ActivityPubPollRequestEntity? = null,
     @SerialName("in_reply_to_id")
     val replyToId: String? = null,

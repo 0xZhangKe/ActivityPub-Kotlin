@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class ActivityPubErrorEntry(
-    val error: String
+    val error: String = "",
 )

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ActivityPubSearchEntity (
-    val accounts: List<ActivityPubAccountEntity>,
-    val statuses: List<ActivityPubStatusEntity>,
-    val hashtags: List<ActivityPubTagEntity>,
+    val accounts: List<ActivityPubAccountEntity> = emptyList(),
+    val statuses: List<ActivityPubStatusEntity> = emptyList(),
+    val hashtags: List<ActivityPubTagEntity> = emptyList(),
 )

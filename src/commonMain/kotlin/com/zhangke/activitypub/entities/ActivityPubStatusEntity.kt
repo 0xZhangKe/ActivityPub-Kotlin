@@ -19,19 +19,19 @@ data class ActivityPubStatusEntity(
     val account: ActivityPubAccountEntity,
     @SerialName("media_attachments")
     val mediaAttachments: List<ActivityPubMediaAttachmentEntity>? = null,
-    val sensitive: Boolean,
+    val sensitive: Boolean = false,
     @SerialName("spoiler_text")
-    val spoilerText: String,
-    val visibility: String,
-    val language: String?,
-    val uri: String,
-    val url: String?,
+    val spoilerText: String = "",
+    val visibility: String = "",
+    val language: String? = null,
+    val uri: String = "",
+    val url: String? = null,
     @SerialName("replies_count")
-    val repliesCount: Int,
+    val repliesCount: Int = 0,
     @SerialName("reblogs_count")
-    val reblogsCount: Int,
+    val reblogsCount: Int = 0,
     @SerialName("favourites_count")
-    val favouritesCount: Int,
+    val favouritesCount: Int = 0,
     val favourited: Boolean? = null,
     val reblogged: Boolean? = null,
     val pinned: Boolean? = null,
@@ -40,10 +40,10 @@ data class ActivityPubStatusEntity(
     val content: String? = null,
     val emojis: List<ActivityPubCustomEmojiEntity> = emptyList(),
     val reblog: ActivityPubStatusEntity? = null,
-    val tags: List<Tag>,
+    val tags: List<Tag> = emptyList(),
     val poll: ActivityPubPollEntity? = null,
-    val mentions: List<Mention>,
-    val card: PreviewCard?,
+    val mentions: List<Mention> = emptyList(),
+    val card: PreviewCard? = null,
     @SerialName("edited_at") val editedAt: String? = null,
     val application: Application? = null,
 ) {
@@ -51,33 +51,33 @@ data class ActivityPubStatusEntity(
     @Serializable
     data class Mention(
         val id: String,
-        val username: String,
-        val url: String,
-        val acct: String,
+        val username: String = "",
+        val url: String = "",
+        val acct: String = "",
     )
 
     @Serializable
     data class Tag(
-        val name: String,
-        val url: String,
+        val name: String = "",
+        val url: String = "",
     )
 
     @Serializable
     data class PreviewCard(
         val url: String,
         val title: String,
-        val description: String,
-        val type: String,
-        @SerialName("author_name") val authorName: String,
-        @SerialName("author_url") val authorUrl: String,
-        @SerialName("provider_name") val providerName: String,
-        @SerialName("provider_url") val providerUrl: String,
-        val html: String,
-        val width: Int,
-        val height: Int,
-        val image: String?,
-        @SerialName("embed_url") val embedUrl: String?,
-        val blurhash: String?,
+        val description: String = "",
+        val type: String = "",
+        @SerialName("author_name") val authorName: String = "",
+        @SerialName("author_url") val authorUrl: String = "",
+        @SerialName("provider_name") val providerName: String = "",
+        @SerialName("provider_url") val providerUrl: String = "",
+        val html: String = "",
+        val width: Int = 0,
+        val height: Int = 0,
+        val image: String? = null,
+        @SerialName("embed_url") val embedUrl: String? = null,
+        val blurhash: String? = null,
     ) {
 
         companion object {
@@ -92,7 +92,7 @@ data class ActivityPubStatusEntity(
     @Serializable
     data class Application(
         val name: String,
-        val website: String?,
+        val website: String? = null,
     )
 
     companion object {

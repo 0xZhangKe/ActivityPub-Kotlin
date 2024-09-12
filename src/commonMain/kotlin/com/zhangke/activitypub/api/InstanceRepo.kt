@@ -12,22 +12,22 @@ import de.jensklingenberg.ktorfit.http.Query
 
 internal interface InstanceApi {
 
-    @GET("/api/v2/instance")
+    @GET("api/v2/instance")
     suspend fun v2InstanceInformation(): ActivityPubInstanceEntity
 
-    @GET("/api/v1/instance")
+    @GET("api/v1/instance")
     suspend fun v1InstanceInformation(): ActivityPubV1InstanceEntity
 
-    @GET("/api/v1/announcements")
+    @GET("api/v1/announcements")
     suspend fun getAnnouncement(): List<ActivityPubAnnouncementEntity>
 
-    @GET("/api/v1/trends/tags")
+    @GET("api/v1/trends/tags")
     suspend fun getTrendsTags(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
     ): List<ActivityPubTagEntity>
 
-    @GET("/api/v1/trends/statuses")
+    @GET("api/v1/trends/statuses")
     suspend fun getTrendsStatuses(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,

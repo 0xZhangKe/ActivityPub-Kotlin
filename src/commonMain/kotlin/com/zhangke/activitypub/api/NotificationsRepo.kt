@@ -7,7 +7,7 @@ import de.jensklingenberg.ktorfit.http.Query
 
 internal interface NotificationsApi {
 
-    @GET("/api/v1/notifications")
+    @GET("api/v1/notifications")
     suspend fun getNotifications(
         @Query("max_id") maxId: String?,
         @Query("since_id") sinceId: String?,

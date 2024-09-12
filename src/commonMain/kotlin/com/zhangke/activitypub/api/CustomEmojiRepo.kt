@@ -12,7 +12,7 @@ class CustomEmojiRepo(private val client: ActivityPubClient) {
         return runCatching {
             client.ktorfit.httpClient.get {
                 url {
-                    takeFrom(client.ktorfit.baseUrl + "/api/v1/custom_emojis")
+                    takeFrom(client.ktorfit.baseUrl + "api/v1/custom_emojis")
                 }
             }.body()
         }

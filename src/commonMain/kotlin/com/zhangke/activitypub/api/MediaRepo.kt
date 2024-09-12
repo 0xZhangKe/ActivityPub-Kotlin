@@ -24,7 +24,7 @@ internal interface MediaService {
     //     @Part file: MultipartBody.Part,
     // ): ActivityPubMediaAttachmentEntity
 
-    @PUT("/api/v1/media/{id}")
+    @PUT("api/v1/media/{id}")
     suspend fun updateMedia(
         @Path("id") id: String,
         @Body requestBody: ActivityPubUpdateMediaRequestEntity,
@@ -45,20 +45,25 @@ class MediaRepo(private val client: ActivityPubClient) {
         return runCatching {
             client.ktorfit.httpClient.post {
                 url {
-                    takeFrom(client.ktorfit.baseUrl + "/api/v2/media")
+                    takeFrom(client.ktorfit.baseUrl + "api/v2/media")
                 }
                 setBody(
                     MultiPartFormDataContent(
                         formData {
-                            append("file", byteArray, Headers.build {
-                                append(HttpHeaders.ContentType, fileMediaType)
-                                append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
-                            })
+                            append(
+                                key = "file",
+                                value = byteArray,
+                                headers = Headers.build {
+                                    append(HttpHeaders.ContentType, fileMediaType)
+                                    append(HttpHeaders.ContentDisposition, "filename=\"$fileName\"")
+                                },
+                            )
                         }
                     )
                 )
                 onUpload { bytesSentTotal, contentLength ->
-                    onProgress(bytesSentTotal.toFloat() / (contentLength ?: fileSize))                }
+                    onProgress(bytesSentTotal.toFloat() / (contentLength ?: fileSize))
+                }
             }.body()
         }
     }

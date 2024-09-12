@@ -10,7 +10,7 @@ import de.jensklingenberg.ktorfit.http.Query
 
 internal interface SearchApi {
 
-    @GET("/api/v2/search")
+    @GET("api/v2/search")
     suspend fun search(
         @Query("q") query: String,
         /**

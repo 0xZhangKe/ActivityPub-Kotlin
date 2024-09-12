@@ -46,17 +46,17 @@ import kotlinx.serialization.json.JsonElement
  */
 internal interface AccountsApi {
 
-    @GET("/api/v1/accounts/verify_credentials")
+    @GET("api/v1/accounts/verify_credentials")
     suspend fun verifyCredentials(
         @ReqBuilder ext: HttpRequestBuilder.() -> Unit
     ): ActivityPubAccountEntity
 
-    @GET("/api/v1/accounts/lookup")
+    @GET("api/v1/accounts/lookup")
     suspend fun lookup(
         @Query("acct") acct: String
     ): ActivityPubAccountEntity?
 
-    @GET("/api/v1/accounts/search")
+    @GET("api/v1/accounts/search")
     suspend fun search(
         @Query("q") q: String,
         @Query("limit") limit: Int?,
@@ -65,12 +65,12 @@ internal interface AccountsApi {
         @Query("following") following: Boolean?,
     ): List<ActivityPubAccountEntity>
 
-    @GET("/api/v1/accounts/{id}")
+    @GET("api/v1/accounts/{id}")
     suspend fun getAccount(
         @Path("id") id: String
     ): ActivityPubAccountEntity
 
-    @GET("/api/v1/accounts/{id}/statuses")
+    @GET("api/v1/accounts/{id}/statuses")
     suspend fun getStatuses(
         @Path("id") id: String,
         @Query("min_id") minId: String?,
@@ -83,50 +83,50 @@ internal interface AccountsApi {
         @Query("exclude_reblogs") excludeBlogs: Boolean?,
     ): List<ActivityPubStatusEntity>
 
-    @GET("/api/v1/lists")
+    @GET("api/v1/lists")
     suspend fun getAccountLists(): List<ActivityPubListEntity>
 
-    @POST("/api/v1/follow_requests/{account_id}/authorize")
+    @POST("api/v1/follow_requests/{account_id}/authorize")
     suspend fun authorizeFollowRequest(
         @Path("account_id") accountId: String,
     ): ActivityPubRelationshipEntity
 
-    @POST("/api/v1/follow_requests/{account_id}/reject")
+    @POST("api/v1/follow_requests/{account_id}/reject")
     suspend fun rejectFollowRequest(
         @Path("account_id") accountId: String,
     ): ActivityPubRelationshipEntity
 
-    @GET("/api/v1/accounts/relationships")
+    @GET("api/v1/accounts/relationships")
     suspend fun getRelationships(
         @Query("id[]") ids: List<String>,
         @Query("with_suspended") withSuspended: Boolean,
     ): List<ActivityPubRelationshipEntity>
 
-    @POST("/api/v1/accounts/{id}/follow")
+    @POST("api/v1/accounts/{id}/follow")
     suspend fun follow(
         @Path("id") id: String,
     ): ActivityPubRelationshipEntity
 
-    @POST("/api/v1/accounts/{id}/unfollow")
+    @POST("api/v1/accounts/{id}/unfollow")
     suspend fun unfollow(
         @Path("id") id: String,
     ): ActivityPubRelationshipEntity
 
-    @POST("/api/v1/accounts/{id}/block")
+    @POST("api/v1/accounts/{id}/block")
     suspend fun block(
         @Path("id") id: String,
     ): ActivityPubRelationshipEntity
 
-    @POST("/api/v1/accounts/{id}/unblock")
+    @POST("api/v1/accounts/{id}/unblock")
     suspend fun unblock(
         @Path("id") id: String,
     ): ActivityPubRelationshipEntity
 
-    @GET("/api/v1/domain_blocks")
+    @GET("api/v1/domain_blocks")
     suspend fun getDomainBlocks(): List<String>
 
     @FormUrlEncoded
-    @POST("/api/v1/domain_blocks")
+    @POST("api/v1/domain_blocks")
     suspend fun blockDomain(
         @Field("domain") domain: String,
     ): JsonElement
@@ -138,17 +138,17 @@ internal interface AccountsApi {
     //     @Field("domain") domain: String,
     // ): Result<JsonElement>
 
-    @GET("/api/v1/tags/{id}")
+    @GET("api/v1/tags/{id}")
     suspend fun getTagInformation(
         @Path("id") id: String,
     ): ActivityPubTagEntity
 
-    @POST("/api/v1/tags/{id}/follow")
+    @POST("api/v1/tags/{id}/follow")
     suspend fun followTag(
         @Path("id") id: String,
     ): ActivityPubTagEntity
 
-    @POST("/api/v1/tags/{id}/unfollow")
+    @POST("api/v1/tags/{id}/unfollow")
     suspend fun unfollowTag(
         @Path("id") id: String,
     ): ActivityPubTagEntity
@@ -169,12 +169,12 @@ internal interface AccountsApi {
     //     @Part header: MultipartBody.Part?,
     // ): Result<ActivityPubAccountEntity>
 
-    @GET("/api/v2/suggestions")
+    @GET("api/v2/suggestions")
     suspend fun getSuggestions(
         @Query("limit") limit: Int,
     ): List<ActivityPubSuggestionEntry>
 
-    @GET("/api/v1/accounts/{id}/followers")
+    @GET("api/v1/accounts/{id}/followers")
     fun getFollowers(
         @Path("id") id: String,
         @Query("min_id") minId: String?,
@@ -183,7 +183,7 @@ internal interface AccountsApi {
         @Query("limit") limit: Int?,
     ): Response<List<ActivityPubAccountEntity>>
 
-    @GET("/api/v1/accounts/{id}/following")
+    @GET("api/v1/accounts/{id}/following")
     fun getFollowing(
         @Path("id") id: String,
         @Query("min_id") minId: String?,
@@ -193,30 +193,30 @@ internal interface AccountsApi {
     ): Response<List<ActivityPubAccountEntity>>
 
     @FormUrlEncoded
-    @POST("/api/v1/accounts/{id}/note")
+    @POST("api/v1/accounts/{id}/note")
     suspend fun updateNote(
         @Path("id") id: String,
         @Field("comment") comment: String,
     ): ActivityPubRelationshipEntity
 
-    @GET("/api/v1/mutes")
+    @GET("api/v1/mutes")
     fun getMutedUserList(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("limit") limit: Int?,
     ): Response<List<ActivityPubAccountEntity>>
 
-    @POST("/api/v1/accounts/{id}/mute")
+    @POST("api/v1/accounts/{id}/mute")
     suspend fun mute(
         @Path("id") id: String,
     ): ActivityPubRelationshipEntity
 
-    @POST("/api/v1/accounts/{id}/unmute")
+    @POST("api/v1/accounts/{id}/unmute")
     suspend fun unmute(
         @Path("id") id: String,
     ): ActivityPubRelationshipEntity
 
-    @GET("/api/v1/bookmarks")
+    @GET("api/v1/bookmarks")
     fun getBookmarks(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
@@ -224,7 +224,7 @@ internal interface AccountsApi {
         @Query("limit") limit: Int?,
     ): Response<List<ActivityPubStatusEntity>>
 
-    @GET("/api/v1/favourites")
+    @GET("api/v1/favourites")
     fun getFavourites(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
@@ -232,7 +232,7 @@ internal interface AccountsApi {
         @Query("limit") limit: Int?,
     ): Response<List<ActivityPubStatusEntity>>
 
-    @GET("/api/v1/blocks")
+    @GET("api/v1/blocks")
     fun getBlockedUserList(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
@@ -240,7 +240,7 @@ internal interface AccountsApi {
         @Query("limit") limit: Int?,
     ): Response<List<ActivityPubAccountEntity>>
 
-    @GET("/api/v1/followed_tags")
+    @GET("api/v1/followed_tags")
     fun getFollowedTags(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
@@ -248,24 +248,24 @@ internal interface AccountsApi {
         @Query("limit") limit: Int?,
     ): Response<List<ActivityPubTagEntity>>
 
-    @GET("/api/v2/filters")
+    @GET("api/v2/filters")
     suspend fun getFilters(): List<ActivityPubFilterEntity>
 
-    @GET("/api/v2/filters/{id}")
+    @GET("api/v2/filters/{id}")
     suspend fun getFilter(@Path("id") id: String): ActivityPubFilterEntity
 
-    @POST("/api/v2/filters")
+    @POST("api/v2/filters")
     suspend fun createFilter(
         @Body data: ActivityPubCreateFilterEntity,
     ): ActivityPubFilterEntity
 
-    @PUT("/api/v2/filters/{id}")
+    @PUT("api/v2/filters/{id}")
     suspend fun updateFilter(
         @Path("id") id: String,
         @Body data: ActivityPubCreateFilterEntity,
     ): ActivityPubFilterEntity
 
-    @DELETE("/api/v2/filters/{id}")
+    @DELETE("api/v2/filters/{id}")
     suspend fun deleteFilter(@Path("id") id: String): Unit
 }
 
@@ -435,7 +435,7 @@ class AccountsRepo(private val client: ActivityPubClient) {
         return runCatching {
             client.ktorfit.httpClient.delete {
                 url {
-                    takeFrom(client.ktorfit.baseUrl + "/api/v1/domain_blocks")
+                    takeFrom(client.ktorfit.baseUrl + "api/v1/domain_blocks")
                 }
                 headers {
                     contentType(ContentType.Application.FormUrlEncoded)
@@ -496,7 +496,7 @@ class AccountsRepo(private val client: ActivityPubClient) {
         return runCatching {
             client.ktorfit.httpClient.patch {
                 url {
-                    takeFrom(client.ktorfit.baseUrl + "/api/v1/accounts/update_credentials")
+                    takeFrom(client.ktorfit.baseUrl + "api/v1/accounts/update_credentials")
                     fieldList?.forEachIndexed { index, entity ->
                         parameter("fields_attributes[$index][name]", entity.name)
                         parameter("fields_attributes[$index][value]", entity.value)

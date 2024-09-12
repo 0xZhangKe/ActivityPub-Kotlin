@@ -28,59 +28,59 @@ import kotlinx.serialization.json.JsonPrimitive
 
 internal interface StatusService {
 
-    @GET("/api/v1/statuses/{id}")
+    @GET("api/v1/statuses/{id}")
     suspend fun getStatuses(@Path("id") id: String): ActivityPubStatusEntity?
 
-    @POST("/api/v1/statuses")
+    @POST("api/v1/statuses")
     suspend fun postStatus(
         @Body requestBody: ActivityPubPostStatusRequestEntity,
     ): ActivityPubStatusEntity
 
-    @PUT("/api/v1/statuses/{id}")
+    @PUT("api/v1/statuses/{id}")
     suspend fun editStatus(
         @Path("id") id: String,
         @Body requestBody: ActivityPubEditStatusEntity,
     ): ActivityPubStatusEntity
 
-    @POST("/api/v1/statuses/{id}/favourite")
+    @POST("api/v1/statuses/{id}/favourite")
     suspend fun favourite(
         @Path("id") id: String,
     ): ActivityPubStatusEntity
 
-    @POST("/api/v1/statuses/{id}/unfavourite")
+    @POST("api/v1/statuses/{id}/unfavourite")
     suspend fun unfavourite(@Path("id") id: String): ActivityPubStatusEntity
 
-    @POST("/api/v1/statuses/{id}/reblog")
+    @POST("api/v1/statuses/{id}/reblog")
     suspend fun reblog(@Path("id") id: String): ActivityPubStatusEntity
 
-    @POST("/api/v1/statuses/{id}/unreblog")
+    @POST("api/v1/statuses/{id}/unreblog")
     suspend fun unreblog(@Path("id") id: String): ActivityPubStatusEntity
 
-    @POST("/api/v1/statuses/{id}/bookmark")
+    @POST("api/v1/statuses/{id}/bookmark")
     suspend fun bookmark(@Path("id") id: String): ActivityPubStatusEntity
 
-    @POST("/api/v1/statuses/{id}/unbookmark")
+    @POST("api/v1/statuses/{id}/unbookmark")
     suspend fun unbookmark(@Path("id") id: String): ActivityPubStatusEntity
 
-    @POST("/api/v1/statuses/{id}/pin")
+    @POST("api/v1/statuses/{id}/pin")
     suspend fun pin(@Path("id") id: String): ActivityPubStatusEntity
 
-    @POST("/api/v1/statuses/{id}/unpin")
+    @POST("api/v1/statuses/{id}/unpin")
     suspend fun unpin(@Path("id") id: String): ActivityPubStatusEntity
 
-    @DELETE("/api/v1/statuses/{id}")
+    @DELETE("api/v1/statuses/{id}")
     suspend fun delete(@Path("id") id: String): ActivityPubStatusEntity
 
-    @GET("/api/v1/statuses/{id}/context")
+    @GET("api/v1/statuses/{id}/context")
     suspend fun getContext(@Path("id") id: String): ActivityPubStatusContextEntity
 
-    @POST("/api/v1/polls/{id}/votes")
+    @POST("api/v1/polls/{id}/votes")
     suspend fun votes(
         @Path("id") id: String,
         @Body choices: JsonElement
     ): ActivityPubPollEntity
 
-    @GET("/api/v1/statuses/{id}/reblogged_by")
+    @GET("api/v1/statuses/{id}/reblogged_by")
     fun getReblogBy(
         @Path("id") id: String,
         @Query("since_id") sinceId: String?,
@@ -88,7 +88,7 @@ internal interface StatusService {
         @Query("limit") limit: Int?,
     ): Response<List<ActivityPubAccountEntity>>
 
-    @GET("/api/v1/statuses/{id}/favourited_by")
+    @GET("api/v1/statuses/{id}/favourited_by")
     fun getFavouritesBy(
         @Path("id") id: String,
         @Query("since_id") sinceId: String?,
@@ -97,7 +97,7 @@ internal interface StatusService {
     ): Response<List<ActivityPubAccountEntity>>
 
     @FormUrlEncoded
-    @POST("/api/v1/statuses/{id}/translate")
+    @POST("api/v1/statuses/{id}/translate")
     suspend fun translate(
         @Path("id") id: String,
         @Field("lang") lang: String,

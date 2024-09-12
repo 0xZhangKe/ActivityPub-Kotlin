@@ -12,7 +12,7 @@ import de.jensklingenberg.ktorfit.http.Query
 
 internal interface TimelinesApi {
 
-    @GET("/api/v1/timelines/public?only_media=false")
+    @GET("api/v1/timelines/public?only_media=false")
     suspend fun timelines(
         @Query("local") local: Boolean,
         @Query("remote") remote: Boolean,
@@ -22,7 +22,7 @@ internal interface TimelinesApi {
         @Query("limit") limit: Int,
     ): List<ActivityPubStatusEntity>
 
-    @GET("/api/v1/timelines/home")
+    @GET("api/v1/timelines/home")
     suspend fun homeTimeline(
         @Query("max_id") maxId: String?,
         @Query("since_id") sinceId: String?,
@@ -30,7 +30,7 @@ internal interface TimelinesApi {
         @Query("limit") limit: Int,
     ): List<ActivityPubStatusEntity>
 
-    @GET("/api/v1/timelines/list/{list_id}")
+    @GET("api/v1/timelines/list/{list_id}")
     suspend fun getTimelineList(
         @Path("list_id") listId: String,
         @Query("max_id") maxId: String?,
@@ -39,7 +39,7 @@ internal interface TimelinesApi {
         @Query("limit") limit: Int,
     ): List<ActivityPubStatusEntity>
 
-    @GET("/api/v1/timelines/tag/{hashtag}")
+    @GET("api/v1/timelines/tag/{hashtag}")
     suspend fun getTagTimeline(
         @Path("hashtag") hashtag: String,
         @Query("max_id") maxId: String?,

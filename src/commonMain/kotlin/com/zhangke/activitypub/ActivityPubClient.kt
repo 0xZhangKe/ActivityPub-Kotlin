@@ -17,8 +17,12 @@ import de.jensklingenberg.ktorfit.Ktorfit
 import de.jensklingenberg.ktorfit.converter.ResponseConverterFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.header
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -51,6 +55,9 @@ class ActivityPubClient(
             }
             install(AuthorizationPlugin) {
                 tokenProvider = this@ActivityPubClient.tokenProvider
+            }
+            install(DefaultRequest){
+                header(HttpHeaders.ContentType, ContentType.Application.Json)
             }
             HttpResponseValidator {
                 validateResponse { response ->

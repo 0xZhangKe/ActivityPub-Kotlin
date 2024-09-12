@@ -23,7 +23,7 @@ class AppsRepo(private val client: ActivityPubClient) {
         return runCatching {
             client.ktorfit.httpClient.post {
                 url {
-                    takeFrom(client.ktorfit.baseUrl + "/api/v1/apps")
+                    takeFrom(client.ktorfit.baseUrl + "api/v1/apps")
                 }
                 setBody(
                     FormDataContent(

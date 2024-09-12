@@ -13,7 +13,7 @@ import de.jensklingenberg.ktorfit.http.POST
 internal interface OAuthApi {
 
     @FormUrlEncoded
-    @POST("/oauth/token")
+    @POST("oauth/token")
     suspend fun getToken(
         @Field("client_id") clientId: String,
         @Field("client_secret") clientSecret: String,

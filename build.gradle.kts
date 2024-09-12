@@ -21,6 +21,7 @@ kotlin {
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.client.serialization.kotlinx.json)
 
+                implementation(libs.ktor.client.core)
                 implementation(libs.ktorfit.lib)
                 implementation(libs.ktorfit.converters.response)
             }

@@ -58,8 +58,7 @@ class MediaRepo(private val client: ActivityPubClient) {
                     )
                 )
                 onUpload { bytesSentTotal, contentLength ->
-                    onProgress(bytesSentTotal.toFloat() / contentLength)
-                }
+                    onProgress(bytesSentTotal.toFloat() / (contentLength ?: fileSize))                }
             }.body()
         }
     }

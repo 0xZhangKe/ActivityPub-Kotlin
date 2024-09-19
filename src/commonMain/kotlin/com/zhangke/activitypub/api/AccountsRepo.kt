@@ -29,6 +29,7 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
+import io.ktor.client.request.get
 import io.ktor.client.request.headers
 import io.ktor.client.request.parameter
 import io.ktor.client.request.patch
@@ -51,10 +52,11 @@ internal interface AccountsApi {
         @ReqBuilder ext: HttpRequestBuilder.() -> Unit
     ): ActivityPubAccountEntity
 
-    @GET("api/v1/accounts/lookup")
-    suspend fun lookup(
-        @Query("acct") acct: String
-    ): ActivityPubAccountEntity?
+// FIXME: waiting ktorfit upgrade
+//    @GET("api/v1/accounts/lookup")
+//    suspend fun lookup(
+//        @Query("acct") acct: String
+//    ): ActivityPubAccountEntity?
 
     @GET("api/v1/accounts/search")
     suspend fun search(
@@ -289,7 +291,13 @@ class AccountsRepo(private val client: ActivityPubClient) {
 
     suspend fun lookup(acct: String): Result<ActivityPubAccountEntity?> {
         return runCatching {
-            api.lookup(acct)
+            client.ktorfit.httpClient
+                .get {
+                    url {
+                        takeFrom("${client.ktorfit.baseUrl}api/v1/accounts/lookup?acct=$acct")
+                    }
+                }
+                .body()
         }
     }
 
@@ -514,13 +522,19 @@ class AccountsRepo(private val client: ActivityPubClient) {
                             if (avatarFileName != null && avatarByteArray != null) {
                                 append("avatar", avatarByteArray, Headers.build {
                                     append(HttpHeaders.ContentType, "image/*")
-                                    append(HttpHeaders.ContentDisposition, "filename=\"$avatarFileName\"")
+                                    append(
+                                        HttpHeaders.ContentDisposition,
+                                        "filename=\"$avatarFileName\""
+                                    )
                                 })
                             }
                             if (headerFileName != null && headerByteArray != null) {
                                 append("header", headerByteArray, Headers.build {
                                     append(HttpHeaders.ContentType, "image/*")
-                                    append(HttpHeaders.ContentDisposition, "filename=\"$headerFileName\"")
+                                    append(
+                                        HttpHeaders.ContentDisposition,
+                                        "filename=\"$headerFileName\""
+                                    )
                                 })
                             }
                         }

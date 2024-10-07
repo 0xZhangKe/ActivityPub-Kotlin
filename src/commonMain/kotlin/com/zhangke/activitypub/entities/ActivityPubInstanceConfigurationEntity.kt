@@ -55,4 +55,17 @@ data class ActivityPubInstanceConfigurationEntity(
     data class Translation(
         val enabled: Boolean = false,
     )
+
+    companion object{
+
+        fun empty() = ActivityPubInstanceConfigurationEntity(
+            urls = null,
+            vapid = null,
+            accounts = null,
+            statuses = null,
+            mediaAttachments = null,
+            polls = null,
+            translation = null,
+        )
+    }
 }

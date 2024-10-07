@@ -15,7 +15,7 @@ data class ActivityPubInstanceEntity(
     val languages: List<String>? = null,
     val rules: List<Rule> = emptyList(),
     val contact: Contact? = null,
-    val configuration: ActivityPubInstanceConfigurationEntity,
+    val configuration: ActivityPubInstanceConfigurationEntity = ActivityPubInstanceConfigurationEntity.empty(),
 ) {
 
     @Serializable
@@ -57,7 +57,7 @@ internal data class ActivityPubV1InstanceEntity(
     val stats: Stats,
     val rules: List<ActivityPubInstanceEntity.Rule>? = null,
     @SerialName("contact_account") val contactAccount: ActivityPubAccountEntity? = null,
-    val configuration: ActivityPubInstanceConfigurationEntity,
+    val configuration: ActivityPubInstanceConfigurationEntity? = null,
 ) {
 
     @Serializable
@@ -91,7 +91,7 @@ internal data class ActivityPubV1InstanceEntity(
                     account = it,
                 )
             },
-            configuration = configuration,
+            configuration = configuration ?: ActivityPubInstanceConfigurationEntity.empty(),
         )
     }
 }

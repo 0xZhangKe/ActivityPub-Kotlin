@@ -177,7 +177,7 @@ internal interface AccountsApi {
     ): List<ActivityPubSuggestionEntry>
 
     @GET("api/v1/accounts/{id}/followers")
-    fun getFollowers(
+    suspend fun getFollowers(
         @Path("id") id: String,
         @Query("min_id") minId: String?,
         @Query("since_id") sinceId: String?,
@@ -186,7 +186,7 @@ internal interface AccountsApi {
     ): Response<List<ActivityPubAccountEntity>>
 
     @GET("api/v1/accounts/{id}/following")
-    fun getFollowing(
+    suspend fun getFollowing(
         @Path("id") id: String,
         @Query("min_id") minId: String?,
         @Query("since_id") sinceId: String?,
@@ -202,7 +202,7 @@ internal interface AccountsApi {
     ): ActivityPubRelationshipEntity
 
     @GET("api/v1/mutes")
-    fun getMutedUserList(
+    suspend fun getMutedUserList(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("limit") limit: Int?,
@@ -219,7 +219,7 @@ internal interface AccountsApi {
     ): ActivityPubRelationshipEntity
 
     @GET("api/v1/bookmarks")
-    fun getBookmarks(
+    suspend fun getBookmarks(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("min_id") minId: String?,
@@ -227,7 +227,7 @@ internal interface AccountsApi {
     ): Response<List<ActivityPubStatusEntity>>
 
     @GET("api/v1/favourites")
-    fun getFavourites(
+    suspend fun getFavourites(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("min_id") minId: String?,
@@ -235,7 +235,7 @@ internal interface AccountsApi {
     ): Response<List<ActivityPubStatusEntity>>
 
     @GET("api/v1/blocks")
-    fun getBlockedUserList(
+    suspend fun getBlockedUserList(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("min_id") minId: String?,
@@ -243,7 +243,7 @@ internal interface AccountsApi {
     ): Response<List<ActivityPubAccountEntity>>
 
     @GET("api/v1/followed_tags")
-    fun getFollowedTags(
+    suspend fun getFollowedTags(
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
         @Query("min_id") minId: String?,

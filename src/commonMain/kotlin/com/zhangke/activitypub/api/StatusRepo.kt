@@ -81,7 +81,7 @@ internal interface StatusService {
     ): ActivityPubPollEntity
 
     @GET("api/v1/statuses/{id}/reblogged_by")
-    fun getReblogBy(
+    suspend fun getReblogBy(
         @Path("id") id: String,
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,
@@ -89,7 +89,7 @@ internal interface StatusService {
     ): Response<List<ActivityPubAccountEntity>>
 
     @GET("api/v1/statuses/{id}/favourited_by")
-    fun getFavouritesBy(
+    suspend fun getFavouritesBy(
         @Path("id") id: String,
         @Query("since_id") sinceId: String?,
         @Query("max_id") maxId: String?,

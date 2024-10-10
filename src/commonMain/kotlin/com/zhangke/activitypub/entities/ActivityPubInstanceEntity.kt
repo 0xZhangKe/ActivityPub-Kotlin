@@ -39,7 +39,7 @@ data class ActivityPubInstanceEntity(
     @Serializable
     data class Contact(
         val email: String,
-        val account: ActivityPubAccountEntity,
+        val account: ActivityPubAccountEntity? = null,
     )
 
 }

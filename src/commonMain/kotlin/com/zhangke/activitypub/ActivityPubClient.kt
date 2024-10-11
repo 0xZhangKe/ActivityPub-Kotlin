@@ -31,12 +31,16 @@ import kotlinx.serialization.json.Json
  * Created by ZhangKe on 2022/12/3.
  */
 class ActivityPubClient(
-    baseUrl: String,
+    val baseUrl: String,
     private val engine: HttpClientEngine,
     val json: Json,
     private val tokenProvider: suspend () -> ActivityPubTokenEntity?,
     onAuthorizeFailed: () -> Unit,
 ) {
+
+    internal val httpClient: HttpClient by lazy {
+        createHttpClient()
+    }
 
     internal val ktorfit: Ktorfit by lazy {
         Ktorfit.Builder()
@@ -44,7 +48,7 @@ class ActivityPubClient(
             .converterFactories(
                 ResponseConverterFactory(),
             )
-            .httpClient(createHttpClient())
+            .httpClient(httpClient)
             .build()
     }
 

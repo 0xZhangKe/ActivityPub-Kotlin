@@ -1,6 +1,7 @@
 package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
+import com.zhangke.activitypub.entities.ActivityPubNotificationUnreadCountEntity
 import com.zhangke.activitypub.entities.ActivityPubNotificationsEntity
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Query
@@ -21,9 +22,16 @@ internal interface NotificationsApi {
          */
         @Query("account_id") accountId: String?,
         @Query("types[]") types: List<String>?,
-        @Query("exclude_types") excludeTypes: List<String>?,
+        @Query("exclude_types[]") excludeTypes: List<String>?,
     ): List<ActivityPubNotificationsEntity>
 
+    @GET("/api/v1/notifications/unread_count")
+    suspend fun getUnreadNotificationCount(
+        @Query("limit") limit: Int?,
+        @Query("account_id") accountId: String?,
+        @Query("types[]") types: List<String>?,
+        @Query("exclude_types[]") excludeTypes: List<String>?,
+    ): ActivityPubNotificationUnreadCountEntity
 }
 
 class NotificationsRepo(client: ActivityPubClient) {
@@ -44,6 +52,22 @@ class NotificationsRepo(client: ActivityPubClient) {
                 maxId = maxId,
                 sinceId = sinceId,
                 minId = minId,
+                limit = limit,
+                accountId = accountId,
+                types = types,
+                excludeTypes = excludeTypes,
+            )
+        }
+    }
+
+    suspend fun getUnreadNotificationCount(
+        limit: Int? = null,
+        accountId: String? = null,
+        types: List<String>? = null,
+        excludeTypes: List<String>? = null,
+    ): Result<ActivityPubNotificationUnreadCountEntity> {
+        return runCatching {
+            api.getUnreadNotificationCount(
                 limit = limit,
                 accountId = accountId,
                 types = types,

@@ -13,7 +13,7 @@ class MarkersRepo(private val client: ActivityPubClient) {
 
     private val apiUrl = "${client.baseUrl}api/v1/markers"
 
-    private companion object {
+    companion object {
 
         const val TIMELINE_HOME = "home"
         const val TIMELINE_NOTIFICATIONS = "notifications"

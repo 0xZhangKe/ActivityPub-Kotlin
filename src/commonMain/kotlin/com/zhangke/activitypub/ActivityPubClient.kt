@@ -4,6 +4,7 @@ import com.zhangke.activitypub.api.AccountsRepo
 import com.zhangke.activitypub.api.AppsRepo
 import com.zhangke.activitypub.api.CustomEmojiRepo
 import com.zhangke.activitypub.api.InstanceRepo
+import com.zhangke.activitypub.api.MarkersRepo
 import com.zhangke.activitypub.api.MediaRepo
 import com.zhangke.activitypub.api.NotificationsRepo
 import com.zhangke.activitypub.api.OAuthRepo
@@ -96,4 +97,6 @@ class ActivityPubClient(
     val notificationsRepo: NotificationsRepo by lazy { NotificationsRepo(this) }
 
     val searchRepo: SearchRepo by lazy { SearchRepo(this) }
+
+    val markerRepo: MarkersRepo by lazy { MarkersRepo(this) }
 }

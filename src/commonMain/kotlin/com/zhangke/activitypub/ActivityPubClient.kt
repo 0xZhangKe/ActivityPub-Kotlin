@@ -8,6 +8,7 @@ import com.zhangke.activitypub.api.MarkersRepo
 import com.zhangke.activitypub.api.MediaRepo
 import com.zhangke.activitypub.api.NotificationsRepo
 import com.zhangke.activitypub.api.OAuthRepo
+import com.zhangke.activitypub.api.PushRepo
 import com.zhangke.activitypub.api.SearchRepo
 import com.zhangke.activitypub.api.StatusRepo
 import com.zhangke.activitypub.api.TimelinesRepo
@@ -61,7 +62,7 @@ class ActivityPubClient(
             install(AuthorizationPlugin) {
                 tokenProvider = this@ActivityPubClient.tokenProvider
             }
-            install(DefaultRequest){
+            install(DefaultRequest) {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
             }
             HttpResponseValidator {
@@ -99,4 +100,6 @@ class ActivityPubClient(
     val searchRepo: SearchRepo by lazy { SearchRepo(this) }
 
     val markerRepo: MarkersRepo by lazy { MarkersRepo(this) }
+
+    val pushRepo: PushRepo by lazy { PushRepo(this) }
 }

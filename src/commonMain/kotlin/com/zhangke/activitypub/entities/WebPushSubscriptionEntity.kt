@@ -5,9 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class WebPushSubscriptionEntity(
-    val id: String,
+    val id: Int,
     val endpoint: String,
     val alerts: SubscriptionAlertsEntity,
     @SerialName("server_key")
     val serverKey: String,
+    val policy: String,
 )

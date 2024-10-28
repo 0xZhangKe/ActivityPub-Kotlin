@@ -11,6 +11,7 @@ import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonObjectBuilder
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -76,7 +77,7 @@ class PushRepo(private val client: ActivityPubClient) {
         if (value != null) put(key, value)
     }
 
-    suspend fun removeSubscription(): Result<WebPushSubscriptionEntity> {
+    suspend fun removeSubscription(): Result<JsonObject> {
         return runCatching {
             client.httpClient.delete(subscriptionUrl).body()
         }

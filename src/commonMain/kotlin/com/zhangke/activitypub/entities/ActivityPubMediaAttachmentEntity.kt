@@ -16,7 +16,7 @@ data class ActivityPubMediaAttachmentEntity(
      * enum of [TYPE_UNKNOWN], [TYPE_IMAGE], [TYPE_GIFV], [TYPE_VIDEO], [TYPE_AUDIO]
      */
     val type: String,
-    val url: String,
+    val url: String? = null,
     @SerialName("preview_url")
     val previewUrl: String = "",
     @SerialName("remote_url")

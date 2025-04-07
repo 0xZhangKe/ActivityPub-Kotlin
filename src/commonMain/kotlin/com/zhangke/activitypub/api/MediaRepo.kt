@@ -2,6 +2,7 @@ package com.zhangke.activitypub.api
 
 import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubMediaAttachmentEntity
+import com.zhangke.activitypub.entities.ActivityPubResponse
 import com.zhangke.activitypub.entities.ActivityPubUpdateMediaRequestEntity
 import de.jensklingenberg.ktorfit.http.Body
 import de.jensklingenberg.ktorfit.http.PUT
@@ -10,6 +11,7 @@ import io.ktor.client.call.body
 import io.ktor.client.plugins.onUpload
 import io.ktor.client.request.forms.MultiPartFormDataContent
 import io.ktor.client.request.forms.formData
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.Headers
@@ -41,12 +43,10 @@ class MediaRepo(private val client: ActivityPubClient) {
         byteArray: ByteArray,
         fileMediaType: String,
         onProgress: (Float) -> Unit,
-    ): Result<ActivityPubMediaAttachmentEntity> {
+    ): Result<ActivityPubResponse<ActivityPubMediaAttachmentEntity>> {
         return runCatching {
-            client.ktorfit.httpClient.post {
-                url {
-                    takeFrom(client.ktorfit.baseUrl + "api/v2/media")
-                }
+            val response = client.ktorfit.httpClient.post {
+                url { takeFrom(client.ktorfit.baseUrl + "api/v2/media") }
                 setBody(
                     MultiPartFormDataContent(
                         formData {
@@ -64,7 +64,12 @@ class MediaRepo(private val client: ActivityPubClient) {
                 onUpload { bytesSentTotal, contentLength ->
                     onProgress(bytesSentTotal.toFloat() / (contentLength ?: fileSize))
                 }
-            }.body()
+            }
+            val entity: ActivityPubMediaAttachmentEntity = response.body()
+            ActivityPubResponse(
+                code = response.status.value,
+                response = entity,
+            )
         }
     }
 
@@ -82,6 +87,18 @@ class MediaRepo(private val client: ActivityPubClient) {
                     description = description,
                     focus = focus,
                 ),
+            )
+        }
+    }
+
+    suspend fun getMedia(id: String): Result<ActivityPubResponse<ActivityPubMediaAttachmentEntity>> {
+        return runCatching {
+            val response = client.ktorfit.httpClient
+                .get(client.ktorfit.baseUrl + "api/v1/media/$id")
+            val entity: ActivityPubMediaAttachmentEntity = response.body()
+            ActivityPubResponse(
+                code = response.status.value,
+                response = entity,
             )
         }
     }

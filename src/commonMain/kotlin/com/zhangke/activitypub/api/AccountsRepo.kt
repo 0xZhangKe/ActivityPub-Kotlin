@@ -88,6 +88,16 @@ internal interface AccountsApi {
     @GET("api/v1/lists")
     suspend fun getAccountLists(): List<ActivityPubListEntity>
 
+    @GET("api/v1/lists/{list_id}")
+    suspend fun getListDetail(
+        @Path("list_id") listId: String,
+    ): ActivityPubListEntity
+
+    @GET("api/v1/lists/{list_id}/accounts")
+    suspend fun getAccountsInList(
+        @Path("list_id") listId: String,
+    ): List<ActivityPubAccountEntity>
+
     @POST("api/v1/follow_requests/{account_id}/authorize")
     suspend fun authorizeFollowRequest(
         @Path("account_id") accountId: String,
@@ -355,6 +365,14 @@ class AccountsRepo(private val client: ActivityPubClient) {
         return runCatching {
             api.getAccountLists()
         }
+    }
+
+    suspend fun getListDetail(listId: String): Result<ActivityPubListEntity> {
+        return runCatching { api.getListDetail(listId) }
+    }
+
+    suspend fun getAccountsInList(listId: String): Result<List<ActivityPubAccountEntity>> {
+        return runCatching { api.getAccountsInList(listId) }
     }
 
     suspend fun authorizeFollowRequest(

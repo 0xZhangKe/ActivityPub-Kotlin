@@ -41,6 +41,7 @@ import io.ktor.http.Parameters
 import io.ktor.http.contentType
 import io.ktor.http.takeFrom
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
 
 /**
  * Created by ZhangKe on 2022/12/13.
@@ -93,10 +94,28 @@ internal interface AccountsApi {
         @Path("list_id") listId: String,
     ): ActivityPubListEntity
 
+    @FormUrlEncoded
+    @PUT("api/v1/lists/{list_id}")
+    suspend fun updateList(
+        @Path("list_id") listId: String,
+        @Field("title") title: String,
+        @Field("replies_policy") repliesPolicy: String,
+        @Field("exclusive") exclusive: Boolean,
+    ): ActivityPubListEntity
+
     @GET("api/v1/lists/{list_id}/accounts")
     suspend fun getAccountsInList(
         @Path("list_id") listId: String,
     ): List<ActivityPubAccountEntity>
+
+    // Add accounts to the given list.
+    // Note that the user must be following these accounts.
+    @FormUrlEncoded
+    @POST("api/v1/lists/{list_id}/accounts")
+    suspend fun postAccountsInList(
+        @Path("list_id") listId: String,
+        @Field("account_ids[]") accountIds: List<String>,
+    ): JsonObject
 
     @POST("api/v1/follow_requests/{account_id}/authorize")
     suspend fun authorizeFollowRequest(
@@ -373,6 +392,19 @@ class AccountsRepo(private val client: ActivityPubClient) {
 
     suspend fun getAccountsInList(listId: String): Result<List<ActivityPubAccountEntity>> {
         return runCatching { api.getAccountsInList(listId) }
+    }
+
+    suspend fun updateList(
+        listId: String,
+        title: String,
+        repliesPolicy: String,
+        exclusive: Boolean,
+    ): Result<ActivityPubListEntity> {
+        return runCatching { api.updateList(listId, title, repliesPolicy, exclusive) }
+    }
+
+    suspend fun postAccountInList(listId: String, accountIds: List<String>): Result<Unit> {
+        return runCatching { api.postAccountsInList(listId, accountIds) }
     }
 
     suspend fun authorizeFollowRequest(

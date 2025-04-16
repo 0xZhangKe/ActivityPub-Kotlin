@@ -4,6 +4,7 @@ import com.zhangke.activitypub.api.AccountsRepo
 import com.zhangke.activitypub.api.AppsRepo
 import com.zhangke.activitypub.api.CustomEmojiRepo
 import com.zhangke.activitypub.api.InstanceRepo
+import com.zhangke.activitypub.api.ListsRepo
 import com.zhangke.activitypub.api.MarkersRepo
 import com.zhangke.activitypub.api.MediaRepo
 import com.zhangke.activitypub.api.NotificationsRepo
@@ -86,6 +87,8 @@ class ActivityPubClient(
     val instanceRepo: InstanceRepo by lazy { InstanceRepo(this) }
 
     val accountRepo: AccountsRepo by lazy { AccountsRepo(this) }
+
+    val listsRepo: ListsRepo by lazy { ListsRepo(this) }
 
     val timelinesRepo: TimelinesRepo by lazy { TimelinesRepo(this) }
 

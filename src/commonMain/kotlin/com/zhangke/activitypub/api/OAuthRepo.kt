@@ -55,7 +55,7 @@ class OAuthRepo(client: ActivityPubClient) {
                 redirectUri = redirectUri,
                 grantType = "authorization_code",
                 code = code,
-                scope = scopeList.joinToString("+") { it.scope }
+                scope = scopeList.joinToString(" ") { it.scope }
             )
         }
     }

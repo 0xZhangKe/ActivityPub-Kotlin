@@ -1,12 +1,17 @@
-rootProject.name = "ActivityPub-Kolin"
+rootProject.name = "ActivityPubClient-Kotlin"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
 dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-    }
-    versionCatalogs {
-        create("libs") {
-            from(files("../gradle/libs.versions.toml"))
-        }
+        gradlePluginPortal()
     }
 }
+
+include(":activity-pub-client")

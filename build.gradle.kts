@@ -1,35 +1,74 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlinx.serialization)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.ktorfit)
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlinx.serialization) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.ktorfit) apply false
+    alias(libs.plugins.publish)
+    alias(libs.plugins.dokka)
 }
 
-group = "com.zhangke.activitypub"
-version = "1.0.0-SNAPSHOT"
+allprojects {
+    group = "io.github.0xzhangke"
+    version = ProjectVersion.VERSION
 
-kotlin {
-    jvm()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
-    sourceSets {
-        commonMain {
-            dependencies {
-                implementation(libs.kotlinx.serialization.json)
-
-                implementation(libs.ktor.client.content.negotiation)
-                implementation(libs.ktor.client.serialization.kotlinx.json)
-
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktorfit.lib)
-                implementation(libs.ktorfit.converters.response)
-            }
-        }
-        commonTest {
-            dependencies {
-                implementation(kotlin("test"))
+    plugins.withId("com.vanniktech.maven.publish.base") {
+        mavenPublishing {
+            publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
+            signAllPublications()
+            pom {
+                name.set("ActivityPubClient")
+                description.set("Kotlin version of the ActivityPub protocol client SDK.")
+                url.set("https://github.com/0xZhangKe/ActivityPub-Kotlin")
+                licenses {
+                    license {
+                        name.set("Apache 2.0")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0")
+                        distribution.set("repo")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("zhangke")
+                        name.set("Zhangke")
+                        url.set("https://github.com/0xZhangKe")
+                    }
+                }
+                scm {
+                    url.set("https://github.com/0xZhangKe/ActivityPub-Kotlin")
+                    connection.set("scm:git:git://github.com:0xZhangKe/ActivityPub-Kotlin.git")
+                    developerConnection.set("scm:git:git://github.com:0xZhangKe/ActivityPub-Kotlin.git")
+                }
             }
         }
     }
+
+    // fix order of android release lint tasks
+    listOf(
+        "generateReleaseLintVitalModel",
+        "lintVitalAnalyzeRelease",
+    ).forEach { name ->
+        tasks.matching { it.name == name }.configureEach {
+            dependsOn(tasks.matching { it.name == "copyFontsToAndroidAssets" })
+        }
+    }
+}
+
+object ProjectVersion {
+    // incompatible API changes
+    private const val MAJOR = "0"
+
+    // functionality in a backwards compatible manner
+    private const val MINOR = "1"
+
+    // backwards compatible bug fixes
+    private const val PATH = "0"
+    const val VERSION = "$MAJOR.$MINOR.$PATH"
+}
+
+tasks.dokkaHtmlMultiModule {
+    moduleVersion.set(ProjectVersion.VERSION)
+    outputDirectory.set(rootDir.resolve("docs/static/api"))
 }

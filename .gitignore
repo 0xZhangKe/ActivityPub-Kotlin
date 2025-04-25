@@ -1,4 +1,5 @@
 .gradle/
 .idea/
 build/
-src/test/TestConfig.json
+local.properties
+.kotlin

@@ -1,3 +1,4 @@
+
 plugins {
     id("com.android.library")
     alias(libs.plugins.kotlin.multiplatform)
@@ -42,4 +43,8 @@ kotlin {
             }
         }
     }
+}
+
+tasks.named("sourcesJar") {
+    dependsOn(tasks.named("kspCommonMainKotlinMetadata"))
 }

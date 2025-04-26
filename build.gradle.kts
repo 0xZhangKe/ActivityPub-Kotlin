@@ -11,6 +11,14 @@ plugins {
 }
 
 allprojects {
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        kotlinOptions {
+            jvmTarget = "1.8"
+        }
+    }
+}
+
+allprojects {
     group = "io.github.0xzhangke"
     version = ProjectVersion.VERSION
 

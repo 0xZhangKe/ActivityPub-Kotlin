@@ -1,3 +1,5 @@
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.0xzhangke/activity-pub-client)](https://central.sonatype.com/artifact/io.github.0xzhangke/activity-pub-client)
+
 ## ActivityPub-Kotlin
 
 Kotlin version of the ActivityPub protocol client SDK, used to communicate with the ActivityPub

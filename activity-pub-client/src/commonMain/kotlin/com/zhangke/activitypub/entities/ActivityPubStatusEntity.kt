@@ -46,7 +46,7 @@ data class ActivityPubStatusEntity(
     val card: PreviewCard? = null,
     @SerialName("edited_at") val editedAt: String? = null,
     val application: Application? = null,
-    val filtered: ActivityPubFilterResultEntity? = null,
+    val filtered: List<ActivityPubFilterResultEntity>? = null,
 ) {
 
     @Serializable

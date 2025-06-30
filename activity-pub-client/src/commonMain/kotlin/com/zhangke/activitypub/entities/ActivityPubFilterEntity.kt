@@ -21,6 +21,7 @@ data class ActivityPubFilterEntity(
 
         const val FILTER_ACTION_WARN = "warn"
         const val FILTER_ACTION_KEYWORDS = "hide"
+        const val FILTER_ACTION_BLUR = "blur"
 
         const val CONTEXT_HOME = "home"
         const val CONTEXT_NOTIFICATIONS = "notifications"

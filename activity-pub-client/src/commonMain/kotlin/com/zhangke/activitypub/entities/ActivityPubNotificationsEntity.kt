@@ -14,18 +14,25 @@ data class ActivityPubNotificationsEntity(
     val status: ActivityPubStatusEntity? = null,
     @SerialName("relationship_severance_event")
     val relationshipSeveranceEvent: ActivityPubRelationshipSeveranceEventEntity? = null,
+    @SerialName("group_key")
+    val groupKey: String? = null,
+    @SerialName("moderation_warning")
+    val moderationWarning: ActivityPubAccountWarningEntity? = null,
 ) {
 
     companion object Type {
 
-        const val mention = "mention"
-        const val status = "status"
-        const val reblog = "reblog"
-        const val follow = "follow"
-        const val followRequest = "follow_request"
-        const val favourite = "favourite"
-        const val poll = "poll"
-        const val update = "update"
-        const val severedRelationships = "severed_relationships"
+        const val MENTION = "mention"
+        const val STATUS = "status"
+        const val REBLOG = "reblog"
+        const val FOLLOW = "follow"
+        const val FOLLOW_REQUEST = "follow_request"
+        const val FAVORITE = "favourite"
+        const val POLL = "poll"
+        const val UPDATE = "update"
+        const val SEVERED_RELATIONSHIPS = "severed_relationships"
+        const val MODERATION_WARNING = "moderation_warning"
+        const val QUOTE = "quote"
+        const val QUOTED_UPDATE = "quoted_update"
     }
 }

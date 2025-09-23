@@ -12,7 +12,7 @@ data class ActivityPubCredentialAccountEntity(
      * private = Followers-only post
      * direct = Direct post
      */
-    val privacy: String,
+    val privacy: String? = null,
     val sensitive: Boolean,
     val language: String? = null,
     val note: String = "",

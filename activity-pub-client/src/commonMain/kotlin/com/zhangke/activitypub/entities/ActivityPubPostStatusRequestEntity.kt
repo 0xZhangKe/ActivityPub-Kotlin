@@ -19,4 +19,16 @@ data class ActivityPubPostStatusRequestEntity(
     val language: String? = null,
     @SerialName("scheduled_at")
     val scheduledAt: String? = null,
-)
+    @SerialName("quoted_status_id")
+    val quotedStatusId: String? = null,
+    @SerialName("quote_approval_policy")
+    val quoteApprovalPolicy: String? = null,
+) {
+
+    companion object {
+
+        const val QUOTE_APPROVAL_POLICY_PUBLIC = "public"
+        const val QUOTE_APPROVAL_POLICY_FOLLOWERS = "followers"
+        const val QUOTE_APPROVAL_POLICY_NOBODY = "nobody"
+    }
+}

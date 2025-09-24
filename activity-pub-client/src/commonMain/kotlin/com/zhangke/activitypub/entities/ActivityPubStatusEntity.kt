@@ -47,6 +47,9 @@ data class ActivityPubStatusEntity(
     @SerialName("edited_at") val editedAt: String? = null,
     val application: Application? = null,
     val filtered: List<ActivityPubFilterResultEntity>? = null,
+    val quote: ActivityPubQuoteEntity? = null,
+    @SerialName("quote_approval")
+    val quoteApproval: ActivityPubQuoteApprovalEntity? = null,
 ) {
 
     @Serializable

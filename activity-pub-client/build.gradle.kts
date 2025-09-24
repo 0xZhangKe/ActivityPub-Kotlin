@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktorfit)
     id("com.vanniktech.maven.publish")
-    alias(libs.plugins.dokka)
 }
 
 android {

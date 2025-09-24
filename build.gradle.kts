@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.ktorfit) apply false
     alias(libs.plugins.publish)
-    alias(libs.plugins.dokka)
 }
 
 allprojects {
@@ -72,11 +71,6 @@ object ProjectVersion {
     private const val MINOR = "1"
 
     // backwards compatible bug fixes
-    private const val PATH = "3"
+    private const val PATH = "4"
     const val VERSION = "$MAJOR.$MINOR.$PATH"
-}
-
-tasks.dokkaHtmlMultiModule {
-    moduleVersion.set(ProjectVersion.VERSION)
-    outputDirectory.set(rootDir.resolve("docs/static/api"))
 }

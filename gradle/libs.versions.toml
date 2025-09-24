@@ -9,7 +9,6 @@ ktor = "3.0.1"
 ktorfit = "2.2.0"
 
 publish = "0.29.0"
-dokka = "1.9.20"
 
 [libraries]
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
@@ -26,6 +25,5 @@ kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", vers
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktorfit = { id = "de.jensklingenberg.ktorfit", version.ref = "ktorfit" }
 publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 

@@ -16,7 +16,11 @@ data class ActivityPubInstanceEntity(
     val rules: List<Rule> = emptyList(),
     val contact: Contact? = null,
     val configuration: ActivityPubInstanceConfigurationEntity = ActivityPubInstanceConfigurationEntity.empty(),
+    @SerialName("api_versions")
+    val apiVersions: ApiVersions? = null,
 ) {
+
+    val supportsQuotePost: Boolean get() = (apiVersions?.mastodon ?: 0) >= 7
 
     @Serializable
     data class Usage(val users: Users) {
@@ -42,6 +46,10 @@ data class ActivityPubInstanceEntity(
         val account: ActivityPubAccountEntity? = null,
     )
 
+    @Serializable
+    data class ApiVersions(
+        val mastodon: Int,
+    )
 }
 
 @Serializable

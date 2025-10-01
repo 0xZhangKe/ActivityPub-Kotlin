@@ -124,6 +124,8 @@ class StatusRepo(private val client: ActivityPubClient) {
         visibility: ActivityPubStatusVisibilityEntity? = null,
         language: String? = null,
         scheduledAt: String? = null,
+        quotedStatusId: String? = null,
+        quoteApprovalPolicy: String? = null,
     ): Result<ActivityPubStatusEntity> {
         return runCatching {
             val requestBody = ActivityPubPostStatusRequestEntity(
@@ -136,9 +138,15 @@ class StatusRepo(private val client: ActivityPubClient) {
                 visibility = visibility?.code,
                 language = language,
                 scheduledAt = scheduledAt,
+                quotedStatusId = quotedStatusId,
+                quoteApprovalPolicy = quoteApprovalPolicy,
             )
             api.postStatus(requestBody = requestBody)
         }
+    }
+
+    suspend fun publishBlog(request: ActivityPubPostStatusRequestEntity): Result<ActivityPubStatusEntity> {
+        return runCatching { api.postStatus(requestBody = request) }
     }
 
     suspend fun editStatus(
@@ -150,7 +158,8 @@ class StatusRepo(private val client: ActivityPubClient) {
         mediaAttributes: List<ActivityPubEditStatusEntity.MediaAttributes>? = null,
         poll: ActivityPubPollRequestEntity? = null,
         language: String? = null,
-    ): Result<ActivityPubStatusEntity>{
+        quoteApprovalPolicy: String? = null,
+    ): Result<ActivityPubStatusEntity> {
         return runCatching {
             val requestBody = ActivityPubEditStatusEntity(
                 status = status,
@@ -160,9 +169,17 @@ class StatusRepo(private val client: ActivityPubClient) {
                 mediaIds = mediaIds,
                 mediaAttributes = mediaAttributes,
                 poll = poll,
+                quoteApprovalPolicy = quoteApprovalPolicy,
             )
             api.editStatus(id, requestBody)
         }
+    }
+
+    suspend fun editStatus(
+        id: String,
+        request: ActivityPubEditStatusEntity,
+    ): Result<ActivityPubStatusEntity> {
+        return runCatching { api.editStatus(id, request) }
     }
 
     suspend fun favourite(id: String): Result<ActivityPubStatusEntity> {
@@ -230,11 +247,13 @@ class StatusRepo(private val client: ActivityPubClient) {
         choices: List<Int>,
     ): Result<ActivityPubPollEntity> {
         return runCatching {
-            val params = JsonObject(mapOf(
-                "choices" to JsonArray(
-                    choices.map { JsonPrimitive(it) },
-                ),
-            ))
+            val params = JsonObject(
+                mapOf(
+                    "choices" to JsonArray(
+                        choices.map { JsonPrimitive(it) },
+                    ),
+                )
+            )
             api.votes(
                 id = id,
                 choices = params,

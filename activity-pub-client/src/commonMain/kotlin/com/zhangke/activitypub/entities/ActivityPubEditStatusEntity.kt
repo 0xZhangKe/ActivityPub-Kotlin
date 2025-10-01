@@ -12,6 +12,8 @@ data class ActivityPubEditStatusEntity(
     @SerialName("media_ids") val mediaIds: List<String>? = null,
     @SerialName("media_attributes") val mediaAttributes: List<MediaAttributes>? = null,
     val poll: ActivityPubPollRequestEntity? = null,
+    @SerialName("quote_approval_policy")
+    val quoteApprovalPolicy: String? = null,
 ) {
 
     @Serializable

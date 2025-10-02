@@ -4,6 +4,7 @@ import com.zhangke.activitypub.ActivityPubClient
 import com.zhangke.activitypub.entities.ActivityPubAccountEntity
 import com.zhangke.activitypub.entities.ActivityPubCreateFilterEntity
 import com.zhangke.activitypub.entities.ActivityPubFilterEntity
+import com.zhangke.activitypub.entities.ActivityPubPreferencesEntity
 import com.zhangke.activitypub.entities.ActivityPubRelationshipEntity
 import com.zhangke.activitypub.entities.ActivityPubStatusEntity
 import com.zhangke.activitypub.entities.ActivityPubSuggestionEntry
@@ -265,6 +266,9 @@ internal interface AccountsApi {
 
     @DELETE("api/v2/filters/{id}")
     suspend fun deleteFilter(@Path("id") id: String): Unit
+
+    @GET("api/v1/preferences")
+    suspend fun getPreferences(): ActivityPubPreferencesEntity
 }
 
 class AccountsRepo(private val client: ActivityPubClient) {
@@ -730,5 +734,9 @@ class AccountsRepo(private val client: ActivityPubClient) {
         return runCatching {
             api.deleteFilter(id)
         }
+    }
+
+    suspend fun getPreferences(): Result<ActivityPubPreferencesEntity> {
+        return runCatching { api.getPreferences() }
     }
 }

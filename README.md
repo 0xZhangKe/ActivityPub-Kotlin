@@ -22,5 +22,5 @@ Support Kotlin Multiplatform.
 ```
 ### Add Dependency
 ```kts
-implementation("io.github.0xzhangke:activity-pub-client:0.1.0")
+implementation("io.github.0xzhangke:activity-pub-client:1.0.0")
 ```

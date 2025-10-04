@@ -1,7 +1,9 @@
 package com.zhangke.activitypub.entities
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ActivityPubPreferencesEntity(
     @SerialName("posting:default:visibility")
     val postingDefaultVisibility: String,

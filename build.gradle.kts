@@ -65,12 +65,12 @@ allprojects {
 
 object ProjectVersion {
     // incompatible API changes
-    private const val MAJOR = "0"
+    private const val MAJOR = "1"
 
     // functionality in a backwards compatible manner
-    private const val MINOR = "1"
+    private const val MINOR = "0"
 
     // backwards compatible bug fixes
-    private const val PATH = "8"
+    private const val PATH = "0"
     const val VERSION = "$MAJOR.$MINOR.$PATH"
 }
